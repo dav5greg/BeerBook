@@ -22,12 +22,14 @@ function App() {
   const [query, setQuery] = useState('')
   const [filters, setFilters] = useState({ rating: '', brewery: '', country: '', style: '', city: '', place: '', type: '', toTry: false })
   const [userKey, setUserKey] = useState(localStorage.getItem('beerbook-user-key') || '')
+  const [displayName, setDisplayName] = useState(localStorage.getItem('beerbook-display-name') || '')
   const [sync, setSync] = useState('offline')
   const [form, setForm] = useState(emptyForm)
   const [showFilters, setShowFilters] = useState(false)
 
   useEffect(() => {
     loadBeers()
+    loadUserProfile()
     const online = () => setSync('sync')
     const offline = () => setSync('offline')
     window.addEventListener('online', online)
@@ -59,11 +61,41 @@ function App() {
     }
   }
 
-  function saveUserKey(value) {
+  async function loadUserProfile(key = userKey) {
+    if (!API_BASE || !key || !navigator.onLine) return
+    try {
+      const res = await fetch(API_BASE + '/api/user', { headers: { 'x-user-key': key } })
+      if (!res.ok) return
+      const data = await res.json()
+      const name = data.user?.display_name || ''
+      setDisplayName(name)
+      if (name) localStorage.setItem('beerbook-display-name', name)
+      else localStorage.removeItem('beerbook-display-name')
+    } catch {}
+  }
+
+  async function saveUserKey(value, nameValue = displayName) {
     const clean = value.trim()
+    const name = nameValue.trim()
     setUserKey(clean)
+    setDisplayName(name)
     if (clean) localStorage.setItem('beerbook-user-key', clean)
     else localStorage.removeItem('beerbook-user-key')
+    if (!API_BASE || !clean || !navigator.onLine) return
+    try {
+      const res = await fetch(API_BASE + '/api/user', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-user-key': clean },
+        body: JSON.stringify({ display_name: name })
+      })
+      if (res.ok) {
+        const data = await res.json()
+        const saved = data.user?.display_name || ''
+        setDisplayName(saved)
+        if (saved) localStorage.setItem('beerbook-display-name', saved)
+        else localStorage.removeItem('beerbook-display-name')
+      }
+    } catch {}
   }
 
   const filtered = useMemo(() => beers.filter(b => {
@@ -135,11 +167,11 @@ function App() {
     </header>
 
     <main>
-      {screen === 'home' && <Home stats={stats} beers={beers} onOpen={openBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
+      {screen === 'home' && <Home displayName={displayName} userKey={userKey} stats={stats} beers={beers} onOpen={openBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
       {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
-      {screen === 'settings' && <Settings userKey={userKey} saveUserKey={saveUserKey} sync={sync} onReload={loadBeers} />}
+      {screen === 'settings' && <Settings userKey={userKey} displayName={displayName} saveUserKey={saveUserKey} sync={sync} onReload={loadBeers} />}
     </main>
 
     <nav className="bottom-nav">
@@ -166,11 +198,12 @@ function NavItem({ active, icon, label, onClick }) {
   return <button className={'nav-item ' + (active ? 'active' : '')} onClick={onClick}><span>{icon}</span><small>{label}</small></button>
 }
 
-function Home({ stats, beers, onOpen, onLibrary, onAdd, onTry }) {
+function Home({ displayName, userKey, stats, beers, onOpen, onLibrary, onAdd, onTry }) {
   const recent = beers.slice(0, 3)
   return <section className="page">
     <div className="hero">
       <p className="eyebrow">IL TUO ARCHIVIO</p>
+      <p className="home-greeting">Ciao, <strong>{displayName || userKey || 'birraio'}</strong> 👋</p>
       <h1>Che birra<br /><em>stappiamo?</em></h1>
       <p className="hero-copy">Tutto quello che hai bevuto, in un unico posto.</p>
       <button className="search-hero" onClick={onLibrary}>⌕ <span>Cerca una birra, un birrificio…</span></button>
@@ -280,11 +313,12 @@ function AddBeer({ form, setForm, onBack, onSave }) {
 
 function Field({ label, children }) { return <label className="field"><span>{label}</span>{children}</label> }
 
-function Settings({ userKey, saveUserKey, sync, onReload }) {
+function Settings({ userKey, displayName, saveUserKey, sync, onReload }) {
   const [value, setValue] = useState(userKey)
+  const [name, setName] = useState(displayName)
   return <section className="page">
     <p className="eyebrow">CONFIGURAZIONE</p><h1>Impostazioni</h1>
-    <div className="settings-card"><h3>Il tuo identificativo</h3><p>Scegli una stringa che userai per ritrovare il tuo archivio su altri dispositivi.</p><input value={value} onChange={e => setValue(e.target.value)} placeholder="es. greg-beer" /><button className="primary-button" onClick={() => { saveUserKey(value); onReload() }}>Salva identificativo</button></div>
+    <div className="settings-card"><h3>Profilo</h3><p>Identificativo dell'archivio e nome mostrato in Home.</p><label className="field"><span>Nome utente</span><input value={name} onChange={e => setName(e.target.value)} placeholder="es. Greg" /></label><label className="field"><span>Identificativo archivio</span><input value={value} onChange={e => setValue(e.target.value)} placeholder="es. greg-beer" /></label><button className="primary-button" onClick={async () => { await saveUserKey(value, name); await onReload() }}>Salva profilo</button></div>
     <div className="settings-card"><h3>Sincronizzazione</h3><SyncBadge state={sync} /><p className="muted">Il dispositivo conserva una copia locale per poter consultare l'archivio anche senza connessione.</p><button className="secondary-button" onClick={onReload}>↻ Sincronizza ora</button></div>
   </section>
 }
