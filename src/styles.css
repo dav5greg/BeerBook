@@ -538,3 +538,62 @@ main{padding:0 20px}
 @media(max-width:520px){
   .app-shell.onboarding-active .topbar{position:relative !important;}
 }
+
+/* --- Final Home mockup alignment --- */
+.topbar-user{display:none !important}
+.brand{gap:9px}
+.brand>span:last-child{display:inline !important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.home-page{padding-top:12px}
+.home-hero{
+  min-height:175px;
+  height:175px;
+  margin:0 -2px 12px;
+  padding:20px 20px 19px;
+  border-radius:24px;
+  background:
+    linear-gradient(180deg,rgba(20,12,7,.04),rgba(20,12,7,.70)),
+    radial-gradient(circle at 70% 30%,#d99437 0,#6d3a1b 45%,#28160e 100%);
+}
+.home-hero .eyebrow{display:none}
+.home-hero h1{font-size:36px;margin-bottom:3px}
+.home-hero p:last-child{font-size:15px}
+.hero-beer-art{font-size:130px;right:-8px;bottom:-24px}
+.mock-stats{gap:7px;margin-bottom:13px}
+.mock-stats .stat{
+  min-height:82px;
+  padding:10px 4px 8px;
+  border-radius:14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.stat-icon{font-size:20px;margin-bottom:5px}
+.mock-stats .stat strong{font-size:20px;font-weight:900}
+.mock-stats .stat-label{font-size:9px;margin-top:4px}
+.home-search{height:40px;padding:8px 12px}
+.compact-head{margin:20px 0 9px}
+.compact-head h2{font-size:17px;font-weight:900}
+.chip-grid{gap:7px}
+.chip-grid button{padding:7px 10px;font-size:10px}
+.latest-head{margin-top:22px}
+.recent-grid{gap:7px}
+.beer-card{border-radius:12px}
+.beer-card-art{height:104px}
+.beer-card-body{padding:7px 7px 9px}
+.beer-card-body>strong{font-size:11px}
+.beer-card-body>span{font-size:9px}
+.card-rating b{font-size:10px}
+.bottom-nav{
+  grid-template-columns:1fr 1fr 64px 1fr 1fr !important;
+  gap:3px;
+  padding-left:14px !important;
+  padding-right:14px !important;
+}
+.add-fab{width:58px;height:58px;border-radius:50%;font-size:30px}
+@media(max-width:520px){
+  .brand>span:last-child{display:inline !important;max-width:115px}
+  .topbar-user{display:none !important}
+  .home-hero{min-height:160px;height:160px;border-radius:20px}
+  .home-hero h1{font-size:32px}
+  .hero-beer-art{font-size:110px;right:-12px;bottom:-19px}
+  .mock-stats .stat{min-height:78px}
+  .bottom-nav{grid-template-columns:1fr 1fr 60px 1fr 1fr !important}
+}
