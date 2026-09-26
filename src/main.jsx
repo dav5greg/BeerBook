@@ -497,3 +497,23 @@ function Onboarding({ onRegister, onEnter }) {
     </div>
   </section>
 }
+
+
+function Settings({ userKey, displayName, saveUserKey }) {
+  const [value, setValue] = useState(userKey)
+  const [name, setName] = useState(displayName)
+  return <section className="page">
+    <p className="eyebrow">CONFIGURAZIONE</p><h1>Impostazioni</h1>
+    <div className="settings-card">
+      <h3>Profilo</h3>
+      <p>Identificativo dell'archivio e nome mostrato in Home.</p>
+      <label className="field"><span>Nome utente</span><input value={name} onChange={e => setName(e.target.value)} placeholder="Inserisci il tuo nome" /></label>
+      <label className="field"><span>Identificativo archivio</span><input value={value} onChange={e => setValue(e.target.value)} placeholder="Scegli un identificativo" /></label>
+      <button className="primary-button" onClick={() => saveUserKey(value, name)}>Salva profilo</button>
+    </div>
+  </section>
+}
+
+function EmptyState() { return <div className="empty"><div>🍺</div><h3>Nessuna birra trovata</h3><p>Prova a cambiare ricerca o filtri.</p></div> }
+
+createRoot(document.getElementById('root')).render(<App />)
