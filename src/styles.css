@@ -1113,3 +1113,43 @@ main{padding:0 20px}
     font-size:15px;
   }
 }
+
+
+/* --- Final icon treatment: realistic, monochrome black --- */
+.mock-stats .stat-icon{
+  color:#111 !important;
+  opacity:1;
+}
+.mock-stats .stat-icon svg{
+  color:#111 !important;
+  stroke:currentColor;
+  stroke-width:1.55;
+  filter:none;
+}
+.mock-stats .stat:nth-child(2) .stat-icon svg{
+  fill:currentColor;
+  stroke:currentColor;
+  stroke-width:1.1;
+}
+.mock-stats .stat-label,
+.mock-stats .stat strong{
+  color:#111;
+}
+
+.bottom-nav .nav-item,
+.bottom-nav .nav-item.active{
+  color:#111 !important;
+}
+.bottom-nav .nav-item .nav-icon svg{
+  color:#111 !important;
+  stroke:currentColor;
+  stroke-width:1.65;
+  filter:none;
+}
+.bottom-nav .nav-item.active .nav-icon svg{
+  stroke-width:1.9;
+}
+.bottom-nav .nav-item small{
+  color:#111 !important;
+  font-weight:800;
+}
