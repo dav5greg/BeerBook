@@ -41,9 +41,10 @@ function App() {
     }
   }, [])
 
-  async function loadBeers() {
-    if (!navigator.onLine || !API_BASE || !userKey) {
-      setBeers(JSON.parse(localStorage.getItem('beerbook-cache') || 'null') || DEMO_BEERS)
+  async function loadBeers(key = userKey) {
+    const cacheKey = key ? 'beerbook-cache-' + key : 'beerbook-cache'
+    if (!navigator.onLine || !API_BASE || !key) {
+      setBeers(JSON.parse(localStorage.getItem(cacheKey) || 'null') || DEMO_BEERS)
       setSync(navigator.onLine ? 'pending' : 'offline')
       return
     }
@@ -53,10 +54,10 @@ function App() {
       if (!res.ok) throw new Error()
       const data = await res.json()
       setBeers(data.beers || [])
-      localStorage.setItem('beerbook-cache', JSON.stringify(data.beers || []))
+      localStorage.setItem(cacheKey, JSON.stringify(data.beers || []))
       setSync('ok')
     } catch {
-      setBeers(JSON.parse(localStorage.getItem('beerbook-cache') || 'null') || DEMO_BEERS)
+      setBeers(JSON.parse(localStorage.getItem(cacheKey) || 'null') || DEMO_BEERS)
       setSync('pending')
     }
   }
@@ -147,7 +148,7 @@ function App() {
     }
     const local = selected ? beers.map(b => b.id === selected.id ? { ...b, ...payload } : b) : [{ ...payload, id: crypto.randomUUID() }, ...beers]
     setBeers(local)
-    localStorage.setItem('beerbook-cache', JSON.stringify(local))
+    localStorage.setItem('beerbook-cache-' + userKey, JSON.stringify(local))
     setScreen('library')
     if (!API_BASE || !userKey || !navigator.onLine) { setSync('pending'); return }
     try {
