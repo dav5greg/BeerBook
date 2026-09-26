@@ -16,7 +16,12 @@ export default async function handler(req, res) {
 
     if (req.method === 'GET') {
       const rows = await sql`
-        SELECT b.*, COALESCE(array_agg(DISTINCT pp.name) FILTER (WHERE pp.name IS NOT NULL), '{}') AS place_names
+        SELECT b.*,
+          COALESCE(array_agg(DISTINCT pp.name) FILTER (WHERE pp.name IS NOT NULL), '{}') AS place_names,
+          COALESCE(
+            jsonb_agg(DISTINCT jsonb_build_object('name', pp.name, 'type', pp.type, 'city', pp.city))
+            FILTER (WHERE pp.id IS NOT NULL), '[]'::jsonb
+          ) AS places
         FROM beers b
         LEFT JOIN beer_purchase_places bpp ON bpp.beer_id = b.id
         LEFT JOIN purchase_places pp ON pp.id = bpp.purchase_place_id
@@ -36,7 +41,7 @@ export default async function handler(req, res) {
         VALUES (${uid},${body.name},${body.brewery || null},${body.country || null},${body.region || null},${body.style || null},${body.abv ?? null},${body.description || null},${body.rating || 0},${body.notes || null},${body.last_tasted_at || null},${body.carbonation || 'Media'},${!!body.to_try})
         RETURNING id
       `
-      await syncPlaces(sql, uid, rows[0].id, body.place_names || [])
+      await syncPlaces(sql, uid, rows[0].id, body.places || (body.place_names || []).map(name => ({ name })))
       return json(res, 201, { id: rows[0].id })
     }
 
@@ -46,10 +51,20 @@ export default async function handler(req, res) {
   }
 }
 
-async function syncPlaces(sql, uid, beerId, names) {
+export async function syncPlaces(sql, uid, beerId, places) {
   await sql`DELETE FROM beer_purchase_places WHERE beer_id = ${beerId}`
-  for (const name of names) {
-    const rows = await sql`INSERT INTO purchase_places (user_id,name,type,city) VALUES (${uid},${name},'Altro',NULL) ON CONFLICT (user_id,name) DO UPDATE SET name=EXCLUDED.name RETURNING id`
+  for (const place of places) {
+    const name = String(place?.name || '').trim()
+    if (!name) continue
+    const type = String(place?.type || 'Altro').trim() || 'Altro'
+    const city = String(place?.city || '').trim() || null
+    const rows = await sql`
+      INSERT INTO purchase_places (user_id,name,type,city)
+      VALUES (${uid},${name},${type},${city})
+      ON CONFLICT (user_id,name)
+      DO UPDATE SET type=EXCLUDED.type, city=EXCLUDED.city, updated_at=NOW()
+      RETURNING id
+    `
     await sql`INSERT INTO beer_purchase_places (beer_id,purchase_place_id) VALUES (${beerId},${rows[0].id}) ON CONFLICT DO NOTHING`
   }
 }
