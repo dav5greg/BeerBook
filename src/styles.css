@@ -825,3 +825,38 @@ main{padding:0 20px}
     font-size:31px;
   }
 }
+
+/* --- Home section hierarchy --- */
+.compact-head{
+  margin:24px 0 12px;
+}
+.compact-head h2{
+  font-size:21px;
+  line-height:1.1;
+  font-weight:900;
+  letter-spacing:-.025em;
+}
+.compact-head .text-button{
+  font-size:13px;
+  font-weight:800;
+  color:#a65d10;
+  white-space:nowrap;
+}
+.latest-head{
+  margin-top:29px;
+}
+.beer-card-body>span{
+  font-size:10px;
+  color:#77695f;
+  margin-top:3px;
+}
+.card-rating small{
+  font-size:9px;
+  white-space:nowrap;
+}
+@media(max-width:520px){
+  .compact-head{margin:22px 0 11px}
+  .compact-head h2{font-size:20px}
+  .compact-head .text-button{font-size:12px}
+  .latest-head{margin-top:27px}
+}
