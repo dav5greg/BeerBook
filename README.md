@@ -20,3 +20,7 @@ The initial schema is in `backend/migrations/001_initial.sql`.
 
 The Beer Book V1 data model is intentionally small:
 `users`, `beers`, `purchase_places`, `beer_purchase_places`.
+
+## Deployment
+
+Vercel backend deployment is connected to the Neon PostgreSQL resource.
