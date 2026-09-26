@@ -388,7 +388,7 @@ function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary,
     <button className="home-search" onClick={onLibrary}><span>⌕</span><span>Cerca birra, birrificio, stile, paese...</span></button>
 
     <div className="section-head compact-head">
-      <div><p className="eyebrow">ESPLORA</p><h2>Filtri rapidi</h2></div>
+      <div><h2>Filtri rapidi</h2></div>
       <button className="text-button" onClick={onLibrary}>Tutti i filtri ›</button>
     </div>
     <div className="chip-grid">
@@ -401,7 +401,7 @@ function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary,
     </div>
 
     <div className="section-head compact-head latest-head">
-      <div><p className="eyebrow">ARCHIVIO</p><h2>Ultime birre</h2></div>
+      <div><h2>Ultime birre</h2></div>
       <button className="text-button" onClick={onLibrary}>Vedi tutte ›</button>
     </div>
     <div className="recent-grid">
@@ -422,8 +422,8 @@ function BeerCard({ beer, onClick, onDelete }) {
       <div className="beer-card-art"><span>🍺</span></div>
       <div className="beer-card-body">
         <strong>{beer.name}</strong>
-        <span>{beer.brewery || 'Birrificio non indicato'}</span>
-        <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b><small>{beer.last_tasted_at || '—'}</small></div>
+        <span>{beer.style || 'Stile non indicato'}</span>
+        <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b><small>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</small></div>
       </div>
     </button>
     <button className="card-delete" onClick={onDelete} aria-label={'Elimina ' + beer.name}>×</button>
