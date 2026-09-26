@@ -99,7 +99,7 @@ function App() {
 
   function startEdit(beer) {
     setSelected(beer)
-    setForm({ ...emptyForm, ...beer, place_names: (beer.place_names || []).join(', ') })
+    setForm({ ...emptyForm, ...beer, places: beer.places?.length ? beer.places : (beer.place_names || []).map(name => ({ name, type: 'Altro', city: '' })) })
     setScreen('add')
   }
 
@@ -109,7 +109,7 @@ function App() {
       ...form,
       abv: form.abv === '' ? null : Number(form.abv),
       rating: Number(form.rating) || 0,
-      place_names: form.place_names.split(',').map(x => x.trim()).filter(Boolean)
+      places: form.places.filter(p => p.name.trim()).map(p => ({ name: p.name.trim(), type: p.type || 'Altro', city: p.city.trim() || null }))
     }
     const local = selected ? beers.map(b => b.id === selected.id ? { ...b, ...payload } : b) : [{ ...payload, id: crypto.randomUUID() }, ...beers]
     setBeers(local)
@@ -261,7 +261,17 @@ function AddBeer({ form, setForm, onBack, onSave }) {
       <Field label="Valutazione"><div className="star-input">{[1,2,3,4,5].map(x => <button type="button" key={x} className={x <= form.rating ? 'on' : ''} onClick={() => update('rating', x)}>★</button>)}</div></Field>
       <Field label="Descrizione"><textarea rows="3" value={form.description} onChange={e => update('description', e.target.value)} /></Field>
       <Field label="Le mie note"><textarea rows="4" value={form.notes} onChange={e => update('notes', e.target.value)} /></Field>
-      <Field label="Luoghi di acquisto"><input value={form.place_names} onChange={e => update('place_names', e.target.value)} placeholder="Es. Esselunga, Birreria X" /><small>Separali con una virgola.</small></Field>
+      <Field label="Luoghi di acquisto">
+        {form.places.map((place, index) => <div className="place-row" key={index}>
+          <input value={place.name} onChange={e => { const places = [...form.places]; places[index] = { ...places[index], name: e.target.value }; update('places', places) }} placeholder="Nome luogo" />
+          <select value={place.type} onChange={e => { const places = [...form.places]; places[index] = { ...places[index], type: e.target.value }; update('places', places) }}>
+            <option>Supermercato</option><option>Pub</option><option>Bar</option><option>Ristorante</option><option>Altro</option>
+          </select>
+          <input value={place.city} onChange={e => { const places = [...form.places]; places[index] = { ...places[index], city: e.target.value }; update('places', places) }} placeholder="Città" />
+          {form.places.length > 1 && <button type="button" className="remove-place" onClick={() => update('places', form.places.filter((_, i) => i !== index))}>×</button>}
+        </div>)}
+        <button type="button" className="secondary-button" onClick={() => update('places', [...form.places, { name: '', type: 'Altro', city: '' }])}>＋ Aggiungi luogo</button>
+      </Field>
       <label className="switch-line"><input type="checkbox" checked={form.to_try} onChange={e => update('to_try', e.target.checked)} /><span>Da provare</span></label>
       <button className="primary-button full" type="submit">Salva birra</button>
     </form>
