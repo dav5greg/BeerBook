@@ -281,7 +281,15 @@ function App() {
 
   return <div className={"app-shell " + (onboarding ? "onboarding-active" : "")}>
     <header className="topbar">
-      <button className="brand" onClick={() => !onboarding && setScreen('home')}><span className="brand-mark">🍺</span><span>{displayName || userKey || 'Beer Book'}</span></button>
+      {!onboarding && <button className="brand home-back-button" onClick={() => {
+        if (screen === 'home') return
+        if (screen === 'detail') return setScreen('library')
+        if (screen === 'add') return setScreen(selected ? 'detail' : 'library')
+        if (screen === 'library' || screen === 'settings') return setScreen('home')
+        setScreen('home')
+      }} aria-label={screen === 'home' ? 'Home' : 'Torna indietro'} title={screen === 'home' ? 'Home' : 'Torna indietro'}>
+        <Icon name={screen === 'home' ? 'home' : 'back'} />
+      </button>}
       {!onboarding && <div className="topbar-actions">
         <button className="topbar-action sync-button" onClick={syncNow} disabled={sync === 'sync'} aria-label="Sincronizza ora" title="Sincronizza ora">↻</button>
         <SyncBadge state={sync} />
@@ -395,6 +403,8 @@ function Icon({ name }) {
     <path d="M7.7 11.2h10.5"/>
   </svg>
 
+  if (name === 'back') return <svg {...common}><path d="m15.5 5.5-6.5 6.5 6.5 6.5"/><path d="M9.5 12h10"/></svg>
+
   if (name === 'home') return <svg {...common}>
     <path d="m3.2 10.5 8.8-7.1 8.8 7.1"/>
     <path d="M5.1 9.6v10.2h13.8V9.6"/>
@@ -428,7 +438,7 @@ function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary,
   return <section className="page home-page">
     <div className="home-hero">
       <div className="home-hero-copy">
-        <p className="eyebrow">IL MIO ARCHIVIO DI BIRRE</p>
+        <p className="home-user-name">{displayName || userKey}</p>
         <h1>Beer Book</h1>
         <p>Il mio archivio di birre</p>
       </div>
