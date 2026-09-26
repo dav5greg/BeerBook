@@ -1,24 +1,18 @@
 {
-  "name": "Beer Book",
-  "short_name": "Beer Book",
-  "start_url": "/BeerBook/",
-  "scope": "/BeerBook/",
-  "display": "standalone",
-  "background_color": "#f5eee5",
-  "theme_color": "#8b5e3c",
-  "lang": "it",
-  "icons": [
+  "name":"Beer Book",
+  "short_name":"Beer Book",
+  "start_url":"/BeerBook/",
+  "scope":"/BeerBook/",
+  "display":"standalone",
+  "background_color":"#f5eee5",
+  "theme_color":"#8b5e3c",
+  "lang":"it",
+  "icons":[
     {
-      "src": "/BeerBook/icon.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "/BeerBook/icon.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
+      "src":"/BeerBook/icon-512.png",
+      "sizes":"512x512",
+      "type":"image/png",
+      "purpose":"any maskable"
     }
   ]
 }
