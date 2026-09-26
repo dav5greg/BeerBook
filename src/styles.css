@@ -860,3 +860,193 @@ main{padding:0 20px}
   .compact-head .text-button{font-size:12px}
   .latest-head{margin-top:27px}
 }
+
+/* --- Readability pass: inner app screens --- */
+.library-page,.detail-page,.add-page{
+  font-size:14px;
+}
+.library-page .library-heading h1{
+  font-size:32px;
+  font-weight:900;
+  letter-spacing:-.04em;
+}
+.library-page .library-heading p{
+  font-size:13px;
+  font-weight:600;
+}
+.library-search-row .search-box input{
+  font-size:13px;
+  font-weight:500;
+}
+.library-search-row .search-box span{
+  font-size:23px;
+}
+.filter-chips button{
+  padding:9px 12px;
+  font-size:12px;
+  font-weight:800;
+}
+.library-options{
+  font-size:12px;
+  font-weight:600;
+}
+.library-options b{
+  font-size:11px;
+  font-weight:800;
+}
+.library-list .beer-row-main{
+  min-height:78px;
+  padding:11px 2px;
+}
+.beer-list-art{
+  width:55px;
+  height:68px;
+  border-radius:10px;
+}
+.beer-list-art span{font-size:45px}
+.library-list .beer-info strong{
+  font-size:15px;
+  font-weight:900;
+}
+.library-list .beer-info span{
+  font-size:12px;
+  font-weight:600;
+}
+.library-list .beer-info small{
+  font-size:11px;
+  font-weight:500;
+}
+.list-rating{
+  font-size:11px;
+}
+.list-rating strong{font-size:11px}
+.library-list time{
+  font-size:10px;
+  font-weight:600;
+}
+.row-more{font-size:21px}
+
+.detail-sheet h1{
+  font-size:38px;
+  font-weight:900;
+}
+.detail-sheet h3{
+  font-size:15px;
+  font-weight:700;
+}
+.detail-country{
+  font-size:13px;
+  font-weight:700;
+}
+.detail-rating-row .big-rating{
+  font-size:23px;
+}
+.detail-rating-row>strong{
+  font-size:14px;
+  font-weight:900;
+}
+.try-toggle{
+  font-size:11px;
+  font-weight:700;
+}
+.detail-facts strong{
+  font-size:13px;
+  font-weight:900;
+}
+.detail-facts span{
+  font-size:10px;
+  font-weight:600;
+}
+.detail-section{
+  font-size:14px;
+}
+.detail-section>p{
+  font-size:14px;
+  font-weight:500;
+}
+.tasting-section h3,.places-section h3{
+  font-size:17px;
+  font-weight:900;
+}
+.tasting-card{
+  padding:13px;
+}
+.tasting-card strong{
+  font-size:13px;
+  font-weight:800;
+}
+.tasting-card span{
+  font-size:13px;
+  font-weight:800;
+}
+.tasting-card p{
+  font-size:13px;
+  font-weight:500;
+}
+.purchase-row{
+  padding:13px 0;
+}
+.purchase-row b{
+  font-size:13px;
+  font-weight:900;
+}
+.purchase-row small{
+  font-size:11px;
+  font-weight:500;
+}
+.purchase-row time{
+  font-size:20px;
+}
+.add-page .form-top h1{
+  font-size:30px;
+  font-weight:900;
+}
+.add-page .field>span{
+  font-size:13px;
+  font-weight:800;
+}
+.add-page .field input,
+.add-page .field textarea,
+.add-page .field select{
+  font-size:14px;
+  font-weight:600;
+  min-height:44px;
+}
+.add-page .photo-placeholder b{
+  font-size:13px;
+  font-weight:800;
+}
+.add-page .photo-placeholder small{
+  font-size:11px;
+}
+.add-page .star-input button{
+  font-size:38px;
+}
+.add-page .segmented button{
+  font-size:13px;
+  font-weight:800;
+}
+.add-page .place-row input,
+.add-page .place-row select{
+  font-size:12px;
+  font-weight:600;
+}
+.add-page .secondary-button{
+  font-size:13px;
+  font-weight:800;
+}
+.add-page .switch-line{
+  font-size:14px;
+  font-weight:800;
+}
+@media(max-width:520px){
+  .library-page .library-heading h1{font-size:29px}
+  .filter-chips button{font-size:11px}
+  .library-list .beer-info strong{font-size:14px}
+  .library-list .beer-info span{font-size:11px}
+  .detail-sheet h1{font-size:34px}
+  .detail-section,.detail-section>p{font-size:13px}
+  .tasting-section h3,.places-section h3{font-size:16px}
+  .add-page .form-top h1{font-size:27px}
+  .add-page .field>span{font-size:12px}
+}
