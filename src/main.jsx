@@ -426,10 +426,9 @@ function Onboarding({ onRegister }) {
       <p>Prima di iniziare, scegli il nome con cui vuoi essere chiamato e un identificativo univoco per il tuo archivio.</p>
     </div>
     <form className="form onboarding-form" onSubmit={submit}>
-      <Field label="Nome utente *"><input required value={name} onChange={e => setName(e.target.value)} placeholder="Es. Greg" autoFocus /></Field>
+      <Field label="Nome utente *"><input required value={name} onChange={e => setName(e.target.value)} placeholder="Inserisci il tuo nome" autoFocus /></Field>
       <Field label="Identificativo univoco *">
-        <input required value={value} onChange={e => setValue(e.target.value)} placeholder="Es. greg-beer" autoCapitalize="none" autoCorrect="off" spellCheck="false" />
-        <small>3–30 caratteri: lettere, numeri, trattino o underscore.</small>
+        <input required value={value} onChange={e => setValue(e.target.value)} placeholder="Scegli un identificativo" autoCapitalize="none" autoCorrect="off" spellCheck="false" />
       </Field>
       {error && <div className="form-error" role="alert">⚠ {error}</div>}
       <button className="primary-button full" type="submit" disabled={saving}>{saving ? 'Creazione in corso…' : 'Crea il mio archivio'}</button>
