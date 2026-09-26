@@ -1185,7 +1185,7 @@ main{padding:0 20px}
   margin-top:0;
 }
 @media(max-width:520px){
-  .home-user-name{font-size:12px}
+  .home-user-name{font-size:15px}
   .brand.home-back-button{width:36px;height:36px}
   .home-back-button svg{width:24px;height:24px}
 }
@@ -1284,7 +1284,7 @@ main{padding:0 20px}
   color:#111 !important;
 }
 
-.detail-title-row{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.detail-title-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding-top:16px}
 .detail-title-copy{min-width:0;flex:1}
 .detail-mug{width:76px;height:76px;flex:none;display:grid;place-items:center}
 .detail-mug .real-icon{width:64px;height:64px;filter:none}
