@@ -220,7 +220,7 @@ function BeerRow({ beer, onClick }) {
   return <button className="beer-row" onClick={onClick}>
     <div className="beer-avatar">🍺</div>
     <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><small>{beer.style || 'Stile non indicato'}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small></div>
-    <div className="beer-rating">{'★'.repeat(Number(beer.rating || 0)}<span>{'★'.repeat(5 - Number(beer.rating || 0))}</span></div>
+    <div className="beer-rating">{'★'.repeat(Number(beer.rating || 0))}<span>{'★'.repeat(5 - Number(beer.rating || 0))}</span></div>
   </button>
 }
 
