@@ -190,7 +190,7 @@ function App() {
     </header>
 
     <main>
-      {screen === 'home' && <Home displayName={displayName} userKey={userKey} stats={stats} beers={beers} onOpen={openBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
+      {screen === 'home' && <Home displayName={displayName} userKey={userKey} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
       {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
@@ -221,7 +221,7 @@ function NavItem({ active, icon, label, onClick }) {
   return <button className={'nav-item ' + (active ? 'active' : '')} onClick={onClick}><span>{icon}</span><small>{label}</small></button>
 }
 
-function Home({ displayName, userKey, stats, beers, onOpen, onLibrary, onAdd, onTry }) {
+function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary, onAdd, onTry }) {
   const recent = beers.slice(0, 3)
   return <section className="page">
     <div className="hero">
@@ -246,7 +246,7 @@ function Home({ displayName, userKey, stats, beers, onOpen, onLibrary, onAdd, on
     </div>
 
     <div className="section-head"><div><p className="eyebrow">ARCHIVIO</p><h2>Le mie birre</h2></div><button className="text-button" onClick={onLibrary}>Vedi tutte →</button></div>
-    <div className="beer-stack">{recent.map(b => <BeerRow key={b.id} beer={b} onClick={() => onOpen(b)} />)}</div>
+    <div className="beer-stack">{recent.map(b => <BeerRow key={b.id} beer={b} onClick={() => onOpen(b)} onDelete={() => onDelete(b)} />)}</div>
     <button className="primary-button full" onClick={onAdd}>＋ Aggiungi una birra</button>
   </section>
 }
