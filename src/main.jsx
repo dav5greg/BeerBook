@@ -279,7 +279,7 @@ function App() {
 
   const onboarding = !userKey
 
-  return <div className="app-shell">
+  return <div className={"app-shell " + (onboarding ? "onboarding-active" : "")}>
     <header className="topbar">
       <button className="brand" onClick={() => !onboarding && setScreen('home')}><span className="brand-mark">🍺</span><span>Beer Book</span></button>
       {!onboarding && <div className="topbar-user">{displayName || userKey}</div>}
