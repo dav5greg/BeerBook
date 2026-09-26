@@ -311,7 +311,7 @@ function App() {
 
     {!onboarding && <nav className="bottom-nav">
       <NavItem active={screen === 'home'} icon="home" label="Home" onClick={() => setScreen('home')} />
-      <NavItem active={screen === 'library' || screen === 'detail'} icon="bottle" label="Birre" onClick={() => setScreen('library')} />
+      <NavItem active={screen === 'library' || screen === 'detail'} icon="beer" label="Birre" onClick={() => setScreen('library')} />
       <button className="add-fab" onClick={startAdd} aria-label="Aggiungi birra">＋</button>
       <NavItem active={false} icon="places" label="Luoghi" onClick={() => setScreen('library')} />
       <NavItem active={screen === 'settings'} icon="settings" label="Settings" onClick={() => setScreen('settings')} />
@@ -384,9 +384,9 @@ function Icon({ name }) {
     </svg>
   }
   if (name === 'settings') {
-    return <svg className="simple-settings-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/>
-      <path d="m19.4 15 .1.1a1.7 1.7 0 0 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.7 1.7 0 0 1-3.4 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1a1.7 1.7 0 0 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9H4a1.7 1.7 0 0 1 0-3.4h.2a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a1.7 1.7 0 0 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2V4a1.7 1.7 0 0 1 3.4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a1.7 1.7 0 0 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.7 1.7 0 0 1 0 3.4h-.2a1.7 1.7 0 0 0-1.1.9Z"/>
+    return <svg className="simple-settings-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z"/>
+      <path d="M19.1 13.45c.05-.47.05-.95 0-1.42l1.55-1.2-1.7-2.95-1.83.74a7.2 7.2 0 0 0-1.23-.71L15.6 5.95h-3.4l-.29 1.96c-.44.2-.85.44-1.23.71l-1.83-.74-1.7 2.95 1.55 1.2a7.2 7.2 0 0 0 0 1.42l-1.55 1.2 1.7 2.95 1.83-.74c.38.27.79.51 1.23.71l.29 1.96h3.4l.29-1.96c.44-.2.85-.44 1.23-.71l1.83.74 1.7-2.95-1.55-1.2Z"/>
     </svg>
   }
   const code = emoji[name]
