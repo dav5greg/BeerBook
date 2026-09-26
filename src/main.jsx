@@ -306,7 +306,7 @@ function App() {
       <NavItem active={screen === 'library' || screen === 'detail'} icon="bottle" label="Birre" onClick={() => setScreen('library')} />
       <button className="add-fab" onClick={startAdd} aria-label="Aggiungi birra">＋</button>
       <NavItem active={false} icon="places" label="Luoghi" onClick={() => setScreen('library')} />
-      <NavItem active={screen === 'settings'} icon="more" label="Altro" onClick={() => setScreen('settings')} />
+      <NavItem active={screen === 'settings'} icon="settings" label="Impost." onClick={() => setScreen('settings')} />
     </nav>}
   </div>
 }
@@ -362,7 +362,7 @@ function Icon({ name }) {
   if (name === 'home') return <svg {...common} fill="currentColor"><path stroke="none" d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></svg>
   if (name === 'bottle') return <svg {...common}><path d="M10 3h4v3l1 2v12H9V8l1-2z"/><path d="M9 11h6"/></svg>
   if (name === 'places') return <svg {...common}><path d="M12 21s6-5.3 6-11A6 6 0 1 0 6 10c0 5.7 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
-  if (name === 'more') return <svg {...common}><circle cx="5" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
+  if (name === 'settings') return <svg {...common}><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.7 1.7-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-2.4v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1L8 17l.1-.1A1.7 1.7 0 0 0 8.4 15a1.7 1.7 0 0 0-1.5-1H6.7v-2.4h.2a1.7 1.7 0 0 0 1.5-1A1.7 1.7 0 0 0 8.1 8.7L8 8.6l1.7-1.7.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2h2.4v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.7 1.7-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2V14h-.2a1.7 1.7 0 0 0-1.5 1Z"/></svg>
   return null
 }
 
