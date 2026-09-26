@@ -354,15 +354,72 @@ function NavItem({ active, icon, label, onClick }) {
 }
 
 function Icon({ name }) {
-  const common = { width: '1em', height: '1em', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }
-  if (name === 'beer') return <svg {...common}><path d="M5 8h9v10H5z"/><path d="M14 10h3a2 2 0 0 1 0 4h-3"/><path d="M7 5v3M10 5v3M5 18h10"/></svg>
-  if (name === 'star') return <svg {...common} fill="currentColor"><path stroke="none" d="m12 2.8 2.85 5.78 6.38.93-4.62 4.5 1.09 6.36L12 17.37 6.3 20.37l1.09-6.36-4.62-4.5 6.38-.93L12 2.8Z"/></svg>
-  if (name === 'brewery') return <svg {...common}><path d="M4 20V9l8-4 8 4v11"/><path d="M7 12h2M15 12h2M7 16h2M15 16h2M12 9v11"/></svg>
-  if (name === 'cart') return <svg {...common}><path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.5a2 2 0 0 0 1.9-1.4L20 8H6"/><circle cx="10" cy="19" r="1"/><circle cx="17" cy="19" r="1"/></svg>
-  if (name === 'home') return <svg {...common} fill="currentColor"><path stroke="none" d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></svg>
-  if (name === 'bottle') return <svg {...common}><path d="M10 3h4v3l1 2v12H9V8l1-2z"/><path d="M9 11h6"/></svg>
-  if (name === 'places') return <svg {...common}><path d="M12 21s6-5.3 6-11A6 6 0 1 0 6 10c0 5.7 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
-  if (name === 'settings') return <svg {...common}><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.7 1.7-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-2.4v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1L8 17l.1-.1A1.7 1.7 0 0 0 8.4 15a1.7 1.7 0 0 0-1.5-1H6.7v-2.4h.2a1.7 1.7 0 0 0 1.5-1A1.7 1.7 0 0 0 8.1 8.7L8 8.6l1.7-1.7.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2h2.4v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.7 1.7-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2V14h-.2a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+  const common = {
+    width: '1em',
+    height: '1em',
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.65,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    'aria-hidden': true
+  }
+
+  if (name === 'beer') return <svg {...common}>
+    <path d="M5.5 7.5h8.8v11.2H5.5z"/>
+    <path d="M14.3 9.3h3a2.7 2.7 0 0 1 0 5.4h-3"/>
+    <path d="M7.5 5.2c0 1 1 1 1 2.1M10.4 5.2c0 1 1 1 1 2.1"/>
+    <path d="M5.5 18.7h8.8"/>
+    <path d="M7.1 10.1h5.6M7.1 13h5.6"/>
+  </svg>
+
+  if (name === 'star') return <svg {...common} fill="currentColor" stroke="none">
+    <path d="m12 2.6 2.78 5.63 6.21.9-4.5 4.39 1.06 6.2L12 16.8l-5.55 2.92 1.06-6.2-4.5-4.39 6.21-.9L12 2.6Z"/>
+    <path d="m12 5.3 1.98 4.01 4.43.64-3.2 3.12.76 4.4L12 15.4l-3.97 2.08.76-4.4-3.2-3.12 4.43-.64L12 5.3Z" fill="none" stroke="currentColor" strokeWidth="1"/>
+  </svg>
+
+  if (name === 'brewery') return <svg {...common}>
+    <path d="M3.8 20.2h16.4"/>
+    <path d="M5.2 20.2V9.2L12 5.5l6.8 3.7v11"/>
+    <path d="M8 20.2v-4.8h3v4.8M13 20.2v-4.8h3v4.8"/>
+    <path d="M7.1 11.7h2M14.9 11.7h2M12 8.3v3.4"/>
+    <path d="M3.8 9.2 12 4.8l8.2 4.4"/>
+  </svg>
+
+  if (name === 'cart') return <svg {...common}>
+    <path d="M3.2 4.2h2l2.05 9.2a2.2 2.2 0 0 0 2.15 1.72h7.15a2.2 2.2 0 0 0 2.08-1.49L20.2 8H6.1"/>
+    <path d="M9 18.9h.01M17.1 18.9h.01"/>
+    <circle cx="9" cy="18.9" r="1.15"/>
+    <circle cx="17.1" cy="18.9" r="1.15"/>
+    <path d="M7.7 11.2h10.5"/>
+  </svg>
+
+  if (name === 'home') return <svg {...common}>
+    <path d="m3.2 10.5 8.8-7.1 8.8 7.1"/>
+    <path d="M5.1 9.6v10.2h13.8V9.6"/>
+    <path d="M9.4 19.8v-6.1h5.2v6.1"/>
+    <path d="M8.4 8.9h.01M12 8.9h.01M15.6 8.9h.01"/>
+  </svg>
+
+  if (name === 'bottle') return <svg {...common}>
+    <path d="M10.1 3h3.8v3.1l1.1 2.1v11.1H9V8.2l1.1-2.1z"/>
+    <path d="M9 10.2h6M9 12.4h6"/>
+    <path d="M10.1 4.7h3.8"/>
+    <path d="M11.1 19.3v-3.5h1.8v3.5"/>
+  </svg>
+
+  if (name === 'places') return <svg {...common}>
+    <path d="M12 21s6.4-5.7 6.4-11.1A6.4 6.4 0 1 0 5.6 9.9C5.6 15.3 12 21 12 21Z"/>
+    <circle cx="12" cy="9.7" r="2.25"/>
+    <path d="M9.4 14.8c1.7.7 3.5.7 5.2 0"/>
+  </svg>
+
+  if (name === 'settings') return <svg {...common}>
+    <circle cx="12" cy="12" r="3.1"/>
+    <path d="M19.1 15.1a1.9 1.9 0 0 0 .4 2.1l.1.1-1.9 1.9-.1-.1a1.9 1.9 0 0 0-2.1-.4 1.9 1.9 0 0 0-1.2 1.7v.2h-2.7v-.2a1.9 1.9 0 0 0-1.2-1.7 1.9 1.9 0 0 0-2.1.4l-.1.1-1.9-1.9.1-.1a1.9 1.9 0 0 0 .4-2.1 1.9 1.9 0 0 0-1.7-1.2H4.9v-2.7h.2a1.9 1.9 0 0 0 1.7-1.2 1.9 1.9 0 0 0-.4-2.1l-.1-.1 1.9-1.9.1.1a1.9 1.9 0 0 0 2.1.4 1.9 1.9 0 0 0 1.2-1.7V4.8h2.7V5a1.9 1.9 0 0 0 1.2 1.7 1.9 1.9 0 0 0 2.1-.4l.1-.1 1.9 1.9-.1.1a1.9 1.9 0 0 0-.4 2.1 1.9 1.9 0 0 0 1.7 1.2h.2v2.7h-.2a1.9 1.9 0 0 0-1.7 1.2Z"/>
+  </svg>
+
   return null
 }
 
