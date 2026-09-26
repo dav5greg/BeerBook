@@ -533,3 +533,9 @@ main{padding:0 20px}
   .detail-page{margin:0 -15px}
   .detail-top{padding-left:15px;padding-right:15px}
 }
+
+/* The onboarding/login screen scrolls as a normal page; the archive keeps its sticky header. */
+.app-shell.onboarding-active .topbar{position:relative !important;top:auto;}
+@media(max-width:520px){
+  .app-shell.onboarding-active .topbar{position:relative !important;}
+}
