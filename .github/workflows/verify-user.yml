@@ -1,0 +1,16 @@
+name: Verify Beer Book user
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check grg data
+        shell: bash
+        run: |
+          set -euo pipefail
+          response="$(curl -fsS -H 'x-user-key: grg' 'https://beer-book-api.vercel.app/api/beers')"
+          echo "$response" | jq '{beer_count: (.beers | length), beers: [.beers[] | {name, brewery, rating, place_names}]}'
