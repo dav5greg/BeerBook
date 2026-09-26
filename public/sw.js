@@ -1,4 +1,4 @@
-const CACHE = 'beer-book-v2'
+const CACHE = 'beer-book-v3'
 const APP_SHELL = ['/BeerBook/', '/BeerBook/index.html', '/BeerBook/manifest.webmanifest', '/BeerBook/icon.svg']
 
 self.addEventListener('install', event => {
