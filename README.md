@@ -24,6 +24,3 @@ The Beer Book V1 data model is intentionally small:
 ## Deployment
 
 Vercel backend deployment is connected to the Neon PostgreSQL resource.
-
-
-<!-- temporary verification trigger -->
