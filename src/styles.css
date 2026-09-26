@@ -722,3 +722,106 @@ main{padding:0 20px}
   .nav-item small{font-size:9px}
   .add-fab{width:48px;height:48px;margin-top:-12px;font-size:27px}
 }
+
+/* --- Emphasis pass: larger KPI and footer controls --- */
+.mock-stats{
+  gap:9px;
+}
+.mock-stats .stat{
+  min-height:98px;
+  padding:11px 5px 10px;
+}
+.mock-stats .stat-icon{
+  width:28px;
+  height:28px;
+  margin-bottom:7px;
+  font-size:26px;
+}
+.mock-stats .stat-icon svg{
+  width:26px;
+  height:26px;
+}
+.mock-stats .stat strong{
+  font-size:25px;
+  line-height:1;
+}
+.mock-stats .stat-label{
+  margin-top:6px;
+  font-size:10px;
+}
+.bottom-nav{
+  height:74px;
+  padding:6px 20px calc(6px + env(safe-area-inset-bottom));
+}
+.nav-item{
+  height:58px;
+  grid-template-rows:29px 16px;
+  gap:3px;
+}
+.nav-icon{
+  width:27px;
+  height:27px;
+}
+.nav-icon svg{
+  width:26px;
+  height:26px;
+}
+.nav-item small{
+  font-size:11px;
+  font-weight:800;
+}
+.add-fab{
+  width:58px;
+  height:58px;
+  margin-top:-15px;
+  font-size:32px;
+}
+@media(max-width:520px){
+  .mock-stats{gap:7px}
+  .mock-stats .stat{
+    min-height:94px;
+    padding:10px 4px 9px;
+  }
+  .mock-stats .stat-icon{
+    width:27px;
+    height:27px;
+    margin-bottom:6px;
+  }
+  .mock-stats .stat-icon svg{
+    width:25px;
+    height:25px;
+  }
+  .mock-stats .stat strong{
+    font-size:23px;
+  }
+  .mock-stats .stat-label{
+    font-size:10px;
+    margin-top:6px;
+  }
+  .bottom-nav{
+    height:72px;
+    padding-left:8px;
+    padding-right:8px;
+  }
+  .nav-item{
+    height:58px;
+    grid-template-rows:28px 16px;
+  }
+  .nav-icon{
+    width:26px;
+    height:26px;
+  }
+  .nav-icon svg{
+    width:25px;
+    height:25px;
+  }
+  .nav-item small{
+    font-size:10px;
+  }
+  .add-fab{
+    width:56px;
+    height:56px;
+    margin-top:-14px;
+    font-size:31px;
+  }
+}
