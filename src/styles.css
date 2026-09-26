@@ -350,7 +350,6 @@ main{padding:0 20px}
 .topbar-actions{margin-left:auto}
 @media(max-width:520px){
   .topbar-user{max-width:30%;font-size:13px}
-  .brand>span:last-child{display:none}
 }
 @media(min-width:700px){
   .topbar{position:sticky !important}
