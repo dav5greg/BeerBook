@@ -306,7 +306,7 @@ function App() {
       <NavItem active={screen === 'library' || screen === 'detail'} icon="bottle" label="Birre" onClick={() => setScreen('library')} />
       <button className="add-fab" onClick={startAdd} aria-label="Aggiungi birra">＋</button>
       <NavItem active={false} icon="places" label="Luoghi" onClick={() => setScreen('library')} />
-      <NavItem active={screen === 'settings'} icon="settings" label="Impost." onClick={() => setScreen('settings')} />
+      <NavItem active={screen === 'settings'} icon="settings" label="Settings" onClick={() => setScreen('settings')} />
     </nav>}
   </div>
 }
@@ -491,7 +491,6 @@ function Detail({ beer, onBack, onEdit }) {
         <div><b>▥</b><strong>{beer.style || '—'}</strong><span>Stile</span></div>
         <div><b>🇧🇪</b><strong>{beer.country || '—'}</strong><span>Paese</span></div>
       </div>
-      {beer.description && <div className="detail-section"><p>{beer.description}</p></div>}
       <div className="detail-section tasting-section"><h3>Ultima degustazione</h3><div className="tasting-card"><b>▣</b><strong>{beer.last_tasted_at || '—'}</strong><span>★ {Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</span><button onClick={onEdit}>✎</button><p>{beer.notes || 'Nessuna nota inserita.'}</p></div></div>
       <div className="detail-section places-section"><div className="section-head compact-head"><h3>Luoghi di acquisto</h3><button className="text-button">Aggiungi ›</button></div>{(beer.places || []).length ? beer.places.map((p,i)=><div className="purchase-row" key={i}><span className="purchase-icon">🛒</span><div><b>{p.name}</b><small>{p.type} · {p.city || 'Città non indicata'}</small></div><time>›</time></div>) : <p className="muted">Nessun luogo di acquisto.</p>}</div>
       <button className="primary-button full" onClick={onEdit}>Modifica scheda</button>
@@ -506,21 +505,20 @@ function AddBeer({ form, setForm, onBack, onSave }) {
   return <section className="page add-page">
     <div className="form-top"><button className="back-icon" onClick={onBack}>‹</button><h1>{form.name ? 'Modifica birra' : 'Nuova birra'}</h1></div>
     <form className="form" onSubmit={onSave}>
-      <div className="photo-placeholder"><span>▣</span><b>Aggiungi foto</b><small>etichetta o bottiglia</small></div>
       <Field label="Nome birra *"><input required value={form.name} onChange={e => update('name', e.target.value)} placeholder="Duvel" /></Field>
       <Field label="Birrificio"><input value={form.brewery} onChange={e => update('brewery', e.target.value)} placeholder="Duvel" /></Field>
       <div className="two-cols"><Field label="Paese"><input value={form.country} onChange={e => update('country', e.target.value)} placeholder="Belgio" /></Field><Field label="Stile"><input value={form.style} onChange={e => update('style', e.target.value)} placeholder="Belgian Strong Ale" /></Field></div>
       <Field label="Gradazione alcolica"><input type="number" step="0.1" min="0" value={form.abv} onChange={e => update('abv', e.target.value)} placeholder="8,5%" /></Field>
-      <Field label="Descrizione (opzionale)"><textarea rows="3" value={form.description} onChange={e => update('description', e.target.value)} /></Field>
-      <button className="primary-button full" type="submit">Salva birra</button>
       <div className="form-secondary">
+        <h2 className="tasting-title">Ultima degustazione</h2>
         <Field label="Data degustazione"><input type="date" value={form.last_tasted_at} onChange={e => update('last_tasted_at', e.target.value)} /></Field>
+        <Field label="Carbonazione"><div className="segmented">{['Bassa','Media','Alta'].map(x => <button type="button" key={x} className={form.carbonation === x ? 'selected' : ''} onClick={() => update('carbonation', x)}>{x}</button>)}</div></Field>
         <Field label="Valutazione"><div className="star-input">{[1,2,3,4,5].map(x => <button type="button" key={x} className={x <= form.rating ? 'on' : ''} onClick={() => update('rating', x)}>★</button>)}</div></Field>
         <Field label="Note personali"><textarea rows="4" value={form.notes} onChange={e => update('notes', e.target.value)} /></Field>
-        <Field label="Carbonazione"><div className="segmented">{['Bassa','Media','Alta'].map(x => <button type="button" key={x} className={form.carbonation === x ? 'selected' : ''} onClick={() => update('carbonation', x)}>{x}</button>)}</div></Field>
         <Field label="Luoghi di acquisto">{form.places.map((place,index)=><div className="place-row" key={index}><input value={place.name} onChange={e=>{const places=[...form.places];places[index]={...places[index],name:e.target.value};update('places',places)}} placeholder="Nome luogo"/><select value={place.type} onChange={e=>{const places=[...form.places];places[index]={...places[index],type:e.target.value};update('places',places)}}><option>Supermercato</option><option>Pub</option><option>Bar</option><option>Ristorante</option><option>Altro</option></select><input value={place.city} onChange={e=>{const places=[...form.places];places[index]={...places[index],city:e.target.value};update('places',places)}} placeholder="Città"/><button type="button" className="remove-place" onClick={()=>update('places',form.places.length>1?form.places.filter((_,i)=>i!==index):[{name:'',type:'Altro',city:''}])}>×</button></div>)}<button type="button" className="secondary-button" onClick={()=>update('places',[...form.places,{name:'',type:'Altro',city:''}])}>＋ Aggiungi luogo</button></Field>
         <label className="switch-line"><input type="checkbox" checked={form.to_try} onChange={e=>update('to_try',e.target.checked)}/><span>Da provare</span></label>
       </div>
+      <button className="primary-button full save-beer-button" type="submit">Salva birra</button>
     </form>
   </section>
 }
