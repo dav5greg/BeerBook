@@ -373,7 +373,7 @@ function Icon({ name }) {
   }
 
   if (name === 'back') {
-    return <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    return <svg className="back-icon-svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="m15.5 5.5-6.5 6.5 6.5 6.5"/><path d="M9.5 12h10"/>
     </svg>
   }
