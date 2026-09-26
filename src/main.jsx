@@ -288,7 +288,7 @@ function App() {
         if (screen === 'library' || screen === 'settings') return setScreen('home')
         setScreen('home')
       }} aria-label={screen === 'home' ? 'Home' : 'Torna indietro'} title={screen === 'home' ? 'Home' : 'Torna indietro'}>
-        <Icon name={screen === 'home' ? 'home' : 'back'} />
+        <Icon name={screen === 'home' || screen === 'library' || screen === 'settings' ? 'home' : 'back'} />
       </button>}
       {!onboarding && <div className="topbar-actions">
         <button className="topbar-action sync-button" onClick={syncNow} disabled={sync === 'sync'} aria-label="Sincronizza ora" title="Sincronizza ora">↻</button>
