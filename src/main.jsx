@@ -12,7 +12,7 @@ const DEMO_BEERS = [
 const emptyForm = {
   name: '', brewery: '', country: '', region: '', style: '', abv: '', rating: 0,
   description: '', notes: '', last_tasted_at: new Date().toISOString().slice(0, 10),
-  carbonation: 'Media', to_try: false, place_names: ''
+  carbonation: 'Media', to_try: false, places: [{ name: '', type: 'Altro', city: '' }]
 }
 
 function App() {
@@ -128,7 +128,7 @@ function App() {
 
   function startAdd() {
     setSelected(null)
-    setForm(emptyForm)
+    setForm({ ...emptyForm, places: [{ name: '', type: 'Altro', city: '' }] })
     setScreen('add')
   }
 
