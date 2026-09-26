@@ -49,7 +49,7 @@ function App() {
     }
     try {
       setSync('sync')
-      const res = await fetch(API_BASE + '/api/beers', { headers: { 'x-user-key': userKey } })
+      const res = await fetch(API_BASE + '/api/beers', { headers: { 'x-user-key': key } })
       if (!res.ok) throw new Error()
       const data = await res.json()
       setBeers(data.beers || [])
@@ -79,6 +79,7 @@ function App() {
     const name = nameValue.trim()
     setUserKey(clean)
     setDisplayName(name)
+    setBeers([])
     if (clean) localStorage.setItem('beerbook-user-key', clean)
     else localStorage.removeItem('beerbook-user-key')
     if (!API_BASE || !clean || !navigator.onLine) return
@@ -96,6 +97,7 @@ function App() {
         else localStorage.removeItem('beerbook-display-name')
       }
     } catch {}
+    return clean
   }
 
   const filtered = useMemo(() => beers.filter(b => {
@@ -318,7 +320,7 @@ function Settings({ userKey, displayName, saveUserKey, sync, onReload }) {
   const [name, setName] = useState(displayName)
   return <section className="page">
     <p className="eyebrow">CONFIGURAZIONE</p><h1>Impostazioni</h1>
-    <div className="settings-card"><h3>Profilo</h3><p>Identificativo dell'archivio e nome mostrato in Home.</p><label className="field"><span>Nome utente</span><input value={name} onChange={e => setName(e.target.value)} placeholder="es. Greg" /></label><label className="field"><span>Identificativo archivio</span><input value={value} onChange={e => setValue(e.target.value)} placeholder="es. greg-beer" /></label><button className="primary-button" onClick={async () => { await saveUserKey(value, name); await onReload() }}>Salva profilo</button></div>
+    <div className="settings-card"><h3>Profilo</h3><p>Identificativo dell'archivio e nome mostrato in Home.</p><label className="field"><span>Nome utente</span><input value={name} onChange={e => setName(e.target.value)} placeholder="es. Greg" /></label><label className="field"><span>Identificativo archivio</span><input value={value} onChange={e => setValue(e.target.value)} placeholder="es. greg-beer" /></label><button className="primary-button" onClick={async () => { const clean = await saveUserKey(value, name); await onReload(clean) }}>Salva profilo</button></div>
     <div className="settings-card"><h3>Sincronizzazione</h3><SyncBadge state={sync} /><p className="muted">Il dispositivo conserva una copia locale per poter consultare l'archivio anche senza connessione.</p><button className="secondary-button" onClick={onReload}>↻ Sincronizza ora</button></div>
   </section>
 }
