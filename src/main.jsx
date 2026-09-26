@@ -134,7 +134,13 @@ function App() {
 
   function startEdit(beer) {
     setSelected(beer)
-    setForm({ ...emptyForm, ...beer, places: beer.places?.length ? beer.places : (beer.place_names || []).map(name => ({ name, type: 'Altro', city: '' })) })
+    const tastingDate = beer.last_tasted_at ? String(beer.last_tasted_at).slice(0, 10) : emptyForm.last_tasted_at
+    setForm({
+      ...emptyForm,
+      ...beer,
+      last_tasted_at: tastingDate,
+      places: beer.places?.length ? beer.places : (beer.place_names || []).map(name => ({ name, type: 'Altro', city: '' }))
+    })
     setScreen('add')
   }
 
