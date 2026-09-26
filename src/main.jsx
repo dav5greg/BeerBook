@@ -282,6 +282,7 @@ function App() {
   return <div className="app-shell">
     <header className="topbar">
       <button className="brand" onClick={() => !onboarding && setScreen('home')}><span className="brand-mark">🍺</span><span>Beer Book</span></button>
+      {!onboarding && <div className="topbar-user">{displayName || userKey}</div>}
       {!onboarding && <div className="topbar-actions">
         <button className="topbar-action sync-button" onClick={syncNow} disabled={sync === 'sync'} aria-label="Sincronizza ora" title="Sincronizza ora">↻</button>
         <SyncBadge state={sync} />
@@ -305,7 +306,7 @@ function App() {
       <NavItem active={screen === 'home'} icon="⌂" label="Home" onClick={() => setScreen('home')} />
       <NavItem active={screen === 'library' || screen === 'detail'} icon="▤" label="Birre" onClick={() => setScreen('library')} />
       <button className="add-fab" onClick={startAdd} aria-label="Aggiungi birra">＋</button>
-      <NavItem active={screen === 'settings'} icon="⚙" label="Impostazioni" onClick={() => setScreen('settings')} />
+      <NavItem active={screen === 'settings'} icon="•••" label="Altro" onClick={() => setScreen('settings')} />
     </nav>}
   </div>
 }
