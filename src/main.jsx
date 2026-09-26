@@ -144,6 +144,20 @@ function App() {
     setScreen('add')
   }
 
+  async function deleteBeer(beer) {
+    if (!window.confirm('Eliminare "' + beer.name + '" dall’archivio?')) return
+    const local = beers.filter(b => b.id !== beer.id)
+    setBeers(local)
+    localStorage.setItem('beerbook-cache-' + userKey, JSON.stringify(local))
+    if (!API_BASE || !userKey || !navigator.onLine || String(beer.id).startsWith('demo-')) { setSync('pending'); return }
+    try {
+      setSync('sync')
+      const res = await fetch(API_BASE + '/api/beers/' + beer.id, { method: 'DELETE', headers: { 'x-user-key': userKey } })
+      if (!res.ok) throw new Error()
+      setSync('ok')
+    } catch { setSync('pending') }
+  }
+
   async function saveBeer(e) {
     e.preventDefault()
     const payload = {
@@ -177,7 +191,7 @@ function App() {
 
     <main>
       {screen === 'home' && <Home displayName={displayName} userKey={userKey} stats={stats} beers={beers} onOpen={openBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
-      {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} />}
+      {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
       {screen === 'settings' && <Settings userKey={userKey} displayName={displayName} saveUserKey={saveUserKey} sync={sync} onReload={loadBeers} />}
@@ -239,7 +253,7 @@ function Home({ displayName, userKey, stats, beers, onOpen, onLibrary, onAdd, on
 
 function Stat({ value, label }) { return <div className="stat"><strong>{value}</strong><span>{label}</span></div> }
 
-function Library({ beers, query, setQuery, filters, setFilters, showFilters, setShowFilters, onOpen, onAdd }) {
+function Library({ beers, query, setQuery, filters, setFilters, showFilters, setShowFilters, onOpen, onAdd, onDelete }) {
   const styles = [...new Set(beers.map(b => b.style).filter(Boolean))]
   const breweries = [...new Set(beers.map(b => b.brewery).filter(Boolean))]
   return <section className="page">
@@ -253,18 +267,20 @@ function Library({ beers, query, setQuery, filters, setFilters, showFilters, set
       <label className="check"><input type="checkbox" checked={filters.toTry} onChange={e => setFilters({ ...filters, toTry: e.target.checked })} /> Solo da provare</label>
     </div>}
     <p className="result-count">{beers.length} {beers.length === 1 ? 'birra' : 'birre'}</p>
-    <div className="beer-stack">{beers.map(b => <BeerRow key={b.id} beer={b} onClick={() => onOpen(b)} />)}</div>
+    <div className="beer-stack">{beers.map(b => <BeerRow key={b.id} beer={b} onClick={() => onOpen(b)} onDelete={() => onDelete(b)} />)}</div>
     {!beers.length && <EmptyState />}
   </section>
 }
 
-function BeerRow({ beer, onClick }) {
-  return <button className="beer-row" onClick={onClick}>
-    <div className="beer-avatar">🍺</div>
-    <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><small>{beer.style || 'Stile non indicato'}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small></div>
-    <div className="beer-rating">{'★'.repeat(Number(beer.rating || 0))}<span>{'★'.repeat(5 - Number(beer.rating || 0))}</span></div>
-  </button>
-}
+function BeerRow({ beer, onClick, onDelete }) {
+  return <div className="beer-row">
+    <button className="beer-row-main" onClick={onClick}>
+      <div className="beer-avatar">🍺</div>
+      <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><small>{beer.style || 'Stile non indicato'}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small></div>
+      <div className="beer-rating">{'★'.repeat(Number(beer.rating || 0))}<span>{'★'.repeat(5 - Number(beer.rating || 0))}</span></div>
+    </button>
+    <button className="delete-beer" onClick={onDelete} aria-label={'Elimina ' + beer.name} title="Elimina birra">×</button>
+  </div>
 
 function Detail({ beer, onBack, onEdit }) {
   return <section className="page">
@@ -310,7 +326,7 @@ function AddBeer({ form, setForm, onBack, onSave }) {
             <option>Supermercato</option><option>Pub</option><option>Bar</option><option>Ristorante</option><option>Altro</option>
           </select>
           <input value={place.city} onChange={e => { const places = [...form.places]; places[index] = { ...places[index], city: e.target.value }; update('places', places) }} placeholder="Città" />
-          {form.places.length > 1 && <button type="button" className="remove-place" onClick={() => update('places', form.places.filter((_, i) => i !== index))}>×</button>}
+          <button type="button" className="remove-place" onClick={() => update('places', form.places.length > 1 ? form.places.filter((_, i) => i !== index) : [{ name: '', type: 'Altro', city: '' }])} aria-label="Elimina luogo" title="Elimina luogo">×</button>
         </div>)}
         <button type="button" className="secondary-button" onClick={() => update('places', [...form.places, { name: '', type: 'Altro', city: '' }])}>＋ Aggiungi luogo</button>
       </Field>
