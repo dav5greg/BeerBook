@@ -452,7 +452,7 @@ function Library({ beers, query, setQuery, filters, setFilters, showFilters, set
   return <section className="page library-page">
     <div className="page-heading library-heading">
       <div><h1>Le mie birre</h1><p>{beers.length} {beers.length === 1 ? 'birra' : 'birre'}</p></div>
-      <button className="round-button" onClick={onAdd}>＋</button>
+      
     </div>
     <div className="library-search-row">
       <div className="search-box"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca birra, birrificio, stile, paese..." /></div>
@@ -495,12 +495,16 @@ function BeerRow({ beer, onClick, onDelete }) {
 function Detail({ beer, onBack, onEdit }) {
   return <section className="page detail-page">
     <div className="detail-top"><button className="back-icon" onClick={onBack}>‹</button><button className="detail-more">•••</button></div>
-    <div className="detail-hero-art"><span>🍺</span></div>
-    <div className="detail-sheet">
-      <p className="eyebrow">{beer.brewery || 'BIRRA'}</p>
-      <h1>{beer.name}</h1>
-      <h3>{beer.style || 'Stile non indicato'}</h3>
-      <div className="detail-country">{beer.country ? '🇧🇪' : '🌐'} <span>{beer.country || 'Paese non indicato'}</span></div>
+    <div className="detail-sheet detail-sheet-compact">
+      <div className="detail-title-row">
+        <div className="detail-title-copy">
+          <p className="eyebrow">{beer.brewery || 'BIRRA'}</p>
+          <h1>{beer.name}</h1>
+          <h3>{beer.style || 'Stile non indicato'}</h3>
+          <div className="detail-country">{beer.country ? '🇧🇪' : '🌐'} <span>{beer.country || 'Paese non indicato'}</span></div>
+        </div>
+        <div className="detail-mug" aria-hidden="true"><Icon name="beer" /></div>
+      </div>
       <div className="detail-rating-row"><div className="big-rating">{'★'.repeat(Number(beer.rating || 0))}<span>{'★'.repeat(5 - Number(beer.rating || 0))}</span></div><strong>{Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</strong><label className="try-toggle"><span>▮ Da provare</span><input type="checkbox" checked={!!beer.to_try} readOnly /></label></div>
       <div className="detail-facts">
         <div><b>♧</b><strong>{beer.abv ? beer.abv + '%' : '—'}</strong><span>Alcol</span></div>
