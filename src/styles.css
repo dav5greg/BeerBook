@@ -1259,3 +1259,29 @@ main{padding:0 20px}
   stroke:#111;
   stroke-width:2;
 }
+
+
+/* --- Real image icons for KPI and footer --- */
+.real-icon{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  filter:grayscale(1) brightness(0);
+}
+.mock-stats .stat-icon .real-icon{
+  width:29px;
+  height:29px;
+}
+.bottom-nav .nav-icon .real-icon{
+  width:25px;
+  height:25px;
+  opacity:.52;
+}
+.bottom-nav .nav-item.active .nav-icon .real-icon{
+  opacity:1;
+  transform:scale(1.05);
+}
+.mock-stats .stat-icon{
+  color:#111 !important;
+}
