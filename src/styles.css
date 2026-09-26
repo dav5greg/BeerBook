@@ -368,7 +368,7 @@ main{padding:0 20px}
 }
 .home-hero-copy{position:relative;z-index:2;color:white}
 .home-hero .eyebrow{color:rgba(255,255,255,.7);margin-bottom:5px}
-.home-hero h1{font-size:40px;line-height:1;margin:0 0 4px;letter-spacing:-.045em}
+.home-hero h1{font-size:34px;line-height:1;margin:0 0 4px;letter-spacing:-.045em}
 .home-hero p:last-child{margin:0;font-size:16px;color:rgba(255,255,255,.88)}
 .hero-beer-art{
   position:absolute;right:-15px;bottom:-30px;font-size:175px;opacity:.9;
@@ -1180,12 +1180,12 @@ main{padding:0 20px}
   stroke:currentColor;
   stroke-width:1.75;
 }
-.home-user-name{margin:0 0 2px;color:#fff;font-size:16px;line-height:1.1;font-weight:900;letter-spacing:.01em;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.home-user-name{margin:0 0 2px;color:#fff;font-size:40px;line-height:1;font-weight:900;letter-spacing:-.045em;text-shadow:0 1px 3px rgba(0,0,0,.35)}
 .home-hero h1{
   margin-top:0;
 }
 @media(max-width:520px){
-  .home-user-name{font-size:15px}
+  .home-user-name{font-size:32px}
   .brand.home-back-button{width:36px;height:36px}
   .home-back-button svg{width:24px;height:24px}
 }
