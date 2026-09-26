@@ -385,21 +385,6 @@ function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary,
       <Stat icon="cart" value={stats.places} label="Luoghi" />
     </div>
 
-    <button className="home-search" onClick={onLibrary}><span>⌕</span><span>Cerca birra, birrificio, stile, paese...</span></button>
-
-    <div className="section-head compact-head">
-      <div><h2>Filtri rapidi</h2></div>
-      <button className="text-button" onClick={onLibrary}>Tutti i filtri ›</button>
-    </div>
-    <div className="chip-grid">
-      <button onClick={() => { onLibrary(); }}><span>★</span> 5 stelle</button>
-      <button onClick={onTry}><span>▮</span> Da provare</button>
-      <button onClick={onLibrary}><span>♜</span> IPA</button>
-      <button onClick={onLibrary}><span>●</span> Stout</button>
-      <button onClick={onLibrary}><span>🇧🇪</span> Belgio</button>
-      <button onClick={onLibrary}><span>🇮🇹</span> Italia</button>
-    </div>
-
     <div className="section-head compact-head latest-head">
       <div><h2>Ultime birre</h2></div>
       <button className="text-button" onClick={onLibrary}>Vedi tutte ›</button>
@@ -408,7 +393,6 @@ function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary,
       {recent.map(b => <BeerCard key={b.id} beer={b} onClick={() => onOpen(b)} onDelete={() => onDelete(b)} />)}
     </div>
     {!recent.length && <EmptyState />}
-    <button className="primary-button full" onClick={onAdd}>＋ Aggiungi una birra</button>
   </section>
 }
 
@@ -469,7 +453,7 @@ function BeerRow({ beer, onClick, onDelete }) {
     <button className="beer-row-main" onClick={onClick}>
       <div className="beer-list-art"><span>🍺</span></div>
       <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><small>{beer.style || 'Stile non indicato'}{beer.country ? ' · ' + beer.country : ''}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small><div className="list-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b> <strong>{Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</strong></div></div>
-      <time>{beer.last_tasted_at || '—'}</time>
+      <time>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</time>
       <span className="row-more">⋮</span>
     </button>
     <button className="delete-beer" onClick={onDelete} aria-label={'Elimina ' + beer.name} title="Elimina birra">×</button>
@@ -491,7 +475,7 @@ function Detail({ beer, onBack, onEdit }) {
         <div><b>▥</b><strong>{beer.style || '—'}</strong><span>Stile</span></div>
         <div><b>🇧🇪</b><strong>{beer.country || '—'}</strong><span>Paese</span></div>
       </div>
-      <div className="detail-section tasting-section"><h3>Ultima degustazione</h3><div className="tasting-card"><b>▣</b><strong>{beer.last_tasted_at || '—'}</strong><span>★ {Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</span><button onClick={onEdit}>✎</button><p>{beer.notes || 'Nessuna nota inserita.'}</p></div></div>
+      <div className="detail-section tasting-section"><h3>Ultima degustazione</h3><div className="tasting-card"><b>▣</b><strong>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</strong><span>★ {Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</span><button onClick={onEdit}>✎</button><p>{beer.notes || 'Nessuna nota inserita.'}</p></div></div>
       <div className="detail-section places-section"><div className="section-head compact-head"><h3>Luoghi di acquisto</h3><button className="text-button">Aggiungi ›</button></div>{(beer.places || []).length ? beer.places.map((p,i)=><div className="purchase-row" key={i}><span className="purchase-icon">🛒</span><div><b>{p.name}</b><small>{p.type} · {p.city || 'Città non indicata'}</small></div><time>›</time></div>) : <p className="muted">Nessun luogo di acquisto.</p>}</div>
       <button className="primary-button full" onClick={onEdit}>Modifica scheda</button>
     </div>
