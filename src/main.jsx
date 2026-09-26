@@ -86,7 +86,7 @@ function App() {
     const name = nameValue.trim()
     if (!clean || !name) return { ok: false, error: 'Compila tutti i campi obbligatori.' }
     if (!/^[a-z0-9_-]{3,30}$/.test(clean)) {
-      return { ok: false, error: 'Usa 3–30 caratteri: lettere, numeri, trattino o underscore.' }
+      return { ok: false, error: 'L’identificativo deve essere lungo tra 3 e 30 caratteri.' }
     }
     if (!API_BASE || !navigator.onLine) {
       return { ok: false, error: 'Serve una connessione internet per creare un nuovo archivio.' }
@@ -113,6 +113,23 @@ function App() {
     } catch {
       return { ok: false, error: 'Impossibile creare il profilo. Controlla la connessione e riprova.' }
     }
+  }
+
+  async function syncNow() {
+    if (!userKey) return
+    await loadBeers()
+    await loadUserProfile()
+  }
+
+  function exitProfile() {
+    localStorage.removeItem('beerbook-user-key')
+    localStorage.removeItem('beerbook-display-name')
+    setUserKey('')
+    setDisplayName('')
+    setBeers([])
+    setSelected(null)
+    setScreen('onboarding')
+    setSync('offline')
   }
 
   async function saveUserKey(value, nameValue = displayName) {
@@ -234,7 +251,11 @@ function App() {
   return <div className="app-shell">
     <header className="topbar">
       <button className="brand" onClick={() => !onboarding && setScreen('home')}><span className="brand-mark">🍺</span><span>Beer Book</span></button>
-      {!onboarding && <SyncBadge state={sync} />}
+      {!onboarding && <div className="topbar-actions">
+        <button className="topbar-action sync-button" onClick={syncNow} disabled={sync === 'sync'} aria-label="Sincronizza ora" title="Sincronizza ora">↻</button>
+        <SyncBadge state={sync} />
+        <button className="topbar-action exit-button" onClick={exitProfile} aria-label="Esci dal profilo" title="Esci dal profilo">↪</button>
+      </div>}
     </header>
 
     <main>
@@ -243,7 +264,7 @@ function App() {
       {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
-      {screen === 'settings' && <Settings userKey={userKey} displayName={displayName} saveUserKey={saveUserKey} sync={sync} onReload={loadBeers} />}
+      {screen === 'settings' && <Settings userKey={userKey} displayName={displayName} saveUserKey={saveUserKey} />}
     </main>
 
     {deleteTarget && <DeleteDialog beer={deleteTarget} onCancel={() => setDeleteTarget(null)} onConfirm={confirmDeleteBeer} />}
@@ -436,13 +457,12 @@ function Onboarding({ onRegister }) {
   </section>
 }
 
-function Settings({ userKey, displayName, saveUserKey, sync, onReload }) {
+function Settings({ userKey, displayName, saveUserKey }) {
   const [value, setValue] = useState(userKey)
   const [name, setName] = useState(displayName)
   return <section className="page">
     <p className="eyebrow">CONFIGURAZIONE</p><h1>Impostazioni</h1>
     <div className="settings-card"><h3>Profilo</h3><p>Identificativo dell'archivio e nome mostrato in Home.</p><label className="field"><span>Nome utente</span><input value={name} onChange={e => setName(e.target.value)} placeholder="es. Greg" /></label><label className="field"><span>Identificativo archivio</span><input value={value} onChange={e => setValue(e.target.value)} placeholder="es. greg-beer" /></label><button className="primary-button" onClick={async () => { const clean = await saveUserKey(value, name); await onReload(clean) }}>Salva profilo</button></div>
-    <div className="settings-card"><h3>Sincronizzazione</h3><SyncBadge state={sync} /><p className="muted">Il dispositivo conserva una copia locale per poter consultare l'archivio anche senza connessione.</p><button className="secondary-button" onClick={onReload}>↻ Sincronizza ora</button></div>
   </section>
 }
 

@@ -29,3 +29,7 @@
 .delete-confirm{border:0;border-radius:15px;padding:14px 17px;background:var(--red);color:white;font-weight:800;cursor:pointer}
 
 .onboarding{min-height:calc(100vh - 68px);display:flex;flex-direction:column;justify-content:center;padding-top:34px;padding-bottom:40px}.onboarding-hero{text-align:center}.onboarding-mark{width:74px;height:74px;margin:0 auto 22px;border-radius:24px;background:var(--amber);display:grid;place-items:center;font-size:39px;box-shadow:0 12px 30px rgba(77,45,25,.16)}.onboarding-hero h1{font-size:36px}.onboarding-hero h1 em{font-family:Georgia,serif;font-weight:500}.onboarding-hero>p:last-child{max-width:470px;margin:0 auto;color:var(--muted);font-size:14px;line-height:1.55}.onboarding-form{max-width:520px;width:100%;margin:28px auto 0}.form-error{border:1px solid #e7b8b4;background:#fff1ef;color:var(--red);border-radius:12px;padding:11px 12px;font-size:12px;font-weight:800}.primary-button:disabled{opacity:.65;cursor:wait}
+.topbar-actions{display:flex;align-items:center;gap:6px}
+.topbar-action{width:34px;height:34px;border:1px solid var(--line);border-radius:11px;background:var(--cream);color:var(--ink);font-size:19px;font-weight:800;display:grid;place-items:center;cursor:pointer}
+.topbar-action:disabled{opacity:.55;cursor:wait}
+.exit-button{font-size:20px}
