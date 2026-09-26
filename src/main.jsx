@@ -384,9 +384,8 @@ function Icon({ name }) {
     </svg>
   }
   if (name === 'settings') {
-    return <svg className="simple-settings-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z"/>
-      <path d="M19.1 13.45c.05-.47.05-.95 0-1.42l1.55-1.2-1.7-2.95-1.83.74a7.2 7.2 0 0 0-1.23-.71L15.6 5.95h-3.4l-.29 1.96c-.44.2-.85.44-1.23.71l-1.83-.74-1.7 2.95 1.55 1.2a7.2 7.2 0 0 0 0 1.42l-1.55 1.2 1.7 2.95 1.83-.74c.38.27.79.51 1.23.71l.29 1.96h3.4l.29-1.96c.44-.2.85-.44 1.23-.71l1.83.74 1.7-2.95-1.55-1.2Z"/>
+    return <svg className="simple-settings-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path fillRule="evenodd" d="M10.35 2.45h3.3l.55 2.15c.42.14.82.31 1.2.5l1.95-1.05 2.34 2.34-1.05 1.95c.19.38.36.78.5 1.2l2.15.55v3.3l-2.15.55c-.14.42-.31.82-.5 1.2l1.05 1.95-2.34 2.34-1.95-1.05c-.38.19-.78.36-1.2.5l-.55 2.15h-3.3l-.55-2.15c-.42-.14-.82-.31-1.2-.5l-1.95 1.05-2.34-2.34 1.05-1.95a8.7 8.7 0 0 1-.5-1.2L2.7 13.4v-3.3l2.15-.55c.14-.42.31-.82.5-1.2L4.31 6.4l2.34-2.34L8.6 5.1c.38-.19.78-.36 1.2-.5l.55-2.15Zm1.65 6.05a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5Z" clipRule="evenodd"/>
     </svg>
   }
   const code = emoji[name]
