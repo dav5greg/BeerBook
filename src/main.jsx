@@ -281,6 +281,7 @@ function BeerRow({ beer, onClick, onDelete }) {
     </button>
     <button className="delete-beer" onClick={onDelete} aria-label={'Elimina ' + beer.name} title="Elimina birra">×</button>
   </div>
+}
 
 function Detail({ beer, onBack, onEdit }) {
   return <section className="page">
