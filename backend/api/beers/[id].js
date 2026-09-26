@@ -1,4 +1,5 @@
 import { db, cors, json, userKey } from '../_db.js'
+import { syncPlaces } from '../beers.js'
 
 export default async function handler(req, res) {
   cors(res)
@@ -26,6 +27,7 @@ export default async function handler(req, res) {
         to_try=${!!b.to_try}, updated_at=NOW()
         WHERE id=${id} AND user_id=${uid}
       `
+      await syncPlaces(sql, uid, id, b.places || (b.place_names || []).map(name => ({ name })))
       return json(res, 200, { ok: true })
     }
 
