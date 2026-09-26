@@ -16,7 +16,7 @@ const emptyForm = {
 }
 
 function App() {
-  const [screen, setScreen] = useState('home')
+  const [screen, setScreen] = useState(localStorage.getItem('beerbook-user-key') ? 'home' : 'onboarding')
   const [beers, setBeers] = useState([])
   const [selected, setSelected] = useState(null)
   const [query, setQuery] = useState('')
@@ -29,8 +29,13 @@ function App() {
   const [deleteTarget, setDeleteTarget] = useState(null)
 
   useEffect(() => {
-    loadBeers()
-    loadUserProfile()
+    if (userKey) {
+      loadBeers()
+      loadUserProfile()
+    } else {
+      setBeers([])
+      setSync('offline')
+    }
     const online = () => setSync('sync')
     const offline = () => setSync('offline')
     window.addEventListener('online', online)
@@ -74,6 +79,40 @@ function App() {
       if (name) localStorage.setItem('beerbook-display-name', name)
       else localStorage.removeItem('beerbook-display-name')
     } catch {}
+  }
+
+  async function registerUser(value, nameValue) {
+    const clean = value.trim().toLowerCase()
+    const name = nameValue.trim()
+    if (!clean || !name) return { ok: false, error: 'Compila tutti i campi obbligatori.' }
+    if (!/^[a-z0-9_-]{3,30}$/.test(clean)) {
+      return { ok: false, error: 'Usa 3–30 caratteri: lettere, numeri, trattino o underscore.' }
+    }
+    if (!API_BASE || !navigator.onLine) {
+      return { ok: false, error: 'Serve una connessione internet per creare un nuovo archivio.' }
+    }
+    try {
+      setSync('sync')
+      const res = await fetch(API_BASE + '/api/user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-user-key': clean },
+        body: JSON.stringify({ display_name: name })
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.status === 409) return { ok: false, error: 'Identificativo univoco già utilizzato' }
+      if (!res.ok) return { ok: false, error: data.error || 'Impossibile creare il profilo.' }
+      setUserKey(clean)
+      setDisplayName(data.user?.display_name || name)
+      localStorage.setItem('beerbook-user-key', clean)
+      localStorage.setItem('beerbook-display-name', data.user?.display_name || name)
+      setBeers([])
+      setSync('ok')
+      setScreen('home')
+      await loadBeers(clean)
+      return { ok: true }
+    } catch {
+      return { ok: false, error: 'Impossibile creare il profilo. Controlla la connessione e riprova.' }
+    }
   }
 
   async function saveUserKey(value, nameValue = displayName) {
@@ -190,13 +229,16 @@ function App() {
 
   const title = screen === 'home' ? 'Il tuo archivio' : screen === 'library' ? 'Le mie birre' : screen === 'detail' ? selected?.name : screen === 'add' ? (selected ? 'Modifica birra' : 'Aggiungi birra') : 'Impostazioni'
 
+  const onboarding = !userKey
+
   return <div className="app-shell">
     <header className="topbar">
-      <button className="brand" onClick={() => setScreen('home')}><span className="brand-mark">🍺</span><span>Beer Book</span></button>
-      <SyncBadge state={sync} />
+      <button className="brand" onClick={() => !onboarding && setScreen('home')}><span className="brand-mark">🍺</span><span>Beer Book</span></button>
+      {!onboarding && <SyncBadge state={sync} />}
     </header>
 
     <main>
+      {screen === 'onboarding' && <Onboarding onRegister={registerUser} />}
       {screen === 'home' && <Home displayName={displayName} userKey={userKey} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
       {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
@@ -206,12 +248,12 @@ function App() {
 
     {deleteTarget && <DeleteDialog beer={deleteTarget} onCancel={() => setDeleteTarget(null)} onConfirm={confirmDeleteBeer} />}
 
-    <nav className="bottom-nav">
+    {!onboarding && <nav className="bottom-nav">
       <NavItem active={screen === 'home'} icon="⌂" label="Home" onClick={() => setScreen('home')} />
       <NavItem active={screen === 'library' || screen === 'detail'} icon="▤" label="Birre" onClick={() => setScreen('library')} />
       <button className="add-fab" onClick={startAdd} aria-label="Aggiungi birra">＋</button>
       <NavItem active={screen === 'settings'} icon="⚙" label="Impostazioni" onClick={() => setScreen('settings')} />
-    </nav>
+    </nav>}
   </div>
 }
 
@@ -360,6 +402,40 @@ function AddBeer({ form, setForm, onBack, onSave }) {
 }
 
 function Field({ label, children }) { return <label className="field"><span>{label}</span>{children}</label> }
+
+function Onboarding({ onRegister }) {
+  const [name, setName] = useState('')
+  const [value, setValue] = useState('')
+  const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
+
+  async function submit(e) {
+    e.preventDefault()
+    setError('')
+    setSaving(true)
+    const result = await onRegister(value, name)
+    setSaving(false)
+    if (!result.ok) setError(result.error)
+  }
+
+  return <section className="page onboarding">
+    <div className="onboarding-hero">
+      <div className="onboarding-mark">🍺</div>
+      <p className="eyebrow">BENVENUTO IN BEER BOOK</p>
+      <h1>Crea il tuo<br /><em>archivio personale.</em></h1>
+      <p>Prima di iniziare, scegli il nome con cui vuoi essere chiamato e un identificativo univoco per il tuo archivio.</p>
+    </div>
+    <form className="form onboarding-form" onSubmit={submit}>
+      <Field label="Nome utente *"><input required value={name} onChange={e => setName(e.target.value)} placeholder="Es. Greg" autoFocus /></Field>
+      <Field label="Identificativo univoco *">
+        <input required value={value} onChange={e => setValue(e.target.value)} placeholder="Es. greg-beer" autoCapitalize="none" autoCorrect="off" spellCheck="false" />
+        <small>3–30 caratteri: lettere, numeri, trattino o underscore.</small>
+      </Field>
+      {error && <div className="form-error" role="alert">⚠ {error}</div>}
+      <button className="primary-button full" type="submit" disabled={saving}>{saving ? 'Creazione in corso…' : 'Crea il mio archivio'}</button>
+    </form>
+  </section>
+}
 
 function Settings({ userKey, displayName, saveUserKey, sync, onReload }) {
   const [value, setValue] = useState(userKey)
