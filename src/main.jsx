@@ -302,11 +302,11 @@ function App() {
     {showExitConfirm && <ExitDialog onCancel={() => setShowExitConfirm(false)} onConfirm={() => { setShowExitConfirm(false); exitProfile() }} />}
 
     {!onboarding && <nav className="bottom-nav">
-      <NavItem active={screen === 'home'} icon="⌂" label="Home" onClick={() => setScreen('home')} />
-      <NavItem active={screen === 'library' || screen === 'detail'} icon="▤" label="Birre" onClick={() => setScreen('library')} />
+      <NavItem active={screen === 'home'} icon="home" label="Home" onClick={() => setScreen('home')} />
+      <NavItem active={screen === 'library' || screen === 'detail'} icon="bottle" label="Birre" onClick={() => setScreen('library')} />
       <button className="add-fab" onClick={startAdd} aria-label="Aggiungi birra">＋</button>
-      <NavItem active={false} icon="⌖" label="Luoghi" onClick={() => setScreen('library')} />
-      <NavItem active={screen === 'settings'} icon="•••" label="Altro" onClick={() => setScreen('settings')} />
+      <NavItem active={false} icon="places" label="Luoghi" onClick={() => setScreen('library')} />
+      <NavItem active={screen === 'settings'} icon="more" label="Altro" onClick={() => setScreen('settings')} />
     </nav>}
   </div>
 }
@@ -350,7 +350,20 @@ function SyncBadge({ state }) {
 }
 
 function NavItem({ active, icon, label, onClick }) {
-  return <button className={'nav-item ' + (active ? 'active' : '')} onClick={onClick}><span>{icon}</span><small>{label}</small></button>
+  return <button className={'nav-item ' + (active ? 'active' : '')} onClick={onClick}><span className="nav-icon"><Icon name={icon} /></span><small>{label}</small></button>
+}
+
+function Icon({ name }) {
+  const common = { width: '1em', height: '1em', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }
+  if (name === 'beer') return <svg {...common}><path d="M5 8h9v10H5z"/><path d="M14 10h3a2 2 0 0 1 0 4h-3"/><path d="M7 5v3M10 5v3M5 18h10"/></svg>
+  if (name === 'star') return <svg {...common} fill="currentColor"><path stroke="none" d="m12 2.8 2.85 5.78 6.38.93-4.62 4.5 1.09 6.36L12 17.37 6.3 20.37l1.09-6.36-4.62-4.5 6.38-.93L12 2.8Z"/></svg>
+  if (name === 'brewery') return <svg {...common}><path d="M4 20V9l8-4 8 4v11"/><path d="M7 12h2M15 12h2M7 16h2M15 16h2M12 9v11"/></svg>
+  if (name === 'cart') return <svg {...common}><path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.5a2 2 0 0 0 1.9-1.4L20 8H6"/><circle cx="10" cy="19" r="1"/><circle cx="17" cy="19" r="1"/></svg>
+  if (name === 'home') return <svg {...common} fill="currentColor"><path stroke="none" d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></svg>
+  if (name === 'bottle') return <svg {...common}><path d="M10 3h4v3l1 2v12H9V8l1-2z"/><path d="M9 11h6"/></svg>
+  if (name === 'places') return <svg {...common}><path d="M12 21s6-5.3 6-11A6 6 0 1 0 6 10c0 5.7 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
+  if (name === 'more') return <svg {...common}><circle cx="5" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
+  return null
 }
 
 function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary, onAdd, onTry }) {
@@ -366,10 +379,10 @@ function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary,
     </div>
 
     <div className="stats-grid mock-stats">
-      <Stat icon="🍺" value={stats.total} label="Birre" />
-      <Stat icon="★" value={stats.average} label="Voto medio" />
-      <Stat icon="♜" value={stats.breweries} label="Birrifici" />
-      <Stat icon="🛒" value={stats.places} label="Luoghi" />
+      <Stat icon="beer" value={stats.total} label="Birre" />
+      <Stat icon="star" value={stats.average} label="Voto medio" />
+      <Stat icon="brewery" value={stats.breweries} label="Birrifici" />
+      <Stat icon="cart" value={stats.places} label="Luoghi" />
     </div>
 
     <button className="home-search" onClick={onLibrary}><span>⌕</span><span>Cerca birra, birrificio, stile, paese...</span></button>
@@ -400,7 +413,7 @@ function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary,
 }
 
 function Stat({ icon, value, label }) {
-  return <div className="stat"><span className="stat-icon">{icon}</span><strong>{value}</strong><span className="stat-label">{label}</span></div>
+  return <div className="stat"><span className="stat-icon"><Icon name={icon} /></span><strong>{value}</strong><span className="stat-label">{label}</span></div>
 }
 
 function BeerCard({ beer, onClick, onDelete }) {
