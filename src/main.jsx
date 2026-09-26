@@ -27,6 +27,7 @@ function App() {
   const [form, setForm] = useState(emptyForm)
   const [showFilters, setShowFilters] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState(null)
+  const [showExitConfirm, setShowExitConfirm] = useState(false)
 
   useEffect(() => {
     if (userKey) {
@@ -284,7 +285,7 @@ function App() {
       {!onboarding && <div className="topbar-actions">
         <button className="topbar-action sync-button" onClick={syncNow} disabled={sync === 'sync'} aria-label="Sincronizza ora" title="Sincronizza ora">↻</button>
         <SyncBadge state={sync} />
-        <button className="topbar-action exit-button" onClick={exitProfile} aria-label="Esci dal profilo" title="Esci dal profilo">↪</button>
+        <button className="topbar-action exit-button" onClick={() => setShowExitConfirm(true)} aria-label="Esci dal profilo" title="Esci dal profilo">↪</button>
       </div>}
     </header>
 
@@ -298,6 +299,7 @@ function App() {
     </main>
 
     {deleteTarget && <DeleteDialog beer={deleteTarget} onCancel={() => setDeleteTarget(null)} onConfirm={confirmDeleteBeer} />}
+    {showExitConfirm && <ExitDialog onCancel={() => setShowExitConfirm(false)} onConfirm={() => { setShowExitConfirm(false); exitProfile() }} />}
 
     {!onboarding && <nav className="bottom-nav">
       <NavItem active={screen === 'home'} icon="⌂" label="Home" onClick={() => setScreen('home')} />
@@ -316,6 +318,20 @@ function DeleteDialog({ beer, onCancel, onConfirm }) {
       <div className="dialog-actions">
         <button className="secondary-button" onClick={onCancel}>No, torna indietro</button>
         <button className="delete-confirm" onClick={onConfirm}>Sì, elimina</button>
+      </div>
+    </div>
+  </div>
+}
+
+function ExitDialog({ onCancel, onConfirm }) {
+  return <div className="dialog-backdrop" role="presentation" onClick={onCancel}>
+    <div className="delete-dialog exit-dialog" role="dialog" aria-modal="true" aria-labelledby="exit-title" onClick={e => e.stopPropagation()}>
+      <div className="dialog-mark">↪</div>
+      <h2 id="exit-title">Vuoi uscire dall’archivio?</h2>
+      <p>Verrai riportato alla schermata iniziale. I dati già sincronizzati resteranno nel tuo archivio.</p>
+      <div className="dialog-actions">
+        <button className="secondary-button" onClick={onCancel}>No, resta qui</button>
+        <button className="primary-button" onClick={onConfirm}>Sì, esci</button>
       </div>
     </div>
   </div>
