@@ -1050,3 +1050,66 @@ main{padding:0 20px}
   .add-page .form-top h1{font-size:27px}
   .add-page .field>span{font-size:12px}
 }
+
+/* --- Tasting form refinement --- */
+.tasting-title{
+  margin:0 0 2px;
+  font-size:21px;
+  font-weight:900;
+  letter-spacing:-.025em;
+}
+.add-page .form-secondary{
+  margin-top:16px;
+  padding-top:20px;
+}
+.save-beer-button{
+  margin-top:24px !important;
+  margin-bottom:8px;
+}
+.add-page .switch-line{
+  min-height:56px;
+  padding:10px 13px;
+  border:1px solid #dfcdb8;
+  border-radius:15px;
+  background:#fff8ed;
+  font-size:16px;
+  font-weight:900;
+  gap:12px;
+}
+.add-page .switch-line input{
+  appearance:none;
+  width:46px;
+  height:27px;
+  min-height:27px;
+  flex:0 0 46px;
+  border:0;
+  border-radius:999px;
+  background:#cfc8c0;
+  position:relative;
+  cursor:pointer;
+}
+.add-page .switch-line input::after{
+  content:"";
+  position:absolute;
+  width:23px;
+  height:23px;
+  top:2px;
+  left:2px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 1px 4px rgba(0,0,0,.22);
+  transition:left .16s ease;
+}
+.add-page .switch-line input:checked{
+  background:#a96120;
+}
+.add-page .switch-line input:checked::after{
+  left:21px;
+}
+@media(max-width:520px){
+  .tasting-title{font-size:20px}
+  .add-page .switch-line{
+    min-height:58px;
+    font-size:15px;
+  }
+}
