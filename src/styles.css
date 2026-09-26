@@ -1180,15 +1180,7 @@ main{padding:0 20px}
   stroke:currentColor;
   stroke-width:1.75;
 }
-.home-user-name{
-  margin:0 0 2px;
-  color:#fff;
-  font-size:13px;
-  line-height:1.1;
-  font-weight:800;
-  letter-spacing:.01em;
-  text-shadow:0 1px 3px rgba(0,0,0,.35);
-}
+.home-user-name{margin:0 0 2px;color:#fff;font-size:16px;line-height:1.1;font-weight:900;letter-spacing:.01em;text-shadow:0 1px 3px rgba(0,0,0,.35)}
 .home-hero h1{
   margin-top:0;
 }
@@ -1291,3 +1283,9 @@ main{padding:0 20px}
 .mock-stats .stat-icon{
   color:#111 !important;
 }
+
+.detail-title-row{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.detail-title-copy{min-width:0;flex:1}
+.detail-mug{width:76px;height:76px;flex:none;display:grid;place-items:center}
+.detail-mug .real-icon{width:64px;height:64px;filter:none}
+.detail-sheet-compact{padding-top:0}
