@@ -369,8 +369,7 @@ function Icon({ name }) {
     cart: '1f6d2',
     home: '1f3e0',
     bottle: '1f37e',
-    places: '1f4cd',
-    settings: '2699-fe0f'
+    places: '1f4cd'
   }
 
   if (name === 'back') {
@@ -379,6 +378,17 @@ function Icon({ name }) {
     </svg>
   }
 
+  if (name === 'home') {
+    return <svg className="simple-home-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3.5 10.5 12 3.8l8.5 6.7"/><path d="M5.5 9.8v10.2h13V9.8"/><path d="M9.5 20v-6h5v6"/>
+    </svg>
+  }
+  if (name === 'settings') {
+    return <svg className="simple-settings-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/>
+      <path d="m19.4 15 .1.1a1.7 1.7 0 0 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.7 1.7 0 0 1-3.4 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1a1.7 1.7 0 0 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9H4a1.7 1.7 0 0 1 0-3.4h.2a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a1.7 1.7 0 0 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2V4a1.7 1.7 0 0 1 3.4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a1.7 1.7 0 0 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.7 1.7 0 0 1 0 3.4h-.2a1.7 1.7 0 0 0-1.1.9Z"/>
+    </svg>
+  }
   const code = emoji[name]
   if (!code) return null
   return <img
