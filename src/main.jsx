@@ -26,6 +26,7 @@ function App() {
   const [sync, setSync] = useState('offline')
   const [form, setForm] = useState(emptyForm)
   const [showFilters, setShowFilters] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState(null)
 
   useEffect(() => {
     loadBeers()
@@ -145,7 +146,13 @@ function App() {
   }
 
   async function deleteBeer(beer) {
-    if (!window.confirm('Eliminare "' + beer.name + '" dall’archivio?')) return
+    setDeleteTarget(beer)
+  }
+
+  async function confirmDeleteBeer() {
+    const beer = deleteTarget
+    if (!beer) return
+    setDeleteTarget(null)
     const local = beers.filter(b => b.id !== beer.id)
     setBeers(local)
     localStorage.setItem('beerbook-cache-' + userKey, JSON.stringify(local))
@@ -197,12 +204,28 @@ function App() {
       {screen === 'settings' && <Settings userKey={userKey} displayName={displayName} saveUserKey={saveUserKey} sync={sync} onReload={loadBeers} />}
     </main>
 
+    {deleteTarget && <DeleteDialog beer={deleteTarget} onCancel={() => setDeleteTarget(null)} onConfirm={confirmDeleteBeer} />}
+
     <nav className="bottom-nav">
       <NavItem active={screen === 'home'} icon="⌂" label="Home" onClick={() => setScreen('home')} />
       <NavItem active={screen === 'library' || screen === 'detail'} icon="▤" label="Birre" onClick={() => setScreen('library')} />
       <button className="add-fab" onClick={startAdd} aria-label="Aggiungi birra">＋</button>
       <NavItem active={screen === 'settings'} icon="⚙" label="Impostazioni" onClick={() => setScreen('settings')} />
     </nav>
+  </div>
+}
+
+function DeleteDialog({ beer, onCancel, onConfirm }) {
+  return <div className="dialog-backdrop" role="presentation" onClick={onCancel}>
+    <div className="delete-dialog" role="dialog" aria-modal="true" aria-labelledby="delete-title" onClick={e => e.stopPropagation()}>
+      <div className="dialog-icon">×</div>
+      <h2 id="delete-title">Eliminare questa birra?</h2>
+      <p><strong>{beer.name}</strong> verrà rimossa dall’archivio.</p>
+      <div className="dialog-actions">
+        <button className="secondary-button" onClick={onCancel}>Annulla</button>
+        <button className="delete-confirm" onClick={onConfirm}>Elimina</button>
+      </div>
+    </div>
   </div>
 }
 
