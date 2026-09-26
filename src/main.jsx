@@ -81,6 +81,36 @@ function App() {
     } catch {}
   }
 
+  async function enterUser(value) {
+    const clean = value.trim().toLowerCase()
+    if (!clean) return { ok: false, error: 'Inserisci l’identificativo del tuo archivio.' }
+    if (!/^[a-z0-9_-]{3,30}$/.test(clean)) {
+      return { ok: false, error: 'L’identificativo deve essere lungo tra 3 e 30 caratteri.' }
+    }
+    if (!API_BASE || !navigator.onLine) {
+      return { ok: false, error: 'Serve una connessione internet per rientrare nell’archivio.' }
+    }
+    try {
+      setSync('sync')
+      const res = await fetch(API_BASE + '/api/user', { headers: { 'x-user-key': clean } })
+      const data = await res.json().catch(() => ({}))
+      if (res.status === 404) return { ok: false, error: 'Archivio non trovato.' }
+      if (!res.ok) return { ok: false, error: data.error || 'Impossibile accedere all’archivio.' }
+      const name = data.user?.display_name || ''
+      setUserKey(clean)
+      setDisplayName(name)
+      localStorage.setItem('beerbook-user-key', clean)
+      if (name) localStorage.setItem('beerbook-display-name', name)
+      else localStorage.removeItem('beerbook-display-name')
+      setBeers([])
+      setScreen('home')
+      await loadBeers(clean)
+      return { ok: true }
+    } catch {
+      return { ok: false, error: 'Impossibile accedere all’archivio. Controlla la connessione e riprova.' }
+    }
+  }
+
   async function registerUser(value, nameValue) {
     const clean = value.trim().toLowerCase()
     const name = nameValue.trim()
@@ -259,7 +289,7 @@ function App() {
     </header>
 
     <main>
-      {screen === 'onboarding' && <Onboarding onRegister={registerUser} />}
+      {screen === 'onboarding' && <Onboarding onRegister={registerUser} onEnter={enterUser} />}
       {screen === 'home' && <Home displayName={displayName} userKey={userKey} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
       {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
@@ -424,17 +454,23 @@ function AddBeer({ form, setForm, onBack, onSave }) {
 
 function Field({ label, children }) { return <label className="field"><span>{label}</span>{children}</label> }
 
-function Onboarding({ onRegister }) {
+function Onboarding({ onRegister, onEnter }) {
+  const [mode, setMode] = useState('create')
   const [name, setName] = useState('')
   const [value, setValue] = useState('')
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
 
+  function switchMode(nextMode) {
+    setMode(nextMode)
+    setError('')
+  }
+
   async function submit(e) {
     e.preventDefault()
     setError('')
     setSaving(true)
-    const result = await onRegister(value, name)
+    const result = mode === 'create' ? await onRegister(value, name) : await onEnter(value)
     setSaving(false)
     if (!result.ok) setError(result.error)
   }
@@ -443,29 +479,21 @@ function Onboarding({ onRegister }) {
     <div className="onboarding-hero">
       <div className="onboarding-mark">🍺</div>
       <p className="eyebrow">BENVENUTO IN BEER BOOK</p>
-      <h1>Crea il tuo<br /><em>archivio personale.</em></h1>
-      <p>Prima di iniziare, scegli il nome con cui vuoi essere chiamato e un identificativo univoco per il tuo archivio.</p>
+      <h1>{mode === 'create' ? <>Crea il tuo<br /><em>archivio personale.</em></> : <>Rientra nel tuo<br /><em>archivio.</em></>}</h1>
+      <p>{mode === 'create' ? 'Prima di iniziare, scegli il nome con cui vuoi essere chiamato e un identificativo univoco per il tuo archivio.' : 'Inserisci l’identificativo del tuo archivio per continuare.'}</p>
     </div>
+
     <form className="form onboarding-form" onSubmit={submit}>
-      <Field label="Nome utente *"><input required value={name} onChange={e => setName(e.target.value)} placeholder="Inserisci il tuo nome" autoFocus /></Field>
+      {mode === 'create' && <Field label="Nome utente *"><input required value={name} onChange={e => setName(e.target.value)} placeholder="Inserisci il tuo nome" autoFocus /></Field>}
       <Field label="Identificativo univoco *">
-        <input required value={value} onChange={e => setValue(e.target.value)} placeholder="Scegli un identificativo" autoCapitalize="none" autoCorrect="off" spellCheck="false" />
+        <input required value={value} onChange={e => setValue(e.target.value)} placeholder="Scegli un identificativo" autoCapitalize="none" autoCorrect="off" spellCheck="false" autoFocus={mode === 'enter'} />
       </Field>
       {error && <div className="form-error" role="alert">⚠ {error}</div>}
-      <button className="primary-button full" type="submit" disabled={saving}>{saving ? 'Creazione in corso…' : 'Crea il mio archivio'}</button>
+      <button className="primary-button full" type="submit" disabled={saving}>{saving ? (mode === 'create' ? 'Creazione in corso…' : 'Accesso in corso…') : (mode === 'create' ? 'Crea il mio archivio' : 'Entra nel mio archivio')}</button>
     </form>
+
+    <div className="onboarding-switch">
+      {mode === 'create' ? <>Hai già un archivio? <button type="button" onClick={() => switchMode('enter')}>Rientra nel tuo archivio →</button></> : <>Devi ancora creare un archivio? <button type="button" onClick={() => switchMode('create')}>Crea un nuovo archivio →</button></>}
+    </div>
   </section>
 }
-
-function Settings({ userKey, displayName, saveUserKey }) {
-  const [value, setValue] = useState(userKey)
-  const [name, setName] = useState(displayName)
-  return <section className="page">
-    <p className="eyebrow">CONFIGURAZIONE</p><h1>Impostazioni</h1>
-    <div className="settings-card"><h3>Profilo</h3><p>Identificativo dell'archivio e nome mostrato in Home.</p><label className="field"><span>Nome utente</span><input value={name} onChange={e => setName(e.target.value)} placeholder="es. Greg" /></label><label className="field"><span>Identificativo archivio</span><input value={value} onChange={e => setValue(e.target.value)} placeholder="es. greg-beer" /></label><button className="primary-button" onClick={async () => { const clean = await saveUserKey(value, name); await onReload(clean) }}>Salva profilo</button></div>
-  </section>
-}
-
-function EmptyState() { return <div className="empty"><div>🍺</div><h3>Nessuna birra trovata</h3><p>Prova a cambiare ricerca o filtri.</p></div> }
-
-createRoot(document.getElementById('root')).render(<App />)

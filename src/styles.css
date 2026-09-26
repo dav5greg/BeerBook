@@ -33,3 +33,6 @@
 .topbar-action{width:34px;height:34px;border:1px solid var(--line);border-radius:11px;background:var(--cream);color:var(--ink);font-size:19px;font-weight:800;display:grid;place-items:center;cursor:pointer}
 .topbar-action:disabled{opacity:.55;cursor:wait}
 .exit-button{font-size:20px}
+
+.onboarding-switch{margin:22px auto 0;text-align:center;color:var(--muted);font-size:13px}
+.onboarding-switch button{border:0;background:none;color:var(--amber);font:inherit;font-weight:800;cursor:pointer;padding:0}
