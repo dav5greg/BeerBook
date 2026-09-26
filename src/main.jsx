@@ -417,8 +417,6 @@ function BeerCard({ beer, onClick, onDelete }) {
   </article>
 }
 
-function Stat({ value, label }) { return <div className="stat"><strong>{value}</strong><span>{label}</span></div> }
-
 function Library({ beers, query, setQuery, filters, setFilters, showFilters, setShowFilters, onOpen, onAdd, onDelete }) {
   const styles = [...new Set(beers.map(b => b.style).filter(Boolean))]
   const breweries = [...new Set(beers.map(b => b.brewery).filter(Boolean))]
