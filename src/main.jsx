@@ -218,12 +218,11 @@ function App() {
 function DeleteDialog({ beer, onCancel, onConfirm }) {
   return <div className="dialog-backdrop" role="presentation" onClick={onCancel}>
     <div className="delete-dialog" role="dialog" aria-modal="true" aria-labelledby="delete-title" onClick={e => e.stopPropagation()}>
-      <div className="dialog-icon">×</div>
-      <h2 id="delete-title">Eliminare questa birra?</h2>
+      <h2 id="delete-title">Vuoi eliminare questa birra?</h2>
       <p><strong>{beer.name}</strong> verrà rimossa dall’archivio.</p>
       <div className="dialog-actions">
-        <button className="secondary-button" onClick={onCancel}>Annulla</button>
-        <button className="delete-confirm" onClick={onConfirm}>Elimina</button>
+        <button className="secondary-button" onClick={onCancel}>No, torna indietro</button>
+        <button className="delete-confirm" onClick={onConfirm}>Sì, elimina</button>
       </div>
     </div>
   </div>
