@@ -27,6 +27,8 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build
+        env:
+          VITE_API_BASE: https://beer-book-api.vercel.app
         run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v5
