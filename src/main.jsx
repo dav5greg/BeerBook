@@ -355,32 +355,66 @@ function NavItem({ active, icon, label, onClick }) {
 
 function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary, onAdd, onTry }) {
   const recent = beers.slice(0, 3)
-  return <section className="page">
-    <div className="hero">
-      <p className="eyebrow">IL TUO ARCHIVIO</p>
-      <p className="home-greeting">Ciao, <strong>{displayName || userKey || 'birraio'}</strong> 👋</p>
-      <h1>Che birra<br /><em>stappiamo?</em></h1>
-      <p className="hero-copy">Tutto quello che hai bevuto, in un unico posto.</p>
-      <button className="search-hero" onClick={onLibrary}>⌕ <span>Cerca una birra, un birrificio…</span></button>
+  return <section className="page home-page">
+    <div className="home-hero">
+      <div className="home-hero-copy">
+        <p className="eyebrow">IL MIO ARCHIVIO DI BIRRE</p>
+        <h1>Beer Book</h1>
+        <p>Il mio archivio di birre</p>
+      </div>
+      <div className="hero-beer-art" aria-hidden="true">🍺</div>
     </div>
 
-    <div className="quick-row">
-      <button onClick={() => onLibrary()}>★ <b>5 stelle</b></button>
-      <button onClick={onTry}>✦ <b>Da provare</b></button>
-      <button onClick={onLibrary}>☰ <b>Tutte</b></button>
+    <div className="stats-grid mock-stats">
+      <Stat icon="🍺" value={stats.total} label="Birre" />
+      <Stat icon="★" value={stats.average} label="Voto medio" />
+      <Stat icon="♜" value={stats.breweries} label="Birrifici" />
+      <Stat icon="🛒" value={stats.places} label="Luoghi" />
     </div>
 
-    <div className="stats-grid">
-      <Stat value={stats.total} label="Birre" />
-      <Stat value={stats.average} label="Media" />
-      <Stat value={stats.breweries} label="Birrifici" />
-      <Stat value={stats.places} label="Luoghi" />
+    <button className="home-search" onClick={onLibrary}><span>⌕</span><span>Cerca birra, birrificio, stile, paese...</span></button>
+
+    <div className="section-head compact-head">
+      <div><p className="eyebrow">ESPLORA</p><h2>Filtri rapidi</h2></div>
+      <button className="text-button" onClick={onLibrary}>Tutti i filtri ›</button>
+    </div>
+    <div className="chip-grid">
+      <button onClick={() => { onLibrary(); }}><span>★</span> 5 stelle</button>
+      <button onClick={onTry}><span>▮</span> Da provare</button>
+      <button onClick={onLibrary}><span>♜</span> IPA</button>
+      <button onClick={onLibrary}><span>●</span> Stout</button>
+      <button onClick={onLibrary}><span>🇧🇪</span> Belgio</button>
+      <button onClick={onLibrary}><span>🇮🇹</span> Italia</button>
     </div>
 
-    <div className="section-head"><div><p className="eyebrow">ARCHIVIO</p><h2>Le mie birre</h2></div><button className="text-button" onClick={onLibrary}>Vedi tutte →</button></div>
-    <div className="beer-stack">{recent.map(b => <BeerRow key={b.id} beer={b} onClick={() => onOpen(b)} onDelete={() => onDelete(b)} />)}</div>
+    <div className="section-head compact-head latest-head">
+      <div><p className="eyebrow">ARCHIVIO</p><h2>Ultime birre</h2></div>
+      <button className="text-button" onClick={onLibrary}>Vedi tutte ›</button>
+    </div>
+    <div className="recent-grid">
+      {recent.map(b => <BeerCard key={b.id} beer={b} onClick={() => onOpen(b)} onDelete={() => onDelete(b)} />)}
+    </div>
+    {!recent.length && <EmptyState />}
     <button className="primary-button full" onClick={onAdd}>＋ Aggiungi una birra</button>
   </section>
+}
+
+function Stat({ icon, value, label }) {
+  return <div className="stat"><span className="stat-icon">{icon}</span><strong>{value}</strong><span className="stat-label">{label}</span></div>
+}
+
+function BeerCard({ beer, onClick, onDelete }) {
+  return <article className="beer-card">
+    <button className="beer-card-main" onClick={onClick}>
+      <div className="beer-card-art"><span>🍺</span></div>
+      <div className="beer-card-body">
+        <strong>{beer.name}</strong>
+        <span>{beer.brewery || 'Birrificio non indicato'}</span>
+        <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b><small>{beer.last_tasted_at || '—'}</small></div>
+      </div>
+    </button>
+    <button className="card-delete" onClick={onDelete} aria-label={'Elimina ' + beer.name}>×</button>
+  </article>
 }
 
 function Stat({ value, label }) { return <div className="stat"><strong>{value}</strong><span>{label}</span></div> }
@@ -388,18 +422,33 @@ function Stat({ value, label }) { return <div className="stat"><strong>{value}</
 function Library({ beers, query, setQuery, filters, setFilters, showFilters, setShowFilters, onOpen, onAdd, onDelete }) {
   const styles = [...new Set(beers.map(b => b.style).filter(Boolean))]
   const breweries = [...new Set(beers.map(b => b.brewery).filter(Boolean))]
-  return <section className="page">
-    <div className="page-heading"><div><p className="eyebrow">ARCHIVIO</p><h1>Le mie birre</h1></div><button className="round-button" onClick={onAdd}>＋</button></div>
-    <div className="search-box"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca birra, birrificio, stile…" /></div>
-    <button className={'filter-toggle ' + (showFilters ? 'active' : '')} onClick={() => setShowFilters(!showFilters)}>⚙ Filtri {Object.values(filters).filter(Boolean).length ? '•' : ''}</button>
+  return <section className="page library-page">
+    <div className="page-heading library-heading">
+      <div><h1>Le mie birre</h1><p>{beers.length} {beers.length === 1 ? 'birra' : 'birre'}</p></div>
+      <button className="round-button" onClick={onAdd}>＋</button>
+    </div>
+    <div className="library-search-row">
+      <div className="search-box"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca birra, birrificio, stile, paese..." /></div>
+      <button className="filter-icon-button" onClick={() => setShowFilters(!showFilters)} aria-label="Filtri">☷</button>
+    </div>
+    <div className="filter-chips">
+      <button className="active">★ Voto⌄</button>
+      <button>♜ Birrificio</button>
+      <button>🌐 Paese⌄</button>
+      <button>♧ Stile⌄</button>
+      <button>⌖ Città⌄</button>
+      <button>◆ Tipologia⌄</button>
+    </div>
+    <div className="library-options">
+      <label><input type="checkbox" checked={filters.toTry} onChange={e => setFilters({ ...filters, toTry:e.target.checked })} /><span>▮</span> Solo da provare</label>
+      <span>Ordina per <b>Più recenti</b></span>
+    </div>
     {showFilters && <div className="filter-panel">
       <label>Valutazione<select value={filters.rating} onChange={e => setFilters({ ...filters, rating: e.target.value })}><option value="">Tutte</option>{[5,4,3,2,1].map(x => <option key={x} value={x}>{x} stelle</option>)}</select></label>
       <label>Birrificio<select value={filters.brewery} onChange={e => setFilters({ ...filters, brewery: e.target.value })}><option value="">Tutti</option>{breweries.map(x => <option key={x}>{x}</option>)}</select></label>
       <label>Stile<select value={filters.style} onChange={e => setFilters({ ...filters, style: e.target.value })}><option value="">Tutti</option>{styles.map(x => <option key={x}>{x}</option>)}</select></label>
-      <label className="check"><input type="checkbox" checked={filters.toTry} onChange={e => setFilters({ ...filters, toTry: e.target.checked })} /> Solo da provare</label>
     </div>}
-    <p className="result-count">{beers.length} {beers.length === 1 ? 'birra' : 'birre'}</p>
-    <div className="beer-stack">{beers.map(b => <BeerRow key={b.id} beer={b} onClick={() => onOpen(b)} onDelete={() => onDelete(b)} />)}</div>
+    <div className="library-list">{beers.map(b => <BeerRow key={b.id} beer={b} onClick={() => onOpen(b)} onDelete={() => onDelete(b)} />)}</div>
     {!beers.length && <EmptyState />}
   </section>
 }
@@ -407,28 +456,33 @@ function Library({ beers, query, setQuery, filters, setFilters, showFilters, set
 function BeerRow({ beer, onClick, onDelete }) {
   return <div className="beer-row">
     <button className="beer-row-main" onClick={onClick}>
-      <div className="beer-avatar">🍺</div>
-      <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><small>{beer.style || 'Stile non indicato'}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small></div>
-      <div className="beer-rating">{'★'.repeat(Number(beer.rating || 0))}<span>{'★'.repeat(5 - Number(beer.rating || 0))}</span></div>
+      <div className="beer-list-art"><span>🍺</span></div>
+      <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><small>{beer.style || 'Stile non indicato'}{beer.country ? ' · ' + beer.country : ''}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small><div className="list-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b> <strong>{Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</strong></div></div>
+      <time>{beer.last_tasted_at || '—'}</time>
+      <span className="row-more">⋮</span>
     </button>
     <button className="delete-beer" onClick={onDelete} aria-label={'Elimina ' + beer.name} title="Elimina birra">×</button>
   </div>
 }
 
 function Detail({ beer, onBack, onEdit }) {
-  return <section className="page">
-    <button className="back-button" onClick={onBack}>← Le mie birre</button>
-    <div className="detail-card">
-      <div className="detail-art">🍺</div>
-      <p className="eyebrow">{beer.style || 'BIRRA'}</p>
+  return <section className="page detail-page">
+    <div className="detail-top"><button className="back-icon" onClick={onBack}>‹</button><button className="detail-more">•••</button></div>
+    <div className="detail-hero-art"><span>🍺</span></div>
+    <div className="detail-sheet">
+      <p className="eyebrow">{beer.brewery || 'BIRRA'}</p>
       <h1>{beer.name}</h1>
-      <h3>{beer.brewery}</h3>
-      <div className="big-rating">{'★'.repeat(Number(beer.rating || 0))}<span>{'★'.repeat(5 - Number(beer.rating || 0))}</span></div>
-      <div className="tag-row"><Tag text={beer.country} /><Tag text={beer.abv ? beer.abv + '% vol.' : 'ABV —'} /><Tag text={'Carbonazione ' + (beer.carbonation || 'Media').toLowerCase()} /></div>
-      {beer.description && <div className="detail-section"><p className="eyebrow">DESCRIZIONE</p><p>{beer.description}</p></div>}
-      {beer.notes && <div className="note-card"><p className="eyebrow">LE MIE NOTE</p><p>{beer.notes}</p></div>}
-      <div className="detail-meta"><span>Ultima degustazione</span><b>{beer.last_tasted_at || '—'}</b></div>
-      {beer.to_try && <div className="try-banner">✦ Da provare</div>}
+      <h3>{beer.style || 'Stile non indicato'}</h3>
+      <div className="detail-country">{beer.country ? '🇧🇪' : '🌐'} <span>{beer.country || 'Paese non indicato'}</span></div>
+      <div className="detail-rating-row"><div className="big-rating">{'★'.repeat(Number(beer.rating || 0))}<span>{'★'.repeat(5 - Number(beer.rating || 0))}</span></div><strong>{Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</strong><label className="try-toggle"><span>▮ Da provare</span><input type="checkbox" checked={!!beer.to_try} readOnly /></label></div>
+      <div className="detail-facts">
+        <div><b>♧</b><strong>{beer.abv ? beer.abv + '%' : '—'}</strong><span>Alcol</span></div>
+        <div><b>▥</b><strong>{beer.style || '—'}</strong><span>Stile</span></div>
+        <div><b>🇧🇪</b><strong>{beer.country || '—'}</strong><span>Paese</span></div>
+      </div>
+      {beer.description && <div className="detail-section"><p>{beer.description}</p></div>}
+      <div className="detail-section tasting-section"><h3>Ultima degustazione</h3><div className="tasting-card"><b>▣</b><strong>{beer.last_tasted_at || '—'}</strong><span>★ {Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</span><button onClick={onEdit}>✎</button><p>{beer.notes || 'Nessuna nota inserita.'}</p></div></div>
+      <div className="detail-section places-section"><div className="section-head compact-head"><h3>Luoghi di acquisto</h3><button className="text-button">Aggiungi ›</button></div>{(beer.places || []).length ? beer.places.map((p,i)=><div className="purchase-row" key={i}><span className="purchase-icon">🛒</span><div><b>{p.name}</b><small>{p.type} · {p.city || 'Città non indicata'}</small></div><time>›</time></div>) : <p className="muted">Nessun luogo di acquisto.</p>}</div>
       <button className="primary-button full" onClick={onEdit}>Modifica scheda</button>
     </div>
   </section>
@@ -438,33 +492,24 @@ function Tag({ text }) { return text ? <span className="tag">{text}</span> : nul
 
 function AddBeer({ form, setForm, onBack, onSave }) {
   const update = (key, value) => setForm({ ...form, [key]: value })
-  return <section className="page">
-    <button className="back-button" onClick={onBack}>← Indietro</button>
-    <p className="eyebrow">SCHEDA BIRRA</p>
-    <h1>{form.name ? 'Modifica' : 'Aggiungi'} una birra</h1>
+  return <section className="page add-page">
+    <div className="form-top"><button className="back-icon" onClick={onBack}>‹</button><h1>{form.name ? 'Modifica birra' : 'Nuova birra'}</h1></div>
     <form className="form" onSubmit={onSave}>
-      <Field label="Nome *"><input required value={form.name} onChange={e => update('name', e.target.value)} placeholder="Es. Duvel" /></Field>
-      <Field label="Birrificio"><input value={form.brewery} onChange={e => update('brewery', e.target.value)} /></Field>
-      <div className="two-cols"><Field label="Paese"><input value={form.country} onChange={e => update('country', e.target.value)} /></Field><Field label="Regione / città"><input value={form.region} onChange={e => update('region', e.target.value)} /></Field></div>
-      <Field label="Stile"><input value={form.style} onChange={e => update('style', e.target.value)} placeholder="Es. IPA" /></Field>
-      <div className="two-cols"><Field label="ABV %"><input type="number" step="0.1" min="0" value={form.abv} onChange={e => update('abv', e.target.value)} /></Field><Field label="Ultima degustazione"><input type="date" value={form.last_tasted_at} onChange={e => update('last_tasted_at', e.target.value)} /></Field></div>
-      <Field label="Carbonazione"><div className="segmented">{['Bassa','Media','Alta'].map(x => <button type="button" key={x} className={form.carbonation === x ? 'selected' : ''} onClick={() => update('carbonation', x)}>{x}</button>)}</div></Field>
-      <Field label="Valutazione"><div className="star-input">{[1,2,3,4,5].map(x => <button type="button" key={x} className={x <= form.rating ? 'on' : ''} onClick={() => update('rating', x)}>★</button>)}</div></Field>
-      <Field label="Descrizione"><textarea rows="3" value={form.description} onChange={e => update('description', e.target.value)} /></Field>
-      <Field label="Le mie note"><textarea rows="4" value={form.notes} onChange={e => update('notes', e.target.value)} /></Field>
-      <Field label="Luoghi di acquisto">
-        {form.places.map((place, index) => <div className="place-row" key={index}>
-          <input value={place.name} onChange={e => { const places = [...form.places]; places[index] = { ...places[index], name: e.target.value }; update('places', places) }} placeholder="Nome luogo" />
-          <select value={place.type} onChange={e => { const places = [...form.places]; places[index] = { ...places[index], type: e.target.value }; update('places', places) }}>
-            <option>Supermercato</option><option>Pub</option><option>Bar</option><option>Ristorante</option><option>Altro</option>
-          </select>
-          <input value={place.city} onChange={e => { const places = [...form.places]; places[index] = { ...places[index], city: e.target.value }; update('places', places) }} placeholder="Città" />
-          <button type="button" className="remove-place" onClick={() => update('places', form.places.length > 1 ? form.places.filter((_, i) => i !== index) : [{ name: '', type: 'Altro', city: '' }])} aria-label="Elimina luogo" title="Elimina luogo">×</button>
-        </div>)}
-        <button type="button" className="secondary-button" onClick={() => update('places', [...form.places, { name: '', type: 'Altro', city: '' }])}>＋ Aggiungi luogo</button>
-      </Field>
-      <label className="switch-line"><input type="checkbox" checked={form.to_try} onChange={e => update('to_try', e.target.checked)} /><span>Da provare</span></label>
+      <div className="photo-placeholder"><span>▣</span><b>Aggiungi foto</b><small>etichetta o bottiglia</small></div>
+      <Field label="Nome birra *"><input required value={form.name} onChange={e => update('name', e.target.value)} placeholder="Duvel" /></Field>
+      <Field label="Birrificio"><input value={form.brewery} onChange={e => update('brewery', e.target.value)} placeholder="Duvel" /></Field>
+      <div className="two-cols"><Field label="Paese"><input value={form.country} onChange={e => update('country', e.target.value)} placeholder="Belgio" /></Field><Field label="Stile"><input value={form.style} onChange={e => update('style', e.target.value)} placeholder="Belgian Strong Ale" /></Field></div>
+      <Field label="Gradazione alcolica"><input type="number" step="0.1" min="0" value={form.abv} onChange={e => update('abv', e.target.value)} placeholder="8,5%" /></Field>
+      <Field label="Descrizione (opzionale)"><textarea rows="3" value={form.description} onChange={e => update('description', e.target.value)} /></Field>
       <button className="primary-button full" type="submit">Salva birra</button>
+      <div className="form-secondary">
+        <Field label="Data degustazione"><input type="date" value={form.last_tasted_at} onChange={e => update('last_tasted_at', e.target.value)} /></Field>
+        <Field label="Valutazione"><div className="star-input">{[1,2,3,4,5].map(x => <button type="button" key={x} className={x <= form.rating ? 'on' : ''} onClick={() => update('rating', x)}>★</button>)}</div></Field>
+        <Field label="Note personali"><textarea rows="4" value={form.notes} onChange={e => update('notes', e.target.value)} /></Field>
+        <Field label="Carbonazione"><div className="segmented">{['Bassa','Media','Alta'].map(x => <button type="button" key={x} className={form.carbonation === x ? 'selected' : ''} onClick={() => update('carbonation', x)}>{x}</button>)}</div></Field>
+        <Field label="Luoghi di acquisto">{form.places.map((place,index)=><div className="place-row" key={index}><input value={place.name} onChange={e=>{const places=[...form.places];places[index]={...places[index],name:e.target.value};update('places',places)}} placeholder="Nome luogo"/><select value={place.type} onChange={e=>{const places=[...form.places];places[index]={...places[index],type:e.target.value};update('places',places)}}><option>Supermercato</option><option>Pub</option><option>Bar</option><option>Ristorante</option><option>Altro</option></select><input value={place.city} onChange={e=>{const places=[...form.places];places[index]={...places[index],city:e.target.value};update('places',places)}} placeholder="Città"/><button type="button" className="remove-place" onClick={()=>update('places',form.places.length>1?form.places.filter((_,i)=>i!==index):[{name:'',type:'Altro',city:''}])}>×</button></div>)}<button type="button" className="secondary-button" onClick={()=>update('places',[...form.places,{name:'',type:'Altro',city:''}])}>＋ Aggiungi luogo</button></Field>
+        <label className="switch-line"><input type="checkbox" checked={form.to_try} onChange={e=>update('to_try',e.target.checked)}/><span>Da provare</span></label>
+      </div>
     </form>
   </section>
 }
