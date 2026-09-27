@@ -291,9 +291,9 @@ function App() {
         <Icon name={screen === 'home' || screen === 'library' || screen === 'settings' ? 'home' : 'back'} />
       </button>}
       {!onboarding && <div className="topbar-actions">
-        <button className="topbar-action sync-button" onClick={syncNow} disabled={sync === 'sync'} aria-label="Sincronizza ora" title="Sincronizza ora">↻</button>
+        <button className="topbar-action sync-button" onClick={syncNow} disabled={sync === 'sync'} aria-label="Sincronizza ora" title="Sincronizza ora"><Icon name="sync" /></button>
         <SyncBadge state={sync} />
-        <button className="topbar-action exit-button" onClick={() => setShowExitConfirm(true)} aria-label="Esci dal profilo" title="Esci dal profilo">↪</button>
+        <button className="topbar-action exit-button" onClick={() => setShowExitConfirm(true)} aria-label="Esci dal profilo" title="Esci dal profilo"><Icon name="exit" /></button>
       </div>}
     </header>
 
@@ -370,6 +370,19 @@ function Icon({ name }) {
     home: '1f3e0',
     bottle: '1f37e',
     places: '1f4cd'
+  }
+
+  if (name === 'sync') {
+    return <svg className="header-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 11a8 8 0 0 0-14.8-3.9L3.5 9"/><path d="M3.5 5.5V9h3.5"/>
+      <path d="M4 13a8 8 0 0 0 14.8 3.9L20.5 15"/><path d="M20.5 18.5V15H17"/>
+    </svg>
+  }
+
+  if (name === 'exit') {
+    return <svg className="header-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M10 5H5.5v14H10"/><path d="M13 8l4 4-4 4"/><path d="M17 12H8"/>
+    </svg>
   }
 
   if (name === 'back') {
