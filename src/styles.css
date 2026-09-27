@@ -1832,3 +1832,6 @@ main{padding:0 20px}
   .detail-fact-grid>div{min-height:96px;padding:10px 5px}
   .detail-fact-grid strong{font-size:13px}
 }
+
+.detail-stars{color:#d88b0d;letter-spacing:-1px;font-size:17px;white-space:nowrap}
+.detail-stars span{color:#d8cfc6}
