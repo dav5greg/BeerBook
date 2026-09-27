@@ -21,6 +21,7 @@ function App() {
   const [selected, setSelected] = useState(null)
   const [query, setQuery] = useState('')
   const [filters, setFilters] = useState({ rating: '', brewery: '', country: '', style: '', city: '', place: '', type: '', toTry: false })
+  const [sortBy, setSortBy] = useState('recent')
   const [userKey, setUserKey] = useState(localStorage.getItem('beerbook-user-key') || '')
   const [displayName, setDisplayName] = useState(localStorage.getItem('beerbook-display-name') || '')
   const [sync, setSync] = useState('offline')
@@ -189,17 +190,26 @@ function App() {
     return clean
   }
 
-  const filtered = useMemo(() => beers.filter(b => {
-    const text = [b.name, b.brewery, b.country, b.region, b.style, ...(b.place_names || [])].join(' ').toLowerCase()
-    if (query && !text.includes(query.toLowerCase())) return false
-    if (filters.rating && Number(b.rating) !== Number(filters.rating)) return false
-    if (filters.brewery && b.brewery !== filters.brewery) return false
-    if (filters.country && b.country !== filters.country) return false
-    if (filters.style && b.style !== filters.style) return false
-    if (filters.place && !(b.place_names || []).includes(filters.place)) return false
-    if (filters.toTry && !b.to_try) return false
-    return true
-  }), [beers, query, filters])
+  const filtered = useMemo(() => {
+    const result = beers.filter(b => {
+      const text = [b.name, b.brewery, b.country, b.region, b.style, ...(b.place_names || [])].join(' ').toLowerCase()
+      if (query && !text.includes(query.toLowerCase())) return false
+      if (filters.rating && Number(b.rating) !== Number(filters.rating)) return false
+      if (filters.brewery && b.brewery !== filters.brewery) return false
+      if (filters.country && b.country !== filters.country) return false
+      if (filters.style && b.style !== filters.style) return false
+      if (filters.place && !(b.place_names || []).includes(filters.place)) return false
+      if (filters.city && !(b.places || []).some(p => p.city === filters.city)) return false
+      if (filters.type && !(b.places || []).some(p => p.type === filters.type)) return false
+      if (filters.toTry && !b.to_try) return false
+      return true
+    })
+    return result.sort((a,b) => {
+      if (sortBy === 'rating') return Number(b.rating || 0) - Number(a.rating || 0)
+      if (sortBy === 'name') return String(a.name || '').localeCompare(String(b.name || ''), 'it')
+      return String(b.last_tasted_at || '').localeCompare(String(a.last_tasted_at || ''))
+    })
+  }, [beers, query, filters, sortBy])
 
   const stats = {
     total: beers.length,
@@ -300,7 +310,7 @@ function App() {
     <main>
       {screen === 'onboarding' && <Onboarding onRegister={registerUser} onEnter={enterUser} />}
       {screen === 'home' && <Home displayName={displayName} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
-      {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
+      {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
       {screen === 'settings' && <Settings displayName={displayName} saveUserKey={saveUserKey} />}
@@ -467,7 +477,7 @@ function BeerCard({ beer, onClick, onDelete, compact = false }) {
   </article>
 }
 
-function Library({ beers, query, setQuery, filters, setFilters, showFilters, setShowFilters, onOpen, onAdd, onDelete }) {
+function Library({ beers, query, setQuery, filters, setFilters, sortBy, setSortBy, showFilters, setShowFilters, onOpen, onAdd, onDelete }) {
   const styles = [...new Set(beers.map(b => b.style).filter(Boolean))]
   const breweries = [...new Set(beers.map(b => b.brewery).filter(Boolean))]
   return <section className="page library-page">
@@ -479,22 +489,31 @@ function Library({ beers, query, setQuery, filters, setFilters, showFilters, set
       <div className="search-box"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca birra, birrificio, stile, paese..." /></div>
       <button className="filter-icon-button" onClick={() => setShowFilters(!showFilters)} aria-label="Filtri">☷</button>
     </div>
-    <div className="filter-chips" aria-label="Filtri rapidi">
-      <button className="filter-chip active" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">★</span><span>Voto</span><span className="filter-chip-chevron">⌄</span></button>
-      <button className="filter-chip" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">🏭</span><span>Birrificio</span></button>
-      <button className="filter-chip" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">🌍</span><span>Paese</span><span className="filter-chip-chevron">⌄</span></button>
-      <button className="filter-chip" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">🌿</span><span>Stile</span><span className="filter-chip-chevron">⌄</span></button>
-      <button className="filter-chip" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">📍</span><span>Città</span><span className="filter-chip-chevron">⌄</span></button>
-      <button className="filter-chip" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">🏷️</span><span>Tipologia</span><span className="filter-chip-chevron">⌄</span></button>
+    <div className="library-filter-bar">
+      <button className="library-filter-main" onClick={() => setShowFilters(!showFilters)}><span className="library-filter-main-icon">☷</span><span>Filtri</span><strong>{Object.values(filters).filter(Boolean).length}</strong></button>
+      {filters.toTry && <button className="active-filter-chip" onClick={() => setFilters({ ...filters, toTry:false })}>🔖 Da provare ×</button>}
+      {filters.rating && <button className="active-filter-chip" onClick={() => setFilters({ ...filters, rating:'' })}>★ {filters.rating} stelle ×</button>}
+      {filters.brewery && <button className="active-filter-chip" onClick={() => setFilters({ ...filters, brewery:'' })}>Birrificio: {filters.brewery} ×</button>}
+      {filters.country && <button className="active-filter-chip" onClick={() => setFilters({ ...filters, country:'' })}>Paese: {filters.country} ×</button>}
+      {filters.style && <button className="active-filter-chip" onClick={() => setFilters({ ...filters, style:'' })}>Stile: {filters.style} ×</button>}
     </div>
     <div className="library-options">
-      <label><input type="checkbox" checked={filters.toTry} onChange={e => setFilters({ ...filters, toTry:e.target.checked })} /><span className="try-filter-icon">🔖</span><strong>Solo da provare</strong></label>
-      <span className="sort-label">Ordina per <b>Più recenti</b></span>
+      <label className="try-option"><input type="checkbox" checked={filters.toTry} onChange={e => setFilters({ ...filters, toTry:e.target.checked })} /><span className="try-filter-icon">🔖</span><strong>Solo da provare</strong></label>
+      <label className="sort-label">Ordina per
+        <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
+          <option value="recent">Più recenti</option>
+          <option value="rating">Valutazione</option>
+          <option value="name">Nome A–Z</option>
+        </select>
+      </label>
     </div>
     {showFilters && <div className="filter-panel">
       <label>Valutazione<select value={filters.rating} onChange={e => setFilters({ ...filters, rating: e.target.value })}><option value="">Tutte</option>{[5,4,3,2,1].map(x => <option key={x} value={x}>{x} stelle</option>)}</select></label>
       <label>Birrificio<select value={filters.brewery} onChange={e => setFilters({ ...filters, brewery: e.target.value })}><option value="">Tutti</option>{breweries.map(x => <option key={x}>{x}</option>)}</select></label>
+      <label>Paese<select value={filters.country} onChange={e => setFilters({ ...filters, country: e.target.value })}><option value="">Tutti</option>{[...new Set(beers.map(b => b.country).filter(Boolean))].sort().map(x => <option key={x}>{x}</option>)}</select></label>
       <label>Stile<select value={filters.style} onChange={e => setFilters({ ...filters, style: e.target.value })}><option value="">Tutti</option>{styles.map(x => <option key={x}>{x}</option>)}</select></label>
+      <label>Città<select value={filters.city} onChange={e => setFilters({ ...filters, city: e.target.value })}><option value="">Tutte</option>{[...new Set(beers.flatMap(b => (b.places || []).map(p => p.city).filter(Boolean)))].sort().map(x => <option key={x}>{x}</option>)}</select></label>
+      <label>Tipologia<select value={filters.type} onChange={e => setFilters({ ...filters, type: e.target.value })}><option value="">Tutte</option>{['Supermercato','Pub','Bar','Ristorante','Altro'].map(x => <option key={x}>{x}</option>)}</select></label>
     </div>}
     <div className="library-list">{beers.map(b => <BeerRow key={b.id} beer={b} onClick={() => onOpen(b)} onDelete={() => onDelete(b)} />)}</div>
     {!beers.length && <EmptyState />}
@@ -505,8 +524,12 @@ function BeerRow({ beer, onClick, onDelete }) {
   return <div className="beer-row">
     <button className="beer-row-main" onClick={onClick}>
       <div className="beer-list-art"><span>🍺</span></div>
-      <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><small>{beer.style || 'Stile non indicato'}{beer.country ? ' · ' + beer.country : ''}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small><div className="list-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b> <strong>{Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</strong></div></div>
-      <time><span className="list-date-icon" aria-hidden="true">📅</span>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</time>
+      <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span></div>
+      <div className="beer-row-meta">
+        <small>{beer.style || 'Stile non indicato'}</small>
+        <small>{beer.country || 'Paese non indicato'}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small>
+        <div className="list-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b> <strong>{Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</strong></div>
+      </div>
       <span className="row-more">⋮</span>
     </button>
     <button className="delete-beer" onClick={onDelete} aria-label={'Elimina ' + beer.name} title="Elimina birra">×</button>
