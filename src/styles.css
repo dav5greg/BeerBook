@@ -1537,3 +1537,61 @@ main{padding:0 20px}
     padding-right:13px;
   }
 }
+
+
+/* --- New beer section header refinement --- */
+.form-section-head{
+  padding-right:10px;
+}
+.section-try-toggle{
+  padding:9px 12px;
+  font-size:12px;
+}
+.section-try-toggle input{
+  width:33px;
+  height:20px;
+}
+.section-try-toggle input::after{
+  width:16px;
+  height:16px;
+}
+.section-try-toggle input:checked::after{
+  left:15px;
+}
+.section-chevron{
+  flex:none;
+  width:34px;
+  height:34px;
+  padding:0;
+  border:0;
+  background:none;
+  color:#8c7968;
+  display:grid;
+  place-items:center;
+  font-size:18px;
+  line-height:1;
+  font-weight:800;
+  cursor:pointer;
+}
+@media(max-width:520px){
+  .section-try-toggle{
+    padding:8px 10px;
+    font-size:11px;
+  }
+  .section-try-toggle input{
+    width:31px;
+    height:19px;
+  }
+  .section-try-toggle input::after{
+    width:15px;
+    height:15px;
+  }
+  .section-try-toggle input:checked::after{
+    left:14px;
+  }
+  .section-chevron{
+    width:30px;
+    height:30px;
+    font-size:17px;
+  }
+}
