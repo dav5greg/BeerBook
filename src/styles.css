@@ -2843,3 +2843,18 @@ main{padding:0 20px}
   .place-list-info span{font-size:11px}
   .place-list-count{font-size:9px}
 }
+
+/* --- Purchase place rows are clickable library-style controls --- */
+.place-list-row{
+  width:100%;
+  border-left:0;
+  border-right:0;
+  border-top:0;
+  text-align:left;
+  color:inherit;
+  font:inherit;
+  background:transparent;
+  cursor:pointer;
+}
+.place-list-row:hover{background:#fffaf4}
+.place-list-row:active{background:#f5eee7}
