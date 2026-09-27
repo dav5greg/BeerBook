@@ -3107,3 +3107,24 @@ main{padding:0 20px}
 .topbar-action{
   color:var(--ink);
 }
+
+
+/* --- Final header icon contrast fix --- */
+.topbar-action .header-icon-svg{
+  color:var(--ink) !important;
+  stroke:var(--ink) !important;
+}
+.brand.home-back-button .simple-home-icon,
+.brand.home-back-button .back-icon-svg{
+  color:var(--ink) !important;
+  stroke:var(--ink) !important;
+}
+:root[data-theme="dark"] .topbar-action .header-icon-svg{
+  color:#171310 !important;
+  stroke:#171310 !important;
+}
+:root[data-theme="dark"] .brand.home-back-button .simple-home-icon,
+:root[data-theme="dark"] .brand.home-back-button .back-icon-svg{
+  color:#f1e7dc !important;
+  stroke:#f1e7dc !important;
+}
