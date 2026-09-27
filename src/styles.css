@@ -2858,3 +2858,24 @@ main{padding:0 20px}
 }
 .place-list-row:hover{background:#fffaf4}
 .place-list-row:active{background:#f5eee7}
+
+/* --- Luoghi: right-side count matches My Beers metadata scale --- */
+.place-list-count{
+  font-size:11.5px;
+  line-height:1;
+  font-weight:700;
+}
+.place-list-count span{
+  font-size:22px;
+  line-height:1;
+  vertical-align:-2px;
+  margin-left:4px;
+}
+@media(max-width:520px){
+  .place-list-count{
+    font-size:11px;
+  }
+  .place-list-count span{
+    font-size:21px;
+  }
+}
