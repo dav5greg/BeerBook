@@ -19,7 +19,7 @@ export default async function handler(req, res) {
         SELECT b.*,
           COALESCE(array_agg(DISTINCT pp.name) FILTER (WHERE pp.name IS NOT NULL), '{}') AS place_names,
           COALESCE(
-            jsonb_agg(DISTINCT jsonb_build_object('name', pp.name, 'type', pp.type, 'city', pp.city))
+            jsonb_agg(DISTINCT jsonb_build_object('name', pp.name, 'type', pp.type, 'city', pp.city, 'created_at', bpp.created_at))
             FILTER (WHERE pp.id IS NOT NULL), '[]'::jsonb
           ) AS places
         FROM beers b
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
 }
 
 export async function syncPlaces(sql, uid, beerId, places) {
-  await sql`DELETE FROM beer_purchase_places WHERE beer_id = ${beerId}`
+  const wanted = []
   for (const place of places) {
     const name = String(place?.name || '').trim()
     if (!name) continue
@@ -65,6 +65,12 @@ export async function syncPlaces(sql, uid, beerId, places) {
       DO UPDATE SET type=EXCLUDED.type, city=EXCLUDED.city, updated_at=NOW()
       RETURNING id
     `
+    wanted.push(rows[0].id)
     await sql`INSERT INTO beer_purchase_places (beer_id,purchase_place_id) VALUES (${beerId},${rows[0].id}) ON CONFLICT DO NOTHING`
+  }
+  if (wanted.length) {
+    await sql`DELETE FROM beer_purchase_places WHERE beer_id = ${beerId} AND NOT (purchase_place_id = ANY(${wanted}::uuid[]))`
+  } else {
+    await sql`DELETE FROM beer_purchase_places WHERE beer_id = ${beerId}`
   }
 }
