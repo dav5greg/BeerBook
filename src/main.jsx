@@ -212,7 +212,7 @@ function App() {
       else comparison = String(a.last_tasted_at || '').localeCompare(String(b.last_tasted_at || ''))
       return sortDirection === 'asc' ? comparison : -comparison
     })
-  }, [beers, query, filters, sortBy])
+  }, [beers, query, filters, sortBy, sortDirection])
 
   const stats = {
     total: beers.length,
@@ -536,7 +536,7 @@ function BeerRow({ beer, onClick, onDelete }) {
   return <div className="beer-row">
     <button className="beer-row-main" onClick={onClick}>
       <div className="beer-list-art"><span>🍺</span></div>
-      <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><time><span className="list-date-icon" aria-hidden="true">📅</span>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</time></div>
+      <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><time>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</time></div>
       <div className="beer-row-meta">
         <small>{beer.style || 'Stile non indicato'}</small>
         <small>{beer.country || 'Paese non indicato'}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small>
