@@ -2465,3 +2465,72 @@ main{padding:0 20px}
   .library-list .beer-info time{font-size:9px}
   .library-list .beer-info .list-date-icon{font-size:11px}
 }
+
+/* --- Compact three-line beer rows --- */
+.library-list .beer-row-main{
+  min-height:0;
+  padding:7px 1px;
+  align-items:center;
+}
+.library-list .beer-info{
+  display:grid;
+  grid-template-rows:repeat(3,auto);
+  align-content:center;
+  gap:2px;
+  min-width:0;
+  align-self:stretch;
+}
+.library-list .beer-info strong,
+.library-list .beer-info span,
+.library-list .beer-info time{
+  margin:0;
+  min-width:0;
+  line-height:1.05;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.library-list .beer-info strong{font-size:13px}
+.library-list .beer-info span{font-size:10px}
+.library-list .beer-info time{
+  display:block;
+  color:#75685f;
+  font-size:9.5px;
+  font-weight:700;
+}
+.beer-row-meta{
+  display:grid;
+  grid-template-rows:repeat(3,auto);
+  align-content:center;
+  justify-items:end;
+  gap:2px;
+  flex-basis:155px;
+  align-self:stretch;
+  text-align:right;
+}
+.beer-row-meta small,
+.beer-row-meta .list-rating{
+  margin:0;
+  min-height:0;
+  line-height:1.05;
+}
+.beer-row-meta small{
+  max-width:155px;
+  font-size:10.5px;
+}
+.beer-row-meta .list-rating b{font-size:13px}
+.beer-row-meta .list-rating strong{font-size:11px}
+@media(max-width:520px){
+  .library-list .beer-row-main{padding:6px 1px}
+  .library-list .beer-info{gap:1px}
+  .library-list .beer-info strong{font-size:12.5px}
+  .library-list .beer-info span{font-size:9.5px}
+  .library-list .beer-info time{font-size:9px}
+  .beer-row-meta{
+    flex-basis:128px;
+    gap:1px;
+  }
+  .beer-row-meta small{max-width:128px;font-size:9.5px}
+  .beer-row-meta .list-rating b{font-size:12px}
+  .beer-row-meta .list-rating strong{font-size:10.5px}
+}
