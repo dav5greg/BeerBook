@@ -319,7 +319,7 @@ function App() {
       {screen === 'places' && <Places beers={beers} onSelectPlace={(placeName) => { setFilters({ ...filters, place: placeName }); setQuery(''); setShowFilters(false); setScreen('library') }} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
-      {screen === 'settings' && <Settings displayName={displayName} saveUserKey={saveUserKey} />}
+      {screen === 'settings' && <Settings userKey={userKey} displayName={displayName} saveUserKey={saveUserKey} />}
     </main>
 
     {deleteTarget && <DeleteDialog beer={deleteTarget} onCancel={() => setDeleteTarget(null)} onConfirm={confirmDeleteBeer} />}
