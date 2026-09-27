@@ -30,6 +30,21 @@ function App() {
   const [showFilters, setShowFilters] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [showExitConfirm, setShowExitConfirm] = useState(false)
+  const [screenHistory, setScreenHistory] = useState([])
+
+  function navigate(nextScreen) {
+    setScreenHistory(history => [...history, screen])
+    setScreen(nextScreen)
+  }
+
+  function goBack() {
+    setScreenHistory(history => {
+      if (!history.length) return history
+      const next = history[history.length - 1]
+      setScreen(next)
+      return history.slice(0, -1)
+    })
+  }
 
   useEffect(() => {
     if (userKey) {
@@ -106,6 +121,8 @@ function App() {
       if (name) localStorage.setItem('beerbook-display-name', name)
       else localStorage.removeItem('beerbook-display-name')
       setBeers([])
+      setScreenHistory([])
+      setScreenHistory([])
       setScreen('home')
       await loadBeers(clean)
       return { ok: true }
@@ -161,6 +178,7 @@ function App() {
     setDisplayName('')
     setBeers([])
     setSelected(null)
+    setScreenHistory([])
     setScreen('onboarding')
     setSync('offline')
   }
@@ -226,13 +244,13 @@ function App() {
 
   function openBeer(beer) {
     setSelected(beer)
-    setScreen('detail')
+    navigate('detail')
   }
 
   function startAdd() {
     setSelected(null)
     setForm({ ...emptyForm, places: [{ name: '', type: '', city: '' }] })
-    setScreen('add')
+    navigate('add')
   }
 
   function startEdit(beer) {
@@ -278,7 +296,7 @@ function App() {
     const local = selected ? beers.map(b => b.id === selected.id ? { ...b, ...payload } : b) : [{ ...payload, id: crypto.randomUUID() }, ...beers]
     setBeers(local)
     localStorage.setItem('beerbook-cache-' + userKey, JSON.stringify(local))
-    setScreen('library')
+    navigate('library')
     if (!API_BASE || !userKey || !navigator.onLine) { setSync('pending'); return }
     try {
       setSync('sync')
@@ -299,9 +317,9 @@ function App() {
       {!onboarding && <button className="brand home-back-button" onClick={() => {
         if (screen === 'home') return
         if (screen === 'detail') return setScreen('library')
-        if (screen === 'add') return setScreen(selected ? 'detail' : 'library')
+        if (screen === 'add') return navigate(selected ? 'detail' : 'library')
         if (screen === 'library' || screen === 'places' || screen === 'settings') return setScreen('home')
-        setScreen('home')
+        navigate('home')
       }} aria-label={screen === 'home' ? 'Home' : 'Torna indietro'} title={screen === 'home' ? 'Home' : 'Torna indietro'}>
         <Icon name={screen === 'home' || screen === 'library' || screen === 'places' || screen === 'settings' ? 'home' : 'back'} />
       </button>}
@@ -314,11 +332,11 @@ function App() {
 
     <main>
       {screen === 'onboarding' && <Onboarding onRegister={registerUser} onEnter={enterUser} />}
-      {screen === 'home' && <Home displayName={displayName} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
+      {screen === 'home' && <Home displayName={displayName} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); navigate('library') }} />}
       {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy} sortDirection={sortDirection} setSortDirection={setSortDirection} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
       {screen === 'places' && <Places beers={beers} onSelectPlace={(placeName) => { setFilters({ ...filters, place: placeName }); setQuery(''); setShowFilters(false); setScreen('library') }} />}
-      {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
-      {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
+      {screen === 'detail' && selected && <Detail beer={selected} onBack={goBack} onEdit={() => startEdit(selected)} />}
+      {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={goBack} onSave={saveBeer} />}
       {screen === 'settings' && <Settings userKey={userKey} displayName={displayName} saveUserKey={saveUserKey} />}
     </main>
 
@@ -326,11 +344,11 @@ function App() {
     {showExitConfirm && <ExitDialog onCancel={() => setShowExitConfirm(false)} onConfirm={() => { setShowExitConfirm(false); exitProfile() }} />}
 
     {!onboarding && <nav className="bottom-nav">
-      <NavItem active={screen === 'home'} icon="home" label="Home" onClick={() => setScreen('home')} />
-      <NavItem active={screen === 'library' || screen === 'detail'} icon="beer" label="Birre" onClick={() => setScreen('library')} />
+      <NavItem active={screen === 'home'} icon="home" label="Home" onClick={() => navigate('home')} />
+      <NavItem active={screen === 'library' || screen === 'detail'} icon="beer" label="Birre" onClick={() => navigate('library')} />
       <button className="add-fab" onClick={startAdd} aria-label="Aggiungi birra">＋</button>
-      <NavItem active={screen === 'places'} icon="places" label="Luoghi" onClick={() => setScreen('places')} />
-      <NavItem active={screen === 'settings'} icon="settings" label="Settings" onClick={() => setScreen('settings')} />
+      <NavItem active={screen === 'places'} icon="places" label="Luoghi" onClick={() => navigate('places')} />
+      <NavItem active={screen === 'settings'} icon="settings" label="Settings" onClick={() => navigate('settings')} />
     </nav>}
   </div>
 }
