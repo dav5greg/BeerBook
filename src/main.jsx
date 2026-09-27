@@ -262,7 +262,7 @@ function App() {
       last_tasted_at: tastingDate,
       places: beer.places?.length ? beer.places : (beer.place_names || []).map(name => ({ name, type: '', city: '' }))
     })
-    setScreen('add')
+    navigate('add')
   }
 
   async function deleteBeer(beer) {
@@ -316,10 +316,9 @@ function App() {
     <header className="topbar">
       {!onboarding && <button className="brand home-back-button" onClick={() => {
         if (screen === 'home') return
-        if (screen === 'detail') return setScreen('library')
-        if (screen === 'add') return navigate(selected ? 'detail' : 'library')
-        if (screen === 'library' || screen === 'places' || screen === 'settings') return setScreen('home')
-        navigate('home')
+        if (screen === 'detail' || screen === 'add') return goBack()
+        if (screen === 'home') return
+        return navigate('home')
       }} aria-label={screen === 'home' ? 'Home' : 'Torna indietro'} title={screen === 'home' ? 'Home' : 'Torna indietro'}>
         <Icon name={screen === 'home' || screen === 'library' || screen === 'places' || screen === 'settings' ? 'home' : 'back'} />
       </button>}
@@ -332,9 +331,9 @@ function App() {
 
     <main>
       {screen === 'onboarding' && <Onboarding onRegister={registerUser} onEnter={enterUser} />}
-      {screen === 'home' && <Home displayName={displayName} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); navigate('library') }} />}
+      {screen === 'home' && <Home displayName={displayName} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => navigate('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); navigate('library') }} />}
       {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy} sortDirection={sortDirection} setSortDirection={setSortDirection} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
-      {screen === 'places' && <Places beers={beers} onSelectPlace={(placeName) => { setFilters({ ...filters, place: placeName }); setQuery(''); setShowFilters(false); setScreen('library') }} />}
+      {screen === 'places' && <Places beers={beers} onSelectPlace={(placeName) => { setFilters({ ...filters, place: placeName }); setQuery(''); setShowFilters(false); navigate('library') }} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={goBack} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={goBack} onSave={saveBeer} />}
       {screen === 'settings' && <Settings userKey={userKey} displayName={displayName} saveUserKey={saveUserKey} />}
