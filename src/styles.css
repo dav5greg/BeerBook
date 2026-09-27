@@ -1896,11 +1896,33 @@ main{padding:0 20px}
   align-self:center;
 }
 
-.date-input-wrap{position:relative;width:100%;min-width:0}
-.date-input-wrap input[type="date"]{width:100%;min-width:0;box-sizing:border-box;padding-right:42px}
-.clear-date-button{
+.date-input-wrap{
+  position:relative;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  overflow:visible;
+}
+.date-input-wrap input[type="date"]{
+  display:block;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  box-sizing:border-box;
+  padding-right:46px;
+  -webkit-appearance:none;
+  appearance:none;
+}
+.date-input-wrap input[type="date"]::-webkit-calendar-picker-indicator{
   position:absolute;
   right:8px;
+  width:20px;
+  height:20px;
+  opacity:.75;
+}
+.clear-date-button{
+  position:absolute;
+  right:34px;
   top:50%;
   transform:translateY(-50%);
   width:28px;
@@ -1915,10 +1937,31 @@ main{padding:0 20px}
   font-size:19px;
   line-height:1;
   cursor:pointer;
-  z-index:2;
+  z-index:20;
+  touch-action:manipulation;
 }
 .clear-date-button:hover{background:#f3e7dc;border-color:#cdb8a5;color:#5f4635}
 @media(max-width:520px){
-  .date-input-wrap input[type="date"]{font-size:14px;padding-right:40px}
-  .clear-date-button{width:27px;height:27px}
+  .date-input-wrap input[type="date"]{font-size:14px;padding-right:72px}
+  .clear-date-button{right:34px;width:27px;height:27px}
+}
+.add-page .form,
+.add-page .form-section,
+.add-page .form-section-body,
+.add-page .field,
+.add-page .two-cols{
+  min-width:0;
+  max-width:100%;
+}
+.add-page .form-section-body > *{
+  min-width:0;
+}
+.add-page .field input,
+.add-page .field textarea,
+.add-page .field select,
+.add-page .segmented,
+.add-page .star-input,
+.add-page .date-input-wrap{
+  max-width:100%;
+  min-width:0;
 }
