@@ -1677,3 +1677,39 @@ main{padding:0 20px}
 .add-page .style-select{color:#3a2a20}
 .add-page .style-select:invalid{color:#9a8f86 !important}
 .add-page .style-select option[disabled][hidden]{color:#9a8f86}
+
+/* --- Google Places autocomplete --- */
+.place-autocomplete{position:relative;width:100%}
+.place-autocomplete>input{width:100%}
+.autocomplete-menu{
+  position:absolute;
+  z-index:30;
+  left:0;
+  right:0;
+  top:calc(100% + 5px);
+  padding:5px;
+  border:1px solid #dfcfbd;
+  border-radius:13px;
+  background:#fffdfa;
+  box-shadow:0 10px 24px rgba(58,38,23,.14);
+}
+.autocomplete-menu button{
+  width:100%;
+  min-height:46px;
+  padding:8px 10px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:#3a2a20;
+  text-align:left;
+  cursor:pointer;
+}
+.autocomplete-menu button:hover{background:#f5eee7}
+.autocomplete-menu button>span:not(.suggestion-flag){display:flex;flex-direction:column;min-width:0}
+.autocomplete-menu strong{font-size:13px;font-weight:800}
+.autocomplete-menu small{margin-top:2px;color:#8b7d72;font-size:11px;font-weight:600}
+.suggestion-flag{font-size:19px;line-height:1}
+.autocomplete-spinner{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:#9a8f86;font-size:17px;pointer-events:none}
