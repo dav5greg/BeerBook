@@ -303,7 +303,7 @@ function App() {
         if (screen === 'library' || screen === 'places' || screen === 'settings') return setScreen('home')
         setScreen('home')
       }} aria-label={screen === 'home' ? 'Home' : 'Torna indietro'} title={screen === 'home' ? 'Home' : 'Torna indietro'}>
-        <Icon name={screen === 'home' || screen === 'library' || screen === 'settings' ? 'home' : 'back'} />
+        <Icon name={screen === 'home' || screen === 'library' || screen === 'places' || screen === 'settings' ? 'home' : 'back'} />
       </button>}
       {!onboarding && <div className="topbar-actions">
         <button className="topbar-action sync-button" onClick={syncNow} disabled={sync === 'sync'} aria-label="Sincronizza ora" title="Sincronizza ora"><Icon name="sync" /></button>
@@ -479,7 +479,7 @@ function Places({ beers, onAdd }) {
       </div>
       <button className="round-button places-add-button" onClick={onAdd} aria-label="Aggiungi birra" title="Aggiungi birra">＋</button>
     </div>
-    <div className="search-box places-search"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca luogo di acquisto..." /></div>
+    <div className="search-box places-search search-with-clear"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca luogo di acquisto..." />{query && <button type="button" className="clear-search-button" onPointerDown={e => e.preventDefault()} onMouseDown={e => e.preventDefault()} onClick={e => { e.preventDefault(); e.stopPropagation(); setQuery('') }} aria-label="Cancella ricerca" title="Cancella ricerca">×</button>}</div>
     <div className="places-type-filters">
       <button className={!type ? 'active' : ''} onClick={() => setType('')}>Tutti</button>
       {types.map(item => <button key={item} className={type === item ? 'active' : ''} onClick={() => setType(item)}>{item}</button>)}
@@ -560,7 +560,7 @@ function Library({ beers, query, setQuery, filters, setFilters, sortBy, setSortB
       
     </div>
     <div className="library-search-row">
-      <div className="search-box"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca birra, birrificio, stile, paese..." /></div>
+      <div className="search-box search-with-clear"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca birra, birrificio, stile, paese..." />{query && <button type="button" className="clear-search-button" onPointerDown={e => e.preventDefault()} onMouseDown={e => e.preventDefault()} onClick={e => { e.preventDefault(); e.stopPropagation(); setQuery('') }} aria-label="Cancella ricerca" title="Cancella ricerca">×</button>}</div>
       <button className="filter-icon-button" onClick={() => setShowFilters(!showFilters)} aria-label="Apri filtri" title="Filtri">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" /></svg>
         {Object.values(filters).filter(Boolean).length > 0 && <b>{Object.values(filters).filter(Boolean).length}</b>}
