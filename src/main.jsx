@@ -209,6 +209,8 @@ function App() {
       let comparison = 0
       if (sortBy === 'rating') comparison = Number(a.rating || 0) - Number(b.rating || 0)
       else if (sortBy === 'name') comparison = String(a.name || '').localeCompare(String(b.name || ''), 'it')
+      else if (sortBy === 'style') comparison = String(a.style || '').localeCompare(String(b.style || ''), 'it')
+      else if (sortBy === 'country') comparison = String(a.country || '').localeCompare(String(b.country || ''), 'it')
       else comparison = String(a.last_tasted_at || '').localeCompare(String(b.last_tasted_at || ''))
       return sortDirection === 'asc' ? comparison : -comparison
     })
@@ -515,6 +517,8 @@ function Library({ beers, query, setQuery, filters, setFilters, sortBy, setSortB
           <option value="recent">Più recenti</option>
           <option value="rating">Valutazione</option>
           <option value="name">Nome A–Z</option>
+          <option value="style">Stile</option>
+          <option value="country">Paese</option>
         </select>
         <button type="button" className="sort-direction" onClick={e => { e.preventDefault(); e.stopPropagation(); setSortDirection(d => d === 'asc' ? 'desc' : 'asc') }} aria-label={sortDirection === 'asc' ? 'Ordinamento crescente' : 'Ordinamento decrescente'} title={sortDirection === 'asc' ? 'Crescente' : 'Decrescente'}>{sortDirection === 'asc' ? '↑' : '↓'}</button>
       </div>
