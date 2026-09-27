@@ -1874,3 +1874,24 @@ main{padding:0 20px}
 .carbonation-bubbles i:nth-child(2){width:9px;height:9px;left:9px;bottom:5px}
 .carbonation-bubbles i:nth-child(3){width:6px;height:6px;left:16px;bottom:14px}
 .carbonation-bubbles i:nth-child(4){width:4px;height:4px;left:8px;bottom:17px}
+
+.detail-tasting-top.three>div{
+  align-content:center;
+  justify-items:center;
+  grid-template-rows:25px 22px 14px;
+}
+.detail-tasting-top.three .detail-big-icon,
+.detail-tasting-top.three .carbonation-bubbles{
+  width:25px;
+  height:25px;
+  min-height:25px;
+  display:flex!important;
+  align-items:center;
+  justify-content:center;
+  margin:0;
+}
+.detail-tasting-top.three>div strong,
+.detail-tasting-top.three>div small{
+  margin:0;
+  align-self:center;
+}
