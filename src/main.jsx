@@ -299,7 +299,7 @@ function App() {
 
     <main>
       {screen === 'onboarding' && <Onboarding onRegister={registerUser} onEnter={enterUser} />}
-      {screen === 'home' && <Home displayName={displayName} userKey={userKey} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
+      {screen === 'home' && <Home displayName={displayName} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
       {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
@@ -637,7 +637,7 @@ function PlaceAutocomplete({ mode, value, placeholder, onSelect }) {
           ? items.map(item => ({
               key: item.alpha2Code,
               name: item.name,
-              flag: item.flag || countryFlagEmoji(item.alpha2Code)
+              flag: item.flag || '🌐'
             }))
           : items.map(item => ({
               key: String(item.id || item.name + item.countryCode),
