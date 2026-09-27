@@ -603,7 +603,7 @@ function AddBeer({ form, setForm, onBack, onSave }) {
           <select required value={place.type} onChange={e=>{const places=[...form.places];places[index]={...places[index],type:e.target.value};update('places',places)}}><option value="" disabled>Tipologia</option><option>Supermercato</option><option>Pub</option><option>Bar</option><option>Ristorante</option><option>Altro</option></select>
           <PlaceAutocomplete mode="city" value={place.city} placeholder="Cerca città" onSelect={selected => {const places=[...form.places];places[index]={...places[index],city:selected.label};update('places',places)}} />
           <button type="button" className="remove-place" onClick={()=>update('places',form.places.length>1?form.places.filter((_,i)=>i!==index):[{name:'',type:'',city:''}])} aria-label="Rimuovi luogo" title="Rimuovi luogo"><span aria-hidden="true">×</span></button>
-        </div>})}<button type="button" className="secondary-button" onClick={()=>update('places',[...form.places,{name:'',type:'',city:''}])}>＋ Aggiungi luogo</button></Field>>
+        </div>})}<button type="button" className="secondary-button" onClick={()=>update('places',[...form.places,{name:'',type:'',city:''}])}>＋ Aggiungi luogo</button></Field>
         </div>}
       </section>
 
