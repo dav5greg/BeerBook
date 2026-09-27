@@ -1,4 +1,4 @@
-const CACHE = 'beer-book-v5'
+const CACHE = 'beer-book-v6'
 const APP_SHELL = ['/BeerBook/','/BeerBook/index.html','/BeerBook/manifest.webmanifest','/BeerBook/icon-192.png','/BeerBook/icon-512.png']
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)))
