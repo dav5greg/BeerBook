@@ -553,8 +553,8 @@ function Detail({ beer, onBack, onEdit }) {
         {openSections.tasting && <div className="detail-section-body">
           <div className="detail-tasting-top three">
             <div><span className="detail-big-icon">📅</span><strong>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</strong><small>Data degustazione</small></div>
-            <div><strong className="detail-rating-number">{Number(beer.rating || 0) ? Number(beer.rating).toFixed(0) : '—'} / 5</strong><small>Valutazione</small></div>
-            <div><strong>{beer.carbonation || '—'}</strong><small>Carbonazione</small></div>
+            <div><span className="detail-big-icon">★</span><strong className="detail-rating-number">{Number(beer.rating || 0) ? Number(beer.rating).toFixed(0) : '—'} / 5</strong><small>Valutazione</small></div>
+            <div><span className="detail-big-icon">◌</span><strong>{beer.carbonation || '—'}</strong><small>Carbonazione</small></div>
           </div>
           <div className="detail-notes"><p>{beer.notes || 'Nessuna nota inserita.'}</p></div>
         </div>}
