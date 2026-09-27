@@ -203,12 +203,23 @@ function App() {
       if (!res.ok) return { ok: false, error: data.error || 'Impossibile salvare il profilo.' }
       const saved = data.user?.identifier || clean
       const savedName = data.user?.display_name || ''
+      const previousKey = userKey
+
+      // Renaming an archive must not reload/overwrite the current beer list.
+      // The backend changes the identifier on the same users.id, so all beers
+      // and purchase places remain attached to the same user.
+      if (previousKey && previousKey !== saved) {
+        const currentCache = localStorage.getItem('beerbook-cache-' + previousKey)
+        if (currentCache) {
+          localStorage.setItem('beerbook-cache-' + saved, currentCache)
+        }
+      }
+
       setUserKey(saved)
       setDisplayName(savedName)
       localStorage.setItem('beerbook-user-key', saved)
       if (savedName) localStorage.setItem('beerbook-display-name', savedName)
       else localStorage.removeItem('beerbook-display-name')
-      await loadBeers(saved)
       return { ok: true }
     } catch {
       return { ok: false, error: 'Impossibile salvare il profilo. Controlla la connessione e riprova.' }
