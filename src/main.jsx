@@ -543,14 +543,6 @@ function Tag({ text }) { return text ? <span className="tag">{text}</span> : nul
 
 function AddBeer({ form, setForm, onBack, onSave }) {
   const update = (key, value) => setForm({ ...form, [key]: value })
-  const [isOffline, setIsOffline] = useState(typeof navigator !== 'undefined' ? !navigator.onLine : false)
-  useEffect(() => {
-    const online = () => setIsOffline(false)
-    const offline = () => setIsOffline(true)
-    window.addEventListener('online', online)
-    window.addEventListener('offline', offline)
-    return () => { window.removeEventListener('online', online); window.removeEventListener('offline', offline) }
-  }, [])
   const [openSections, setOpenSections] = useState({ beer: true, tasting: true, places: true })
 
   const toggleSection = key => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }))
@@ -606,7 +598,7 @@ function AddBeer({ form, setForm, onBack, onSave }) {
           </button>
         </div>
         {openSections.places && <div className="form-section-body">
-          <Field label="Luoghi di acquisto">{form.places.map((place,index)=>{ const citySelected = !!place.city.trim(); const typeSelected = !!place.type.trim(); const placeDisabled = !isOffline && (!citySelected || !typeSelected); return <div className="place-row" key={index}>
+          <Field label="Luoghi di acquisto">{form.places.map((place,index)=>{ return <div className="place-row" key={index}>
           <PlaceAutocomplete mode="city" value={place.city} placeholder="Cerca città" onSelect={selected => {const places=[...form.places];places[index]={...places[index],city:selected.label,name: ''};update('places',places)}} />
           <select required value={place.type} disabled={!isOffline && !citySelected} onChange={e=>{const places=[...form.places];places[index]={...places[index],type:e.target.value,name:''};update('places',places)}}><option value="" disabled>Tipologia</option><option>Supermercato</option><option>Pub</option><option>Bar</option><option>Ristorante</option><option>Altro</option></select>
           <PlaceAutocomplete mode="place" value={place.name} placeholder="Nome luogo" city={place.city} placeType={place.type} disabled={placeDisabled} onSelect={selected => {const places=[...form.places];places[index]={...places[index],name:selected.label};update('places',places)}} />
