@@ -10,7 +10,6 @@ export default async function handler(req, res) {
   const type = String(req.query?.type || '').trim()
   if (input.length < 2 || city.length < 2) return res.status(200).json({ suggestions: [] })
 
-  const searchText = input + ' ' + city
   const typeTags = {
     Supermercato: 'shop:supermarket',
     Pub: 'amenity:pub',
@@ -18,29 +17,40 @@ export default async function handler(req, res) {
     Ristorante: 'amenity:restaurant',
   }
 
-  const cityResponse = await fetch('https://countries.dev/cities?q=' + encodeURIComponent(city) + '&limit=1')
-  if (!cityResponse.ok) return res.status(200).json({ suggestions: [] })
-  const cityData = await cityResponse.json()
-  const cityMatch = Array.isArray(cityData) ? cityData[0] : null
-  if (!cityMatch?.latitude || !cityMatch?.longitude) return res.status(200).json({ suggestions: [] })
+  try {
+    const cityResponse = await fetch('https://countries.dev/cities?q=' + encodeURIComponent(city) + '&limit=1')
+    if (!cityResponse.ok) return res.status(200).json({ suggestions: [] })
+    const cityData = await cityResponse.json()
+    const cityMatch = Array.isArray(cityData) ? cityData[0] : null
+    if (!cityMatch?.latitude || !cityMatch?.longitude) return res.status(200).json({ suggestions: [] })
 
-  const lat = Number(cityMatch.latitude)
-  const lng = Number(cityMatch.longitude)
-  const delta = 0.12
-  const bbox = [lng - delta, lat - delta, lng + delta, lat + delta].join(',')
-  const tag = typeTags[type] ? '&osm_tag=' + encodeURIComponent(typeTags[type]) : ''
-    const response = await fetch('https://photon.komoot.io/api/?q=' + encodeURIComponent(input) + '&limit=12&lang=it&bbox=' + encodeURIComponent(bbox) + tag)
+    const lat = Number(cityMatch.latitude)
+    const lng = Number(cityMatch.longitude)
+    const delta = 0.12
+    const bbox = [lng - delta, lat - delta, lng + delta, lat + delta].join(',')
+    const tag = typeTags[type] ? '&osm_tag=' + encodeURIComponent(typeTags[type]) : ''
+
+    const response = await fetch(
+      'https://photon.komoot.io/api/?q=' + encodeURIComponent(input) +
+      '&limit=12&lang=it&bbox=' + encodeURIComponent(bbox) + tag
+    )
     if (!response.ok) throw new Error('Photon HTTP ' + response.status)
+
     const data = await response.json()
-    const filter = typeFilters[type]
-    const suggestions = (data.features || []).filter(item => {
-      if (!filter) return true
-      return filter(item.properties?.osm_value)
-    }).map(item => {
-      const p = item.properties || {}
-      const address = [p.street, p.housenumber].filter(Boolean).join(' ')
-      return { id: String(p.osm_id || Math.random()), name: p.name, address }
-    }).filter(item => item.name).slice(0, 8)
+    const suggestions = (data.features || [])
+      .filter(item => item.properties?.name)
+      .map(item => {
+        const p = item.properties || {}
+        const address = [p.street, p.housenumber].filter(Boolean).join(' ')
+        return {
+          id: String(p.osm_id || p.name),
+          name: p.name,
+          address,
+        }
+      })
+      .filter(item => item.name)
+      .slice(0, 8)
+
     return res.status(200).json({ suggestions })
   } catch (error) {
     return res.status(200).json({ suggestions: [], error: 'place-search-unavailable' })
