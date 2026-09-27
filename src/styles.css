@@ -1289,3 +1289,10 @@ main{padding:0 20px}
 .detail-mug{width:76px;height:76px;flex:none;display:grid;place-items:center}
 .detail-mug .real-icon{width:64px;height:64px;filter:none}
 .detail-sheet-compact{padding-top:0}
+
+.try-home-head{margin-top:4px}
+.try-home-grid{margin-bottom:24px}
+.compact-beer-card .beer-card-art{width:44px;height:58px;font-size:22px}
+.compact-beer-card .beer-card-body{padding-top:2px}
+.compact-beer-card .beer-card-body strong{font-size:14px}
+.compact-beer-card .beer-card-body>span{font-size:11px}
