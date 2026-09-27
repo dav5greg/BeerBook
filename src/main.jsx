@@ -539,7 +539,7 @@ function Detail({ beer, onBack, onEdit }) {
         {openSections.beer && <div className="detail-section-body">
           <div className="detail-fact-grid">
             <div><span className="detail-fact-icon">🍺</span><strong>{beer.abv ? beer.abv + '%' : '—'}</strong><small>Gradazione</small></div>
-            <div><span className="detail-fact-icon">◉</span><strong>{beer.style || '—'}</strong><small>Stile</small></div>
+            <div><span className="detail-fact-icon">🌿</span><strong>{beer.style || '—'}</strong><small>Stile</small></div>
             <div><span className="detail-fact-icon">🌍</span><strong>{beer.country || '—'}</strong><small>Paese</small></div>
           </div>
         </div>}
@@ -551,13 +551,12 @@ function Detail({ beer, onBack, onEdit }) {
           <button type="button" className="section-chevron" onClick={() => toggleSection('tasting')} aria-label={openSections.tasting ? 'Chiudi sezione' : 'Apri sezione'}>{openSections.tasting ? '⌃' : '⌄'}</button>
         </div>
         {openSections.tasting && <div className="detail-section-body">
-          <div className="detail-tasting-top">
-            <div><span className="detail-big-icon">▣</span><strong>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</strong><small>Data degustazione</small></div>
-            <div><span className="detail-big-icon">★</span><strong className="detail-stars">{'★'.repeat(Number(beer.rating || 0))}<span>{'★'.repeat(5 - Number(beer.rating || 0))}</span></strong><small>Valutazione · {Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</small></div>
+          <div className="detail-tasting-top three">
+            <div><span className="detail-big-icon">📅</span><strong>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</strong><small>Data degustazione</small></div>
+            <div><strong className="detail-rating-number">{Number(beer.rating || 0) ? Number(beer.rating).toFixed(0) : '—'} / 5</strong><small>Valutazione</small></div>
+            <div><strong>{beer.carbonation || '—'}</strong><small>Carbonazione</small></div>
           </div>
-          <div className="detail-carbonation"><span className="detail-big-icon">◌</span><div><strong>{beer.carbonation || '—'}</strong><small>Carbonazione</small></div></div>
-          <div className="detail-notes"><span className="detail-big-icon">▤</span><p>{beer.notes || 'Nessuna nota inserita.'}</p></div>
-          <button className="detail-edit-inline" onClick={onEdit}>✎ Modifica degustazione</button>
+          <div className="detail-notes"><p>{beer.notes || 'Nessuna nota inserita.'}</p></div>
         </div>}
       </section>
 
