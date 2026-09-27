@@ -2535,49 +2535,43 @@ main{padding:0 20px}
   .beer-row-meta .list-rating strong{font-size:10.5px}
 }
 
-/* --- Compact rows: tighter outer padding, clearer line spacing --- */
+/* --- Compact rows: reduce outer whitespace, restore line breathing --- */
 .library-list .beer-row-main{
-  padding-top:1px;
-  padding-bottom:1px;
+  padding-top:0;
+  padding-bottom:0;
+  min-height:0;
 }
 .library-list .beer-info{
-  gap:4px;
+  gap:6px;
 }
-.library-list .beer-info strong{
-  font-size:15px;
-  line-height:1;
-}
-.library-list .beer-info span{
-  font-size:11.5px;
-  line-height:1;
-}
+.library-list .beer-info strong,
+.library-list .beer-info span,
 .library-list .beer-info time{
-  font-size:10.5px;
   line-height:1;
 }
+.library-list .beer-info strong{font-size:15px}
+.library-list .beer-info span{font-size:11.5px}
+.library-list .beer-info time{font-size:10.5px}
 .beer-row-meta{
-  gap:4px;
+  gap:6px;
 }
-.beer-row-meta small{
-  font-size:11.5px;
+.beer-row-meta small,
+.beer-row-meta .list-rating{
   line-height:1;
 }
-.beer-row-meta .list-rating b{
-  font-size:14px;
-}
-.beer-row-meta .list-rating strong{
-  font-size:12px;
-}
+.beer-row-meta small{font-size:11.5px}
+.beer-row-meta .list-rating b{font-size:14px}
+.beer-row-meta .list-rating strong{font-size:12px}
 @media(max-width:520px){
   .library-list .beer-row-main{
     padding-top:0;
     padding-bottom:0;
   }
-  .library-list .beer-info{gap:3px}
+  .library-list .beer-info{gap:5px}
   .library-list .beer-info strong{font-size:14px}
   .library-list .beer-info span{font-size:11px}
   .library-list .beer-info time{font-size:10px}
-  .beer-row-meta{gap:3px}
+  .beer-row-meta{gap:5px}
   .beer-row-meta small{font-size:11px}
   .beer-row-meta .list-rating b{font-size:13px}
   .beer-row-meta .list-rating strong{font-size:11px}
