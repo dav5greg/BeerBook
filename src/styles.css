@@ -1314,3 +1314,38 @@ main{padding:0 20px}
 }
 .topbar-action.sync-button .header-icon-svg{stroke-width:1.8}
 .topbar-action.exit-button .header-icon-svg{stroke-width:1.8}
+
+
+/* --- Header controls: same surface and icon treatment --- */
+.brand.home-back-button{
+  border-color:var(--line);
+  background:rgba(255,250,243,.92);
+  color:var(--ink);
+  box-shadow:0 3px 10px rgba(70,45,28,.06);
+  border-radius:13px;
+}
+.brand.home-back-button:hover{
+  background:rgba(255,250,243,.98);
+  border-color:var(--line);
+}
+.brand.home-back-button .simple-home-icon,
+.brand.home-back-button .back-icon-svg{
+  width:21px;
+  height:21px;
+  display:block;
+  color:currentColor;
+  stroke:currentColor;
+  stroke-width:1.8;
+}
+@media(max-width:520px){
+  .brand.home-back-button{
+    width:36px;
+    height:36px;
+    border-radius:13px;
+  }
+  .brand.home-back-button .simple-home-icon,
+  .brand.home-back-button .back-icon-svg{
+    width:21px;
+    height:21px;
+  }
+}
