@@ -607,9 +607,7 @@ function AddBeer({ form, setForm, onBack, onSave }) {
   </section>
 }
 
-function countryFlagEmoji(code) { return !code || code.length !== 2 ? '🌐' : String.fromCodePoint(...code.toUpperCase().split('').map(c => 127397 + c.charCodeAt(0))) }
-
-function PlaceAutocomplete({ mode, value, placeholder, userKey, onSelect }) {
+function PlaceAutocomplete({ mode, value, placeholder, onSelect }) {
   const [query, setQuery] = useState(value || '')
   const [suggestions, setSuggestions] = useState([])
   const [open, setOpen] = useState(false)
@@ -625,45 +623,54 @@ function PlaceAutocomplete({ mode, value, placeholder, userKey, onSelect }) {
       setSuggestions([])
       return
     }
+
     const timer = setTimeout(async () => {
       try {
         setLoading(true)
-        const res = await fetch(API_BASE + '/api/places-autocomplete?mode=' + encodeURIComponent(mode) + '&input=' + encodeURIComponent(text), { headers: userKey ? { 'x-user-key': userKey } : {} })
-        const data = await res.json().catch(() => ({}))
-        setSuggestions(data.suggestions || [])
+        const endpoint = mode === 'country'
+          ? 'https://countries.dev/name/' + encodeURIComponent(text) + '?fields=name,alpha2Code,flag&limit=7'
+          : 'https://countries.dev/cities?q=' + encodeURIComponent(text) + '&limit=7'
+        const res = await fetch(endpoint)
+        const data = await res.json().catch(() => [])
+        const items = Array.isArray(data) ? data : []
+        setSuggestions(mode === 'country'
+          ? items.map(item => ({
+              key: item.alpha2Code,
+              name: item.name,
+              flag: item.flag || countryFlagEmoji(item.alpha2Code)
+            }))
+          : items.map(item => ({
+              key: String(item.id || item.name + item.countryCode),
+              name: item.name,
+              secondary: item.adminRegion || item.countryCode || ''
+            }))
+        )
         setOpen(true)
       } catch {
         setSuggestions([])
       } finally {
         setLoading(false)
       }
-    }, 280)
+    }, 220)
+
     return () => clearTimeout(timer)
   }, [query, mode, value])
 
-  async function choose(item) {
+  function choose(item) {
     setOpen(false)
     setSuggestions([])
-    setLoading(true)
-    try {
-      const res = await fetch(API_BASE + '/api/places-autocomplete?mode=details&placeId=' + encodeURIComponent(item.placeId), { headers: userKey ? { 'x-user-key': userKey } : {} })
-      const data = await res.json().catch(() => ({}))
-      const place = data.place
-      if (!place) return
-      const label = mode === 'city'
-        ? place.city + (place.province ? ' (' + place.province + ')' : '')
-        : place.country
-      setQuery(label)
-      onSelect({ ...place, label })
-    } catch {} finally {
-      setLoading(false)
-    }
+    const label = mode === 'country' ? item.flag + ' ' + item.name : item.name
+    setQuery(label)
+    onSelect({ name: item.name, country: item.name, label })
   }
 
   return <div className="place-autocomplete">
     <input
       value={query}
-      onChange={e => { setQuery(e.target.value); onSelect({ name: e.target.value, country: e.target.value, label: e.target.value }) }}
+      onChange={e => {
+        setQuery(e.target.value)
+        onSelect({ name: e.target.value, country: e.target.value, label: e.target.value })
+      }}
       onFocus={() => suggestions.length && setOpen(true)}
       onBlur={() => setTimeout(() => setOpen(false), 180)}
       placeholder={placeholder}
@@ -671,14 +678,13 @@ function PlaceAutocomplete({ mode, value, placeholder, userKey, onSelect }) {
     />
     {loading && <span className="autocomplete-spinner" aria-hidden="true">⌕</span>}
     {open && suggestions.length > 0 && <div className="autocomplete-menu">
-      {suggestions.map(item => <button type="button" key={item.placeId} onMouseDown={e => e.preventDefault()} onClick={() => choose(item)}>
-        {mode === 'country' && <span className="suggestion-flag">🌐</span>}
-        <span><strong>{item.text}</strong>{item.secondary && <small>{item.secondary}</small>}</span>
+      {suggestions.map(item => <button type="button" key={item.key} onMouseDown={e => e.preventDefault()} onClick={() => choose(item)}>
+        {mode === 'country' && <span className="suggestion-flag">{item.flag}</span>}
+        <span><strong>{item.name}</strong>{item.secondary && <small>{item.secondary}</small>}</span>
       </button>)}
     </div>}
   </div>
 }
-
 function Field({ label, children }) { return <label className="field"><span>{label}</span>{children}</label> }
 
 function Onboarding({ onRegister, onEnter }) {
