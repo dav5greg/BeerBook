@@ -1895,3 +1895,30 @@ main{padding:0 20px}
   margin:0;
   align-self:center;
 }
+
+.date-input-wrap{position:relative;width:100%;min-width:0}
+.date-input-wrap input[type="date"]{width:100%;min-width:0;box-sizing:border-box;padding-right:42px}
+.clear-date-button{
+  position:absolute;
+  right:8px;
+  top:50%;
+  transform:translateY(-50%);
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid #dfcfc0;
+  border-radius:50%;
+  background:#fff8f1;
+  color:#8b6f5c;
+  font-size:19px;
+  line-height:1;
+  cursor:pointer;
+  z-index:2;
+}
+.clear-date-button:hover{background:#f3e7dc;border-color:#cdb8a5;color:#5f4635}
+@media(max-width:520px){
+  .date-input-wrap input[type="date"]{font-size:14px;padding-right:40px}
+  .clear-date-button{width:27px;height:27px}
+}
