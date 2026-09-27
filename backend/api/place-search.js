@@ -11,15 +11,25 @@ export default async function handler(req, res) {
   if (input.length < 2 || city.length < 2) return res.status(200).json({ suggestions: [] })
 
   const searchText = input + ' ' + city
-  const typeFilters = {
-    Supermercato: value => value === 'supermarket',
-    Pub: value => value === 'pub',
-    Bar: value => value === 'cafe',
-    Ristorante: value => value === 'restaurant',
+  const typeTags = {
+    Supermercato: 'shop:supermarket',
+    Pub: 'amenity:pub',
+    Bar: 'amenity:cafe',
+    Ristorante: 'amenity:restaurant',
   }
 
-  try {
-    const response = await fetch('https://photon.komoot.io/api/?q=' + encodeURIComponent(searchText) + '&limit=12&lang=it')
+  const cityResponse = await fetch('https://countries.dev/cities?q=' + encodeURIComponent(city) + '&limit=1')
+  if (!cityResponse.ok) return res.status(200).json({ suggestions: [] })
+  const cityData = await cityResponse.json()
+  const cityMatch = Array.isArray(cityData) ? cityData[0] : null
+  if (!cityMatch?.latitude || !cityMatch?.longitude) return res.status(200).json({ suggestions: [] })
+
+  const lat = Number(cityMatch.latitude)
+  const lng = Number(cityMatch.longitude)
+  const delta = 0.12
+  const bbox = [lng - delta, lat - delta, lng + delta, lat + delta].join(',')
+  const tag = typeTags[type] ? '&osm_tag=' + encodeURIComponent(typeTags[type]) : ''
+    const response = await fetch('https://photon.komoot.io/api/?q=' + encodeURIComponent(input) + '&limit=12&lang=it&bbox=' + encodeURIComponent(bbox) + tag)
     if (!response.ok) throw new Error('Photon HTTP ' + response.status)
     const data = await response.json()
     const filter = typeFilters[type]
