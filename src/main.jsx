@@ -316,7 +316,7 @@ function App() {
       {screen === 'onboarding' && <Onboarding onRegister={registerUser} onEnter={enterUser} />}
       {screen === 'home' && <Home displayName={displayName} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
       {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy} sortDirection={sortDirection} setSortDirection={setSortDirection} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
-      {screen === 'places' && <Places beers={beers} onAdd={startAdd} />}
+      {screen === 'places' && <Places beers={beers} onSelectPlace={(placeName) => { setFilters({ ...filters, place: placeName }); setQuery(''); setShowFilters(false); setScreen('library') }} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
       {screen === 'settings' && <Settings displayName={displayName} saveUserKey={saveUserKey} />}
@@ -443,7 +443,7 @@ function Icon({ name }) {
   />
 }
 
-function Places({ beers, onAdd }) {
+function Places({ beers, onSelectPlace }) {
   const [query, setQuery] = useState('')
   const [type, setType] = useState('')
   const places = useMemo(() => {
@@ -477,7 +477,6 @@ function Places({ beers, onAdd }) {
         <h1>Luoghi di acquisto</h1>
         <p>{places.length} {places.length === 1 ? 'luogo' : 'luoghi'}</p>
       </div>
-      <button className="round-button places-add-button" onClick={onAdd} aria-label="Aggiungi birra" title="Aggiungi birra">＋</button>
     </div>
     <div className="search-box places-search search-with-clear"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca luogo di acquisto..." />{query && <button type="button" className="clear-search-button" onPointerDown={e => e.preventDefault()} onMouseDown={e => e.preventDefault()} onClick={e => { e.preventDefault(); e.stopPropagation(); setQuery('') }} aria-label="Cancella ricerca" title="Cancella ricerca">×</button>}</div>
     <div className="places-type-filters">
@@ -485,11 +484,11 @@ function Places({ beers, onAdd }) {
       {types.map(item => <button key={item} className={type === item ? 'active' : ''} onClick={() => setType(item)}>{item}</button>)}
     </div>
     <div className="places-list">
-      {filtered.map(place => <div className="place-list-row" key={[place.name,place.city,place.type].join('|')}>
+      {filtered.map(place => <button className="place-list-row" key={[place.name,place.city,place.type].join('|')} onClick={() => onSelectPlace(place.name)} aria-label={'Filtra le birre acquistate da ' + place.name}>
         <div className="place-list-icon"><Icon name={iconFor(place)} /></div>
         <div className="place-list-info"><strong>{place.name}</strong><span>{place.type || 'Altro'}{place.city ? ' · ' + place.city : ''}</span></div>
         <strong className="place-list-count">{place.count} {place.count === 1 ? 'birra' : 'birre'} <span>›</span></strong>
-      </div>)}
+      </button>)}
       {!filtered.length && <div className="empty places-empty"><div>⌖</div><h3>Nessun luogo trovato</h3><p>Prova a cambiare ricerca o tipologia.</p></div>}
     </div>
   </section>
@@ -673,7 +672,11 @@ function Detail({ beer, onBack, onEdit }) {
           <button type="button" className="section-chevron" onClick={() => toggleSection('places')} aria-label={openSections.places ? 'Chiudi sezione' : 'Apri sezione'}>{openSections.places ? '⌃' : '⌄'}</button>
         </div>
         {openSections.places && <div className="detail-section-body">
-          {(beer.places || []).length ? beer.places.map((p,i)=><div className="purchase-row large-purchase-row" key={i}><span className="purchase-icon">🛒</span><div><b>{p.name}</b><small>{p.type} · {p.city || 'Città non indicata'}</small></div></div>) : <p className="muted">Nessun luogo di acquisto.</p>}
+          {(beer.places || []).length ? [...beer.places].sort((a,b) => {
+            const da = a.created_at ? new Date(a.created_at).getTime() : Number.MAX_SAFE_INTEGER
+            const db = b.created_at ? new Date(b.created_at).getTime() : Number.MAX_SAFE_INTEGER
+            return da - db
+          }).map((p,i)=><div className="purchase-row large-purchase-row" key={i}><span className="purchase-icon">🛒</span><div><b>{p.name}</b><small>{p.type} · {p.city || 'Città non indicata'}</small></div></div>) : <p className="muted">Nessun luogo di acquisto.</p>}
         </div>}
       </section>
 
