@@ -290,7 +290,7 @@ function App() {
     } catch { setSync('pending') }
   }
 
-  const title = screen === 'home' ? 'Il tuo archivio' : screen === 'library' ? 'Le mie birre' : screen === 'detail' ? selected?.name : screen === 'add' ? (selected ? 'Modifica birra' : 'Aggiungi birra') : 'Impostazioni'
+  const title = screen === 'home' ? 'Il tuo archivio' : screen === 'library' ? 'Le mie birre' : screen === 'places' ? 'Luoghi di acquisto' : screen === 'detail' ? selected?.name : screen === 'add' ? (selected ? 'Modifica birra' : 'Aggiungi birra') : 'Impostazioni'
 
   const onboarding = !userKey
 
@@ -300,7 +300,7 @@ function App() {
         if (screen === 'home') return
         if (screen === 'detail') return setScreen('library')
         if (screen === 'add') return setScreen(selected ? 'detail' : 'library')
-        if (screen === 'library' || screen === 'settings') return setScreen('home')
+        if (screen === 'library' || screen === 'places' || screen === 'settings') return setScreen('home')
         setScreen('home')
       }} aria-label={screen === 'home' ? 'Home' : 'Torna indietro'} title={screen === 'home' ? 'Home' : 'Torna indietro'}>
         <Icon name={screen === 'home' || screen === 'library' || screen === 'settings' ? 'home' : 'back'} />
@@ -316,6 +316,7 @@ function App() {
       {screen === 'onboarding' && <Onboarding onRegister={registerUser} onEnter={enterUser} />}
       {screen === 'home' && <Home displayName={displayName} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
       {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy} sortDirection={sortDirection} setSortDirection={setSortDirection} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
+      {screen === 'places' && <Places beers={beers} onAdd={startAdd} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
       {screen === 'settings' && <Settings displayName={displayName} saveUserKey={saveUserKey} />}
@@ -328,7 +329,7 @@ function App() {
       <NavItem active={screen === 'home'} icon="home" label="Home" onClick={() => setScreen('home')} />
       <NavItem active={screen === 'library' || screen === 'detail'} icon="beer" label="Birre" onClick={() => setScreen('library')} />
       <button className="add-fab" onClick={startAdd} aria-label="Aggiungi birra">＋</button>
-      <NavItem active={false} icon="places" label="Luoghi" onClick={() => setScreen('library')} />
+      <NavItem active={screen === 'places'} icon="places" label="Luoghi" onClick={() => setScreen('places')} />
       <NavItem active={screen === 'settings'} icon="settings" label="Settings" onClick={() => setScreen('settings')} />
     </nav>}
   </div>
@@ -411,6 +412,22 @@ function Icon({ name }) {
       <path d="M3.5 10.5 12 3.8l8.5 6.7"/><path d="M5.5 9.8v10.2h13V9.8"/><path d="M9.5 20v-6h5v6"/>
     </svg>
   }
+  if (name === 'places') {
+    return <svg className="simple-places-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21Z"/>
+      <circle cx="12" cy="9.5" r="2.3"/>
+    </svg>
+  }
+  if (name === 'bar') {
+    return <svg className="simple-place-type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M7 4h10l-2.5 7.5A3 3 0 0 1 12 14a3 3 0 0 1-2.5-2.5L7 4Z"/><path d="M12 14v5M8 20h8M5 4h14"/>
+    </svg>
+  }
+  if (name === 'restaurant') {
+    return <svg className="simple-place-type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M7 3v8M4.5 3v5.5a2.5 2.5 0 0 0 5 0V3M7 11v10M17 3v18M17 3c-2 2-3 4-3 6h3"/>
+    </svg>
+  }
   if (name === 'settings') {
     return <svg className="simple-settings-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path fillRule="evenodd" d="M10.35 2.45h3.3l.55 2.15c.42.14.82.31 1.2.5l1.95-1.05 2.34 2.34-1.05 1.95c.19.38.36.78.5 1.2l2.15.55v3.3l-2.15.55c-.14.42-.31.82-.5 1.2l1.05 1.95-2.34 2.34-1.95-1.05c-.38.19-.78.36-1.2.5l-.55 2.15h-3.3l-.55-2.15c-.42-.14-.82-.31-1.2-.5l-1.95 1.05-2.34-2.34 1.05-1.95a8.7 8.7 0 0 1-.5-1.2L2.7 13.4v-3.3l2.15-.55c.14-.42.31-.82.5-1.2L4.31 6.4l2.34-2.34L8.6 5.1c.38-.19.78-.36 1.2-.5l.55-2.15Zm1.65 6.05a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5Z" clipRule="evenodd"/>
@@ -424,6 +441,58 @@ function Icon({ name }) {
     alt=""
     aria-hidden="true"
   />
+}
+
+function Places({ beers, onAdd }) {
+  const [query, setQuery] = useState('')
+  const [type, setType] = useState('')
+  const places = useMemo(() => {
+    const map = new Map()
+    beers.forEach(beer => (beer.places || []).forEach(place => {
+      const name = String(place.name || '').trim()
+      if (!name) return
+      const key = [name.toLowerCase(), place.city || '', place.type || ''].join('|')
+      const current = map.get(key) || { name, city: place.city || '', type: place.type || '', count: 0 }
+      current.count += 1
+      map.set(key, current)
+    }))
+    return [...map.values()].sort((a,b) => a.name.localeCompare(b.name, 'it'))
+  }, [beers])
+  const types = ['Supermercato','Pub','Bar','Ristorante','Altro']
+  const filtered = places.filter(place => {
+    if (type && place.type !== type) return false
+    if (query && ![place.name, place.city, place.type].join(' ').toLowerCase().includes(query.toLowerCase())) return false
+    return true
+  })
+  const iconFor = place => {
+    if (place.type === 'Supermercato') return 'cart'
+    if (place.type === 'Pub') return 'beer'
+    if (place.type === 'Bar') return 'bar'
+    if (place.type === 'Ristorante') return 'restaurant'
+    return 'places'
+  }
+  return <section className="page places-page">
+    <div className="places-heading">
+      <div>
+        <h1>Luoghi di acquisto</h1>
+        <p>{places.length} {places.length === 1 ? 'luogo' : 'luoghi'}</p>
+      </div>
+      <button className="round-button places-add-button" onClick={onAdd} aria-label="Aggiungi birra" title="Aggiungi birra">＋</button>
+    </div>
+    <div className="search-box places-search"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca luogo di acquisto..." /></div>
+    <div className="places-type-filters">
+      <button className={!type ? 'active' : ''} onClick={() => setType('')}>Tutti</button>
+      {types.map(item => <button key={item} className={type === item ? 'active' : ''} onClick={() => setType(item)}>{item}</button>)}
+    </div>
+    <div className="places-list">
+      {filtered.map(place => <div className="place-list-row" key={[place.name,place.city,place.type].join('|')}>
+        <div className="place-list-icon"><Icon name={iconFor(place)} /></div>
+        <div className="place-list-info"><strong>{place.name}</strong><span>{place.type || 'Altro'}{place.city ? ' · ' + place.city : ''}</span></div>
+        <strong className="place-list-count">{place.count} {place.count === 1 ? 'birra' : 'birre'} <span>›</span></strong>
+      </div>)}
+      {!filtered.length && <div className="empty places-empty"><div>⌖</div><h3>Nessun luogo trovato</h3><p>Prova a cambiare ricerca o tipologia.</p></div>}
+    </div>
+  </section>
 }
 
 function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary, onAdd, onTry }) {
