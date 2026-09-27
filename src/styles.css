@@ -3128,3 +3128,40 @@ main{padding:0 20px}
   color:#f1e7dc !important;
   stroke:#f1e7dc !important;
 }
+
+
+/* --- Dark beer detail: reduce luminance for comfortable reading --- */
+:root[data-theme="dark"] .detail-hero-card,
+:root[data-theme="dark"] .detail-form-section{
+  background:#181512;
+  color:#f0e8e0;
+  border-color:#332b25;
+}
+:root[data-theme="dark"] .detail-hero-card{
+  box-shadow:0 8px 24px rgba(0,0,0,.28);
+}
+:root[data-theme="dark"] .detail-mug{
+  background:#241c17;
+}
+:root[data-theme="dark"] .detail-fact-grid>div,
+:root[data-theme="dark"] .detail-tasting-top>div,
+:root[data-theme="dark"] .detail-carbonation,
+:root[data-theme="dark"] .detail-notes{
+  background:#1d1916;
+  border-color:#352d27;
+  color:#eee6de;
+}
+:root[data-theme="dark"] .detail-fact-grid small,
+:root[data-theme="dark"] .detail-tasting-top small,
+:root[data-theme="dark"] .detail-notes p{
+  color:#a99d93;
+}
+:root[data-theme="dark"] .detail-section-head{
+  background:#181512;
+  color:#f0e8e0;
+  border-color:#332b25;
+}
+:root[data-theme="dark"] .detail-section-body{
+  background:#181512;
+  color:#eee6de;
+}
