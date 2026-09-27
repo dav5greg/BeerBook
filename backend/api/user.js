@@ -53,3 +53,5 @@ export default async function handler(req, res) {
     return json(res, 500, { error: error.message })
   }
 }
+
+// Keep this endpoint deployment-triggerable when the Git integration is slow to pick up a backend-only change.
