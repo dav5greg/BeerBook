@@ -1867,3 +1867,10 @@ main{padding:0 20px}
 .detail-try-toggle input:after{width:19px;height:19px;top:2px;left:2px}
 .detail-try-toggle input:checked:after{left:19px}
 .detail-tasting-top.three .detail-big-icon{font-size:21px;color:#b36b12}
+
+.carbonation-bubbles{position:relative;width:25px;height:25px;display:block!important}
+.carbonation-bubbles i{position:absolute;display:block;border:2px solid currentColor;border-radius:50%}
+.carbonation-bubbles i:nth-child(1){width:7px;height:7px;left:2px;bottom:2px}
+.carbonation-bubbles i:nth-child(2){width:9px;height:9px;left:9px;bottom:5px}
+.carbonation-bubbles i:nth-child(3){width:6px;height:6px;left:16px;bottom:14px}
+.carbonation-bubbles i:nth-child(4){width:4px;height:4px;left:8px;bottom:17px}
