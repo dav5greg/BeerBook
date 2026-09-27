@@ -2319,3 +2319,115 @@ main{padding:0 20px}
   max-width:100%;
   min-width:0;
 }
+
+/* --- My Beers final list controls --- */
+.library-search-row{
+  grid-template-columns:minmax(0,1fr) 42px;
+  gap:7px;
+  margin-bottom:8px;
+}
+.library-search-row .search-box{
+  min-width:0;
+}
+.filter-icon-button{
+  position:relative;
+  width:42px;
+  height:42px;
+  padding:0;
+  display:grid;
+  place-items:center;
+}
+.filter-icon-button svg{
+  width:22px;
+  height:22px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.9;
+  stroke-linecap:round;
+}
+.filter-icon-button b{
+  position:absolute;
+  top:-4px;
+  right:-4px;
+  min-width:17px;
+  height:17px;
+  padding:0 4px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:#a96616;
+  color:#fff;
+  font-size:9px;
+  line-height:1;
+}
+.library-active-filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin:0 1px 8px;
+}
+.library-active-filters:empty{display:none}
+.library-active-filters button{
+  border:1px solid #e4c58f;
+  border-radius:10px;
+  background:#fff3dc;
+  color:#754900;
+  padding:5px 8px;
+  font-size:10px;
+  font-weight:800;
+}
+.library-options{
+  min-height:40px;
+  margin:2px 1px 8px;
+  padding:0 1px 7px;
+}
+.sort-label{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.sort-direction{
+  width:32px;
+  height:32px;
+  flex:0 0 32px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid #dccfbe;
+  border-radius:9px;
+  background:#fffaf4;
+  color:#74470f;
+  font-size:20px;
+  font-weight:900;
+  line-height:1;
+  cursor:pointer;
+}
+.sort-direction:active{transform:scale(.96)}
+.beer-row-meta{
+  flex-basis:155px;
+}
+.beer-row-meta small{
+  max-width:155px;
+  font-size:11px;
+  font-weight:700;
+}
+.beer-row-meta .list-rating b{font-size:14px}
+.beer-row-meta .list-rating strong{font-size:12px}
+@media(max-width:520px){
+  .library-search-row{
+    grid-template-columns:minmax(0,1fr) 40px;
+  }
+  .filter-icon-button{
+    width:40px;
+    height:40px;
+  }
+  .beer-row-meta{
+    flex-basis:128px;
+  }
+  .beer-row-meta small{
+    max-width:128px;
+    font-size:10.5px;
+  }
+  .beer-row-meta .list-rating b{font-size:13px}
+  .beer-row-meta .list-rating strong{font-size:11px}
+}
