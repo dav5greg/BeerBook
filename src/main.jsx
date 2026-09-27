@@ -566,7 +566,7 @@ function AddBeer({ form, setForm, onBack, onSave }) {
         {openSections.beer && <div className="form-section-body">
           <Field label="Nome birra *"><input required value={form.name} onChange={e => update('name', e.target.value)} placeholder="Centenario" /></Field>
           <Field label="Birrificio"><input value={form.brewery} onChange={e => update('brewery', e.target.value)} placeholder="Birrificio Pedavena" /></Field>
-          <div className="two-cols"><Field label="Paese"><input value={form.country} onChange={e => update('country', e.target.value)} placeholder="Italia" /></Field><Field label="Stile"><select required className="style-select" value={form.style} onChange={e => update('style', e.target.value)}><option value="" disabled hidden>Seleziona stile</option><option>Lager</option><option>Pils</option><option>Ale</option><option>Blanche</option><option>Belga</option><option>Rossa</option><option>Sour</option><option>Stout</option><option>Altro</option></select></Field></div>
+          <div className="two-cols"><Field label="Paese"><PlaceAutocomplete mode="country" value={form.country} placeholder="Cerca paese" onSelect={place => update('country', place.country || place.name)} /></Field><Field label="Stile"><select required className="style-select" value={form.style} onChange={e => update('style', e.target.value)}><option value="" disabled hidden>Seleziona stile</option><option>Lager</option><option>Pils</option><option>Ale</option><option>Blanche</option><option>Belga</option><option>Rossa</option><option>Sour</option><option>Stout</option><option>Altro</option></select></Field></div>
           <Field label="Gradazione alcolica"><div className="abv-input-wrap"><input type="number" step="0.1" min="0" value={form.abv} onChange={e => update('abv', e.target.value)} placeholder="5" /><span>%</span></div></Field>
         </div>}
       </section>
@@ -598,13 +598,83 @@ function AddBeer({ form, setForm, onBack, onSave }) {
           </button>
         </div>
         {openSections.places && <div className="form-section-body">
-          <Field label="Luoghi di acquisto">{form.places.map((place,index)=><div className="place-row" key={index}><input value={place.name} onChange={e=>{const places=[...form.places];places[index]={...places[index],name:e.target.value};update('places',places)}} placeholder="Nome luogo"/><select required value={place.type} onChange={e=>{const places=[...form.places];places[index]={...places[index],type:e.target.value};update('places',places)}}><option value="" disabled>Tipologia</option><option>Supermercato</option><option>Pub</option><option>Bar</option><option>Ristorante</option><option>Altro</option></select><input value={place.city} onChange={e=>{const places=[...form.places];places[index]={...places[index],city:e.target.value};update('places',places)}} placeholder="Città"/><button type="button" className="remove-place" onClick={()=>update('places',form.places.length>1?form.places.filter((_,i)=>i!==index):[{name:'',type:'',city:''}])} aria-label="Rimuovi luogo" title="Rimuovi luogo"><span aria-hidden="true">×</span></button></div>)}<button type="button" className="secondary-button" onClick={()=>update('places',[...form.places,{name:'',type:'',city:''}])}>＋ Aggiungi luogo</button></Field>
+          <Field label="Luoghi di acquisto">{form.places.map((place,index)=><div className="place-row" key={index}><input value={place.name} onChange={e=>{const places=[...form.places];places[index]={...places[index],name:e.target.value};update('places',places)}} placeholder="Nome luogo"/><select required value={place.type} onChange={e=>{const places=[...form.places];places[index]={...places[index],type:e.target.value};update('places',places)}}><option value="" disabled>Tipologia</option><option>Supermercato</option><option>Pub</option><option>Bar</option><option>Ristorante</option><option>Altro</option></select><PlaceAutocomplete mode="city" value={place.city} placeholder="Cerca città" onSelect={selected => {const places=[...form.places];places[index]={...places[index],city:selected.label};update('places',places)}} /><button type="button" className="remove-place" onClick={()=>update('places',form.places.length>1?form.places.filter((_,i)=>i!==index):[{name:'',type:'',city:''}])} aria-label="Rimuovi luogo" title="Rimuovi luogo"><span aria-hidden="true">×</span></button></div>)}<button type="button" className="secondary-button" onClick={()=>update('places',[...form.places,{name:'',type:'',city:''}])}>＋ Aggiungi luogo</button></Field>
         </div>}
       </section>
 
       <button className="primary-button full save-beer-button" type="submit">Salva birra</button>
     </form>
   </section>
+}
+
+function PlaceAutocomplete({ mode, value, placeholder, onSelect }) {
+  const [query, setQuery] = useState(value || '')
+  const [suggestions, setSuggestions] = useState([])
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    setQuery(value || '')
+  }, [value])
+
+  useEffect(() => {
+    const text = query.trim()
+    if (text.length < 2 || text === String(value || '').trim()) {
+      setSuggestions([])
+      return
+    }
+    const timer = setTimeout(async () => {
+      try {
+        setLoading(true)
+        const res = await fetch(API_BASE + '/api/places-autocomplete?mode=' + encodeURIComponent(mode) + '&input=' + encodeURIComponent(text), { headers: userKey ? { 'x-user-key': userKey } : {} })
+        const data = await res.json().catch(() => ({}))
+        setSuggestions(data.suggestions || [])
+        setOpen(true)
+      } catch {
+        setSuggestions([])
+      } finally {
+        setLoading(false)
+      }
+    }, 280)
+    return () => clearTimeout(timer)
+  }, [query, mode, value])
+
+  async function choose(item) {
+    setOpen(false)
+    setSuggestions([])
+    setLoading(true)
+    try {
+      const res = await fetch(API_BASE + '/api/places-autocomplete?mode=details&placeId=' + encodeURIComponent(item.placeId), { headers: userKey ? { 'x-user-key': userKey } : {} })
+      const data = await res.json().catch(() => ({}))
+      const place = data.place
+      if (!place) return
+      const label = mode === 'city'
+        ? place.city + (place.province ? ' (' + place.province + ')' : '')
+        : place.country
+      setQuery(label)
+      onSelect({ ...place, label })
+    } catch {} finally {
+      setLoading(false)
+    }
+  }
+
+  return <div className="place-autocomplete">
+    <input
+      value={query}
+      onChange={e => { setQuery(e.target.value); onSelect({ name: e.target.value, country: e.target.value, label: e.target.value }) }}
+      onFocus={() => suggestions.length && setOpen(true)}
+      onBlur={() => setTimeout(() => setOpen(false), 180)}
+      placeholder={placeholder}
+      autoComplete="off"
+    />
+    {loading && <span className="autocomplete-spinner" aria-hidden="true">⌕</span>}
+    {open && suggestions.length > 0 && <div className="autocomplete-menu">
+      {suggestions.map(item => <button type="button" key={item.placeId} onMouseDown={e => e.preventDefault()} onClick={() => choose(item)}>
+        {mode === 'country' && <span className="suggestion-flag">🌐</span>}
+        <span><strong>{item.text}</strong>{item.secondary && <small>{item.secondary}</small>}</span>
+      </button>)}
+    </div>}
+  </div>
 }
 
 function Field({ label, children }) { return <label className="field"><span>{label}</span>{children}</label> }
