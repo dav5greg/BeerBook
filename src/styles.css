@@ -1671,3 +1671,9 @@ main{padding:0 20px}
 .style-select:invalid{color:#9a8f86}
 .style-select option{color:#3a2a20}
 .style-select option[disabled]{color:#9a8f86}
+
+
+/* --- Style select placeholder: force neutral gray --- */
+.add-page .style-select{color:#3a2a20}
+.add-page .style-select:invalid{color:#9a8f86 !important}
+.add-page .style-select option[disabled][hidden]{color:#9a8f86}
