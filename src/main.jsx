@@ -417,6 +417,14 @@ function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary,
       <Stat icon="cart" value={stats.places} label="Luoghi" />
     </div>
 
+    {beers.filter(b => b.to_try).slice(0, 3).length > 0 && <>
+      <div className="section-head compact-head latest-head try-home-head">
+        <div><h2>Da provare</h2></div>
+      </div>
+      <div className="recent-grid try-home-grid">
+        {beers.filter(b => b.to_try).slice(0, 3).map(b => <BeerCard key={b.id} beer={b} compact onClick={() => onOpen(b)} onDelete={() => onDelete(b)} />)}
+      </div>
+    </>}
     <div className="section-head compact-head latest-head">
       <div><h2>Ultime birre</h2></div>
       <button className="text-button" onClick={onLibrary}>Vedi tutte ›</button>
@@ -432,14 +440,14 @@ function Stat({ icon, value, label }) {
   return <div className="stat"><span className="stat-icon"><Icon name={icon} /></span><strong>{value}</strong><span className="stat-label">{label}</span></div>
 }
 
-function BeerCard({ beer, onClick, onDelete }) {
-  return <article className="beer-card">
+function BeerCard({ beer, onClick, onDelete, compact = false }) {
+  return <article className={'beer-card ' + (compact ? 'compact-beer-card' : '')}>
     <button className="beer-card-main" onClick={onClick}>
       <div className="beer-card-art"><span>🍺</span></div>
       <div className="beer-card-body">
         <strong>{beer.name}</strong>
         <span>{beer.style || 'Stile non indicato'}</span>
-        <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b><small>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</small></div>
+        {!compact && <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b><small>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</small></div>}
       </div>
     </button>
     <button className="card-delete" onClick={onDelete} aria-label={'Elimina ' + beer.name}>×</button>
