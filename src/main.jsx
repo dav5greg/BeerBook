@@ -514,31 +514,67 @@ function BeerRow({ beer, onClick, onDelete }) {
 }
 
 function Detail({ beer, onBack, onEdit }) {
+  const [openSections, setOpenSections] = useState({ beer: true, tasting: true, places: true })
+  const toggleSection = key => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }))
+
   return <section className="page detail-page">
     <div className="detail-top"><button className="back-icon" onClick={onBack}>‹</button><button className="detail-more">•••</button></div>
     <div className="detail-sheet detail-sheet-compact">
-      <div className="detail-title-row">
+      <div className="detail-hero-card">
+        <div className="detail-mug large" aria-hidden="true"><Icon name="beer" /></div>
         <div className="detail-title-copy">
           <p className="eyebrow">{beer.brewery || 'BIRRA'}</p>
           <h1>{beer.name}</h1>
           <h3>{beer.style || 'Stile non indicato'}</h3>
-          <div className="detail-country">{beer.country ? '🇧🇪' : '🌐'} <span>{beer.country || 'Paese non indicato'}</span></div>
+          <div className="detail-country"><span>{beer.country || 'Paese non indicato'}</span></div>
         </div>
-        <div className="detail-mug" aria-hidden="true"><Icon name="beer" /></div>
       </div>
-      <div className="detail-rating-row"><div className="big-rating">{'★'.repeat(Number(beer.rating || 0))}<span>{'★'.repeat(5 - Number(beer.rating || 0))}</span></div><strong>{Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</strong><label className="try-toggle"><span>▮ Da provare</span><input type="checkbox" checked={!!beer.to_try} readOnly /></label></div>
-      <div className="detail-facts">
-        <div><b>♧</b><strong>{beer.abv ? beer.abv + '%' : '—'}</strong><span>Alcol</span></div>
-        <div><b>▥</b><strong>{beer.style || '—'}</strong><span>Stile</span></div>
-        <div><b>🇧🇪</b><strong>{beer.country || '—'}</strong><span>Paese</span></div>
-      </div>
-      <div className="detail-section tasting-section"><h3>Ultima degustazione</h3><div className="tasting-card"><b>▣</b><strong>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</strong><span>★ {Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</span><button onClick={onEdit}>✎</button><p>{beer.notes || 'Nessuna nota inserita.'}</p></div></div>
-      <div className="detail-section places-section"><div className="section-head compact-head"><h3>Luoghi di acquisto</h3><button className="text-button">Aggiungi ›</button></div>{(beer.places || []).length ? beer.places.map((p,i)=><div className="purchase-row" key={i}><span className="purchase-icon">🛒</span><div><b>{p.name}</b><small>{p.type} · {p.city || 'Città non indicata'}</small></div><time>›</time></div>) : <p className="muted">Nessun luogo di acquisto.</p>}</div>
-      <button className="primary-button full" onClick={onEdit}>Modifica scheda</button>
+
+      <section className={'detail-form-section ' + (openSections.beer ? 'open' : 'collapsed')}>
+        <div className="detail-section-head">
+          <button type="button" className="detail-section-toggle" onClick={() => toggleSection('beer')}><span>Informazioni birra</span></button>
+          <label className="detail-try-toggle"><span>Da provare</span><input type="checkbox" checked={!!beer.to_try} readOnly /></label>
+          <button type="button" className="section-chevron" onClick={() => toggleSection('beer')} aria-label={openSections.beer ? 'Chiudi sezione' : 'Apri sezione'}>{openSections.beer ? '⌃' : '⌄'}</button>
+        </div>
+        {openSections.beer && <div className="detail-section-body">
+          <div className="detail-fact-grid">
+            <div><span className="detail-fact-icon">🍺</span><strong>{beer.abv ? beer.abv + '%' : '—'}</strong><small>Gradazione</small></div>
+            <div><span className="detail-fact-icon">◉</span><strong>{beer.style || '—'}</strong><small>Stile</small></div>
+            <div><span className="detail-fact-icon">🌍</span><strong>{beer.country || '—'}</strong><small>Paese</small></div>
+          </div>
+        </div>}
+      </section>
+
+      <section className={'detail-form-section ' + (openSections.tasting ? 'open' : 'collapsed')}>
+        <div className="detail-section-head">
+          <button type="button" className="detail-section-toggle" onClick={() => toggleSection('tasting')}><span>Ultima degustazione</span></button>
+          <button type="button" className="section-chevron" onClick={() => toggleSection('tasting')} aria-label={openSections.tasting ? 'Chiudi sezione' : 'Apri sezione'}>{openSections.tasting ? '⌃' : '⌄'}</button>
+        </div>
+        {openSections.tasting && <div className="detail-section-body">
+          <div className="detail-tasting-top">
+            <div><span className="detail-big-icon">▣</span><strong>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</strong><small>Data degustazione</small></div>
+            <div><span className="detail-big-icon">★</span><strong>{Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</strong><small>Valutazione</small></div>
+          </div>
+          <div className="detail-carbonation"><span className="detail-big-icon">◌</span><div><strong>{beer.carbonation || '—'}</strong><small>Carbonazione</small></div></div>
+          <div className="detail-notes"><span className="detail-big-icon">▤</span><p>{beer.notes || 'Nessuna nota inserita.'}</p></div>
+          <button className="detail-edit-inline" onClick={onEdit}>✎ Modifica degustazione</button>
+        </div>}
+      </section>
+
+      <section className={'detail-form-section ' + (openSections.places ? 'open' : 'collapsed')}>
+        <div className="detail-section-head">
+          <button type="button" className="detail-section-toggle" onClick={() => toggleSection('places')}><span>Luoghi di acquisto</span></button>
+          <button type="button" className="section-chevron" onClick={() => toggleSection('places')} aria-label={openSections.places ? 'Chiudi sezione' : 'Apri sezione'}>{openSections.places ? '⌃' : '⌄'}</button>
+        </div>
+        {openSections.places && <div className="detail-section-body">
+          {(beer.places || []).length ? beer.places.map((p,i)=><div className="purchase-row large-purchase-row" key={i}><span className="purchase-icon">🛒</span><div><b>{p.name}</b><small>{p.type} · {p.city || 'Città non indicata'}</small></div></div>) : <p className="muted">Nessun luogo di acquisto.</p>}
+        </div>}
+      </section>
+
+      <button className="primary-button full save-beer-button detail-edit-button" onClick={onEdit}>Modifica scheda</button>
     </div>
   </section>
 }
-
 function Tag({ text }) { return text ? <span className="tag">{text}</span> : null }
 
 function AddBeer({ form, setForm, onBack, onSave }) {
