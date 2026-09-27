@@ -479,17 +479,17 @@ function Library({ beers, query, setQuery, filters, setFilters, showFilters, set
       <div className="search-box"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca birra, birrificio, stile, paese..." /></div>
       <button className="filter-icon-button" onClick={() => setShowFilters(!showFilters)} aria-label="Filtri">☷</button>
     </div>
-    <div className="filter-chips">
-      <button className="active">★ Voto⌄</button>
-      <button>♜ Birrificio</button>
-      <button>🌐 Paese⌄</button>
-      <button>♧ Stile⌄</button>
-      <button>⌖ Città⌄</button>
-      <button>◆ Tipologia⌄</button>
+    <div className="filter-chips" aria-label="Filtri rapidi">
+      <button className="filter-chip active" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">★</span><span>Voto</span><span className="filter-chip-chevron">⌄</span></button>
+      <button className="filter-chip" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">🏭</span><span>Birrificio</span></button>
+      <button className="filter-chip" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">🌍</span><span>Paese</span><span className="filter-chip-chevron">⌄</span></button>
+      <button className="filter-chip" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">🌿</span><span>Stile</span><span className="filter-chip-chevron">⌄</span></button>
+      <button className="filter-chip" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">📍</span><span>Città</span><span className="filter-chip-chevron">⌄</span></button>
+      <button className="filter-chip" onClick={() => setShowFilters(true)}><span className="filter-chip-icon">🏷️</span><span>Tipologia</span><span className="filter-chip-chevron">⌄</span></button>
     </div>
     <div className="library-options">
-      <label><input type="checkbox" checked={filters.toTry} onChange={e => setFilters({ ...filters, toTry:e.target.checked })} /><span>▮</span> Solo da provare</label>
-      <span>Ordina per <b>Più recenti</b></span>
+      <label><input type="checkbox" checked={filters.toTry} onChange={e => setFilters({ ...filters, toTry:e.target.checked })} /><span className="try-filter-icon">🔖</span><strong>Solo da provare</strong></label>
+      <span className="sort-label">Ordina per <b>Più recenti</b></span>
     </div>
     {showFilters && <div className="filter-panel">
       <label>Valutazione<select value={filters.rating} onChange={e => setFilters({ ...filters, rating: e.target.value })}><option value="">Tutte</option>{[5,4,3,2,1].map(x => <option key={x} value={x}>{x} stelle</option>)}</select></label>
@@ -506,7 +506,7 @@ function BeerRow({ beer, onClick, onDelete }) {
     <button className="beer-row-main" onClick={onClick}>
       <div className="beer-list-art"><span>🍺</span></div>
       <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><small>{beer.style || 'Stile non indicato'}{beer.country ? ' · ' + beer.country : ''}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small><div className="list-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b> <strong>{Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</strong></div></div>
-      <time>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</time>
+      <time><span className="list-date-icon" aria-hidden="true">📅</span>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</time>
       <span className="row-more">⋮</span>
     </button>
     <button className="delete-beer" onClick={onDelete} aria-label={'Elimina ' + beer.name} title="Elimina birra">×</button>
