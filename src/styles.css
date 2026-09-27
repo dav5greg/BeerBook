@@ -1861,3 +1861,9 @@ main{padding:0 20px}
   .detail-tasting-top.three strong{font-size:13px}
   .detail-rating-number{font-size:16px !important}
 }
+
+.detail-try-toggle{font-size:12px;font-weight:900;gap:8px}
+.detail-try-toggle input{width:40px;height:23px}
+.detail-try-toggle input:after{width:19px;height:19px;top:2px;left:2px}
+.detail-try-toggle input:checked:after{left:19px}
+.detail-tasting-top.three .detail-big-icon{font-size:21px;color:#b36b12}
