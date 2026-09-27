@@ -32,6 +32,10 @@ function App() {
   const [showExitConfirm, setShowExitConfirm] = useState(false)
   const [screenHistory, setScreenHistory] = useState([])
 
+  useEffect(() => {
+    document.documentElement.dataset.theme = localStorage.getItem('beerbook-theme') || 'light'
+  }, [])
+
   function navigate(nextScreen) {
     setScreenHistory(history => [...history, screen])
     setScreen(nextScreen)
