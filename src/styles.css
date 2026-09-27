@@ -862,6 +862,230 @@ main{padding:0 20px}
   .latest-head{margin-top:27px}
 }
 
+/* --- My Beers visual refresh --- */
+.library-page{
+  padding-top:20px;
+}
+.library-page .library-heading{
+  margin-bottom:16px;
+}
+.library-page .library-heading h1{
+  font-size:34px;
+  line-height:1;
+  letter-spacing:-.045em;
+}
+.library-page .library-heading p{
+  margin-top:6px;
+  font-size:13px;
+  font-weight:700;
+  color:#75685f;
+}
+.library-search-row{
+  grid-template-columns:minmax(0,1fr) 46px;
+  gap:9px;
+  margin-bottom:12px;
+}
+.library-search-row .search-box{
+  min-height:46px;
+  padding:9px 13px;
+  border-radius:14px;
+  background:#fffdf9;
+  box-shadow:0 2px 8px rgba(77,45,25,.04);
+}
+.library-search-row .search-box span{
+  font-size:25px;
+  line-height:1;
+}
+.library-search-row .search-box input{
+  font-size:13px;
+  font-weight:600;
+}
+.filter-icon-button{
+  width:46px;
+  height:46px;
+  display:grid;
+  place-items:center;
+  border:1px solid #ddd0c1;
+  background:#fffdf9;
+  border-radius:14px;
+  font-size:24px;
+  color:#3d332c;
+  box-shadow:0 2px 8px rgba(77,45,25,.04);
+}
+.filter-chips{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin:0 0 12px;
+}
+.filter-chip{
+  min-width:0;
+  min-height:46px;
+  padding:7px 9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border:1px solid #ded3c7;
+  background:#fffdf9;
+  border-radius:13px;
+  color:#3b3028;
+  font-size:12px;
+  font-weight:850;
+  box-shadow:0 2px 7px rgba(77,45,25,.035);
+}
+.filter-chip-icon{
+  width:23px;
+  height:23px;
+  display:grid;
+  place-items:center;
+  flex:0 0 23px;
+  font-size:18px;
+  line-height:1;
+}
+.filter-chip.active{
+  background:#fff0d5;
+  border-color:#e9bf72;
+  color:#85500a;
+}
+.filter-chip-chevron{
+  font-size:13px;
+  color:#77685b;
+  margin-left:-2px;
+}
+.library-options{
+  min-height:42px;
+  margin:2px 1px 10px;
+  padding:0 2px 9px;
+  border-bottom:1px solid #e1d6ca;
+  font-size:12px;
+  color:#6e6259;
+}
+.library-options label{
+  min-height:34px;
+  gap:7px;
+  font-size:12px;
+}
+.library-options label strong{
+  color:#40352d;
+  font-weight:850;
+}
+.library-options input{
+  width:18px;
+  height:18px;
+  margin:0;
+}
+.try-filter-icon{
+  font-size:17px;
+  line-height:1;
+}
+.sort-label{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  white-space:nowrap;
+}
+.library-options b{
+  font-size:11px;
+  padding:7px 9px;
+  border-radius:10px;
+  background:#fffaf4;
+  color:#40352d;
+}
+.library-list{
+  border-top:0;
+}
+.library-list .beer-row{
+  min-height:92px;
+  border-width:0 0 1px;
+  border-radius:0;
+  background:transparent;
+}
+.library-list .beer-row-main{
+  min-height:92px;
+  padding:11px 1px;
+  gap:11px;
+}
+.beer-list-art{
+  width:61px;
+  height:72px;
+  border-radius:11px;
+  box-shadow:0 3px 8px rgba(48,27,15,.12);
+}
+.beer-list-art span{
+  font-size:46px;
+}
+.library-list .beer-info{
+  min-width:0;
+  padding-right:0;
+}
+.library-list .beer-info strong{
+  font-size:15px;
+  line-height:1.15;
+}
+.library-list .beer-info span{
+  margin-top:3px;
+  font-size:12px;
+  line-height:1.15;
+}
+.library-list .beer-info small{
+  margin-top:4px;
+  font-size:10.5px;
+  line-height:1.2;
+}
+.list-rating{
+  margin-top:4px;
+  font-size:11px;
+  line-height:1;
+}
+.list-rating b{
+  font-size:13px;
+  letter-spacing:-2px;
+}
+.list-rating strong{
+  font-size:12px;
+  margin-left:4px;
+}
+.library-list time{
+  min-width:58px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:flex-end;
+  gap:2px;
+  align-self:stretch;
+  margin:0 0 11px 2px;
+  font-size:10px;
+  font-weight:700;
+}
+.list-date-icon{
+  font-size:14px;
+  line-height:1;
+  opacity:.8;
+}
+.row-more{
+  align-self:flex-start;
+  margin-top:12px;
+  font-size:22px;
+  color:#665b53;
+}
+@media(max-width:520px){
+  .library-page .library-heading h1{font-size:31px}
+  .filter-chips{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .filter-chip{min-height:47px;font-size:12px}
+  .filter-chip-icon{font-size:19px}
+  .library-options{font-size:11px}
+  .library-options label strong{font-size:11px}
+  .sort-label{font-size:10px}
+  .library-list .beer-row,
+  .library-list .beer-row-main{min-height:88px}
+  .beer-list-art{width:58px;height:70px}
+  .library-list .beer-info strong{font-size:14px}
+  .library-list .beer-info span{font-size:11px}
+  .library-list .beer-info small{font-size:10px}
+  .library-list time{min-width:49px;font-size:9px}
+}
+
 /* --- Readability pass: inner app screens --- */
 .library-page,.detail-page,.add-page{
   font-size:14px;
