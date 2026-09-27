@@ -1621,3 +1621,25 @@ main{padding:0 20px}
 .abv-input-wrap{position:relative;display:flex;align-items:center}
 .abv-input-wrap input{width:100%;padding-right:42px !important}
 .abv-input-wrap>span{position:absolute;right:15px;color:#9a8f86;font-size:14px;font-weight:700;pointer-events:none}
+
+
+/* --- Purchase place delete control --- */
+.remove-place{
+  width:32px;
+  height:32px;
+  flex:0 0 32px;
+  padding:0;
+  display:grid;
+  place-items:center;
+  border:1px solid #dfcfc0;
+  border-radius:50%;
+  background:#fff8f1;
+  color:#8b6f5c;
+  box-shadow:0 2px 6px rgba(77,45,25,.08);
+  cursor:pointer;
+  transition:background .15s ease,border-color .15s ease,color .15s ease,transform .15s ease;
+}
+.remove-place span{font-size:20px;line-height:1;font-weight:500;transform:translateY(-1px)}
+.remove-place:hover{background:#f3e7dc;border-color:#cdb8a5;color:#5f4635;transform:scale(1.04)}
+.remove-place:active{transform:scale(.96)}
+@media(max-width:520px){.remove-place{width:30px;height:30px;flex-basis:30px}.remove-place span{font-size:19px}}
