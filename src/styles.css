@@ -1643,3 +1643,13 @@ main{padding:0 20px}
 .remove-place:hover{background:#f3e7dc;border-color:#cdb8a5;color:#5f4635;transform:scale(1.04)}
 .remove-place:active{transform:scale(.96)}
 @media(max-width:520px){.remove-place{width:30px;height:30px;flex-basis:30px}.remove-place span{font-size:19px}}
+
+
+/* --- Purchase place type placeholder --- */
+.place-row select:invalid{color:#9a8f86}
+.place-row select option{color:#3a2a20}
+.place-row select option[disabled]{color:#9a8f86}
+
+/* --- Purchase place delete button: align beside city field --- */
+.place-row{position:relative}
+.place-row .remove-place{margin-left:2px;align-self:center}
