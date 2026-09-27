@@ -607,7 +607,9 @@ function AddBeer({ form, setForm, onBack, onSave }) {
   </section>
 }
 
-function countryFlagEmoji(code) { return !code || code.length !== 2 ? '🌐' : String.fromCodePoint(...code.toUpperCase().split('').map(c => 127397 + c.charCodeAt(0))) }\n\nfunction PlaceAutocomplete({ mode, value, placeholder, userKey, onSelect }) {
+function countryFlagEmoji(code) { return !code || code.length !== 2 ? '🌐' : String.fromCodePoint(...code.toUpperCase().split('').map(c => 127397 + c.charCodeAt(0))) }
+
+function PlaceAutocomplete({ mode, value, placeholder, userKey, onSelect }) {
   const [query, setQuery] = useState(value || '')
   const [suggestions, setSuggestions] = useState([])
   const [open, setOpen] = useState(false)
