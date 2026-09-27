@@ -2879,3 +2879,61 @@ main{padding:0 20px}
     font-size:21px;
   }
 }
+
+
+/* --- Dark theme --- */
+:root[data-theme="dark"]{
+  color:#eee6dd;
+  background:#171310;
+  --ink:#eee6dd;
+  --muted:#b7a99b;
+  --cream:#211b17;
+  --line:#40372f;
+  --amber:#c48745;
+  --gold:#e0a95c;
+  --green:#58b985;
+  --red:#df756e;
+  --blue:#69a9d0;
+}
+:root[data-theme="dark"] body{background:linear-gradient(180deg,#1b1714 0%,#120f0d 100%);color:var(--ink)}
+:root[data-theme="dark"] .app-shell{background:transparent}
+:root[data-theme="dark"] .topbar{background:rgba(27,23,20,.94);border-bottom-color:rgba(64,55,47,.8)}
+:root[data-theme="dark"] .sync-badge{background:#28211c}
+:root[data-theme="dark"] .home-back-button{background:#211b17;border-color:var(--line);color:var(--ink)}
+:root[data-theme="dark"] .search-hero,
+:root[data-theme="dark"] .search-box,
+:root[data-theme="dark"] .stat,
+:root[data-theme="dark"] .beer-row,
+:root[data-theme="dark"] .settings-card,
+:root[data-theme="dark"] .form-section,
+:root[data-theme="dark"] .detail-section,
+:root[data-theme="dark"] .detail-hero-card,
+:root[data-theme="dark"] .detail-tasting-top>div,
+:root[data-theme="dark"] .detail-carbonation,
+:root[data-theme="dark"] .detail-notes,
+:root[data-theme="dark"] .detail-fact-grid>div{background:#211b17}
+:root[data-theme="dark"] .quick-row button,
+:root[data-theme="dark"] .secondary-button,
+:root[data-theme="dark"] .sort-direction,
+:root[data-theme="dark"] .place-list-row:hover,
+:root[data-theme="dark"] .bottom-nav{background:#211b17}
+:root[data-theme="dark"] .beer-avatar,
+:root[data-theme="dark"] .place-list-icon{background:#33271f}
+:root[data-theme="dark"] .place-list-row{border-bottom-color:#40372f}
+:root[data-theme="dark"] .bottom-nav{border-top-color:#40372f;box-shadow:0 -5px 18px rgba(0,0,0,.25)}
+:root[data-theme="dark"] .bottom-nav .nav-item.active{background:#332a23;box-shadow:inset 0 0 0 1px #4a3e34}
+:root[data-theme="dark"] .field input,
+:root[data-theme="dark"] .field textarea,
+:root[data-theme="dark"] .field select{background:#211b17;color:var(--ink);border-color:var(--line)}
+:root[data-theme="dark"] .field input::placeholder,
+:root[data-theme="dark"] .field textarea::placeholder{color:#82756a}
+:root[data-theme="dark"] .dialog-backdrop{background:rgba(0,0,0,.68)}
+:root[data-theme="dark"] .delete-dialog{background:#211b17;color:var(--ink);border-color:#40372f}
+:root[data-theme="dark"] .theme-switch{background:#171310;border-color:#40372f}
+:root[data-theme="dark"] .theme-switch button{color:#b7a99b}
+:root[data-theme="dark"] .theme-switch button.active{background:#403229;color:#fff}
+
+.theme-switch{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px;background:#f1e7dc;border:1px solid var(--line);border-radius:14px}
+.theme-switch button{min-height:42px;border:0;border-radius:10px;background:transparent;color:var(--muted);font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.theme-switch button.active{background:#fffaf3;color:var(--ink);box-shadow:0 1px 5px rgba(70,45,28,.08)}
+.settings-theme-card{margin-top:10px}
