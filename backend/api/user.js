@@ -41,7 +41,7 @@ export default async function handler(req, res) {
       }
       const rows = await sql`
         UPDATE users
-        SET identifier=${newIdentifier}, display_name=${displayName || null}, updated_at=NOW()
+        SET identifier=${newIdentifier}, display_name=${displayName || null}
         WHERE id=${current[0].id}
         RETURNING identifier, display_name
       `
