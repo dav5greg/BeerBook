@@ -1615,3 +1615,9 @@ main{padding:0 20px}
     line-height:30px;
   }
 }
+
+
+/* --- ABV percentage notation --- */
+.abv-input-wrap{position:relative;display:flex;align-items:center}
+.abv-input-wrap input{width:100%;padding-right:42px !important}
+.abv-input-wrap>span{position:absolute;right:15px;color:#9a8f86;font-size:14px;font-weight:700;pointer-events:none}
