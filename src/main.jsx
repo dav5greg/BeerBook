@@ -495,14 +495,6 @@ function Library({ beers, query, setQuery, filters, setFilters, sortBy, setSortB
         {Object.values(filters).filter(Boolean).length > 0 && <b>{Object.values(filters).filter(Boolean).length}</b>}
       </button>
     </div>
-    {showFilters && <div className="filter-panel">
-      <label>Valutazione<select value={filters.rating} onChange={e => setFilters({ ...filters, rating: e.target.value })}><option value="">Tutte</option>{[5,4,3,2,1].map(x => <option key={x} value={x}>{x} stelle</option>)}</select></label>
-      <label>Birrificio<select value={filters.brewery} onChange={e => setFilters({ ...filters, brewery: e.target.value })}><option value="">Tutti</option>{breweries.map(x => <option key={x}>{x}</option>)}</select></label>
-      <label>Paese<select value={filters.country} onChange={e => setFilters({ ...filters, country: e.target.value })}><option value="">Tutti</option>{[...new Set(beers.map(b => b.country).filter(Boolean))].sort().map(x => <option key={x}>{x}</option>)}</select></label>
-      <label>Stile<select value={filters.style} onChange={e => setFilters({ ...filters, style: e.target.value })}><option value="">Tutti</option>{styles.map(x => <option key={x}>{x}</option>)}</select></label>
-      <label>Città<select value={filters.city} onChange={e => setFilters({ ...filters, city: e.target.value })}><option value="">Tutte</option>{[...new Set(beers.flatMap(b => (b.places || []).map(p => p.city).filter(Boolean)))].sort().map(x => <option key={x}>{x}</option>)}</select></label>
-      <label>Tipologia<select value={filters.type} onChange={e => setFilters({ ...filters, type: e.target.value })}><option value="">Tutte</option>{['Supermercato','Pub','Bar','Ristorante','Altro'].map(x => <option key={x}>{x}</option>)}</select></label>
-    </div>}
     <div className="library-active-filters">
       {filters.toTry && <button onClick={() => setFilters({ ...filters, toTry:false })}>🔖 Da provare ×</button>}
       {filters.rating && <button onClick={() => setFilters({ ...filters, rating:'' })}>★ {filters.rating} stelle ×</button>}
@@ -514,7 +506,7 @@ function Library({ beers, query, setQuery, filters, setFilters, sortBy, setSortB
     </div>
     <div className="library-options">
       <label className="try-option"><input type="checkbox" checked={filters.toTry} onChange={e => setFilters({ ...filters, toTry:e.target.checked })} /><span className="try-filter-icon">🔖</span><strong>Solo da provare</strong></label>
-      <label className="sort-label">Ordina per
+      <div className="sort-label"><span>Ordina per</span>
         <select value={sortBy} onChange={e => {
           const value=e.target.value
           setSortBy(value)
@@ -524,8 +516,8 @@ function Library({ beers, query, setQuery, filters, setFilters, sortBy, setSortB
           <option value="rating">Valutazione</option>
           <option value="name">Nome A–Z</option>
         </select>
-        <button className="sort-direction" onClick={() => setSortDirection(d => d === 'asc' ? 'desc' : 'asc')} aria-label={sortDirection === 'asc' ? 'Ordinamento crescente' : 'Ordinamento decrescente'} title={sortDirection === 'asc' ? 'Crescente' : 'Decrescente'}>{sortDirection === 'asc' ? '↑' : '↓'}</button>
-      </label>
+        <button type="button" className="sort-direction" onClick={e => { e.preventDefault(); e.stopPropagation(); setSortDirection(d => d === 'asc' ? 'desc' : 'asc') }} aria-label={sortDirection === 'asc' ? 'Ordinamento crescente' : 'Ordinamento decrescente'} title={sortDirection === 'asc' ? 'Crescente' : 'Decrescente'}>{sortDirection === 'asc' ? '↑' : '↓'}</button>
+      </div>
     </div>
     {showFilters && <div className="filter-panel">
       <label>Valutazione<select value={filters.rating} onChange={e => setFilters({ ...filters, rating: e.target.value })}><option value="">Tutte</option>{[5,4,3,2,1].map(x => <option key={x} value={x}>{x} stelle</option>)}</select></label>
@@ -544,7 +536,7 @@ function BeerRow({ beer, onClick, onDelete }) {
   return <div className="beer-row">
     <button className="beer-row-main" onClick={onClick}>
       <div className="beer-list-art"><span>🍺</span></div>
-      <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span></div>
+      <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><time><span className="list-date-icon" aria-hidden="true">📅</span>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</time></div>
       <div className="beer-row-meta">
         <small>{beer.style || 'Stile non indicato'}</small>
         <small>{beer.country || 'Paese non indicato'}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small>
