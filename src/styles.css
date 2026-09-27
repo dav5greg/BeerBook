@@ -1729,3 +1729,21 @@ main{padding:0 20px}
   .place-row>.place-autocomplete:nth-of-type(2){grid-column:1;grid-row:3}
   .place-row .remove-place{grid-column:2;grid-row:2 / 4}
 }
+
+/* Keep autocomplete menus above the following form sections */
+.form-section:has(.autocomplete-menu){
+  position:relative;
+  z-index:40;
+  overflow:visible;
+}
+.place-autocomplete{
+  position:relative;
+  z-index:41;
+}
+.autocomplete-menu{
+  z-index:100;
+  max-height:240px;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
