@@ -2431,3 +2431,37 @@ main{padding:0 20px}
   .beer-row-meta .list-rating b{font-size:13px}
   .beer-row-meta .list-rating strong{font-size:11px}
 }
+
+/* --- My Beers date and sort fixes --- */
+.library-list .beer-info time{
+  margin-top:4px;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  color:#75685f;
+  font-size:9.5px;
+  font-weight:700;
+  line-height:1;
+}
+.library-list .beer-info .list-date-icon{
+  font-size:12px;
+  opacity:.78;
+}
+.sort-label{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.sort-label > span{
+  white-space:nowrap;
+}
+.sort-direction{
+  pointer-events:auto;
+  position:relative;
+  z-index:2;
+}
+@media(max-width:520px){
+  .library-list .beer-info time{font-size:9px}
+  .library-list .beer-info .list-date-icon{font-size:11px}
+}
