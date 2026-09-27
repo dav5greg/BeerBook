@@ -188,29 +188,31 @@ function App() {
   }
 
   async function saveUserKey(value, nameValue = displayName) {
-    const clean = value.trim()
+    const clean = value.trim().toLowerCase()
     const name = nameValue.trim()
-    setUserKey(clean)
-    setDisplayName(name)
-    setBeers([])
-    if (clean) localStorage.setItem('beerbook-user-key', clean)
-    else localStorage.removeItem('beerbook-user-key')
-    if (!API_BASE || !clean || !navigator.onLine) return
+    if (!clean) return { ok: false, error: 'Inserisci un identificativo valido.' }
+    if (!/^[a-z0-9_-]{3,30}$/.test(clean)) return { ok: false, error: 'L’identificativo deve essere lungo tra 3 e 30 caratteri.' }
+    if (!API_BASE || !userKey || !navigator.onLine) return { ok: false, error: 'Serve una connessione internet per salvare il profilo.' }
     try {
       const res = await fetch(API_BASE + '/api/user', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-user-key': clean },
-        body: JSON.stringify({ display_name: name })
+        headers: { 'Content-Type': 'application/json', 'x-user-key': userKey },
+        body: JSON.stringify({ identifier: clean, display_name: name })
       })
-      if (res.ok) {
-        const data = await res.json()
-        const saved = data.user?.display_name || ''
-        setDisplayName(saved)
-        if (saved) localStorage.setItem('beerbook-display-name', saved)
-        else localStorage.removeItem('beerbook-display-name')
-      }
-    } catch {}
-    return clean
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) return { ok: false, error: data.error || 'Impossibile salvare il profilo.' }
+      const saved = data.user?.identifier || clean
+      const savedName = data.user?.display_name || ''
+      setUserKey(saved)
+      setDisplayName(savedName)
+      localStorage.setItem('beerbook-user-key', saved)
+      if (savedName) localStorage.setItem('beerbook-display-name', savedName)
+      else localStorage.removeItem('beerbook-display-name')
+      await loadBeers(saved)
+      return { ok: true }
+    } catch {
+      return { ok: false, error: 'Impossibile salvare il profilo. Controlla la connessione e riprova.' }
+    }
   }
 
   const filtered = useMemo(() => {
@@ -917,36 +919,45 @@ function Settings({ userKey, displayName, saveUserKey }) {
   const [value, setValue] = useState(userKey)
   const [name, setName] = useState(displayName)
   const [theme, setTheme] = useState(localStorage.getItem('beerbook-theme') || 'light')
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
   }, [theme])
+
+  useEffect(() => {
+    setValue(userKey)
+    setName(displayName)
+  }, [userKey, displayName])
 
   function changeTheme(next) {
     setTheme(next)
     localStorage.setItem('beerbook-theme', next)
   }
 
+  async function save() {
+    setMessage('')
+    const result = await saveUserKey(value, name)
+    setMessage(result?.ok ? 'Profilo salvato.' : (result?.error || 'Impossibile salvare il profilo.'))
+  }
+
   return <section className="page">
     <p className="eyebrow">CONFIGURAZIONE</p><h1>Impostazioni</h1>
     <div className="settings-card">
       <h3>Profilo</h3>
-      <p>Identificativo dell'archivio e nome mostrato in Home.</p>
+      <p>Nome mostrato in Home e identificativo dell'archivio.</p>
       <label className="field"><span>Nome utente</span><input value={name} onChange={e => setName(e.target.value)} placeholder="Inserisci il tuo nome" /></label>
       <label className="field"><span>Identificativo archivio</span><input value={value} onChange={e => setValue(e.target.value)} placeholder="Scegli un identificativo" /></label>
-      <button className="primary-button" onClick={() => saveUserKey(value, name)}>Salva profilo</button>
+      <button className="primary-button" onClick={save}>Salva profilo</button>
+      {message && <p className="settings-save-message">{message}</p>}
     </div>
 
     <div className="settings-card settings-theme-card">
       <h3>Aspetto</h3>
       <p>Scegli il tema dell'app.</p>
       <div className="theme-switch" role="group" aria-label="Tema">
-        <button className={theme === 'light' ? 'active' : ''} onClick={() => changeTheme('light')} aria-pressed={theme === 'light'}>
-          <span>☀</span> Chiaro
-        </button>
-        <button className={theme === 'dark' ? 'active' : ''} onClick={() => changeTheme('dark')} aria-pressed={theme === 'dark'}>
-          <span>☾</span> Scuro
-        </button>
+        <button className={theme === 'light' ? 'active' : ''} onClick={() => changeTheme('light')} aria-pressed={theme === 'light'}><span>☀</span> Chiaro</button>
+        <button className={theme === 'dark' ? 'active' : ''} onClick={() => changeTheme('dark')} aria-pressed={theme === 'dark'}><span>☾</span> Scuro</button>
       </div>
     </div>
   </section>
