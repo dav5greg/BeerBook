@@ -2534,3 +2534,46 @@ main{padding:0 20px}
   .beer-row-meta .list-rating b{font-size:12px}
   .beer-row-meta .list-rating strong{font-size:10.5px}
 }
+
+/* --- Compact rows with larger readable text --- */
+.library-list .beer-row-main{
+  padding-top:4px;
+  padding-bottom:4px;
+}
+.library-list .beer-info strong{
+  font-size:15px;
+  line-height:1;
+}
+.library-list .beer-info span{
+  font-size:11.5px;
+  line-height:1;
+}
+.library-list .beer-info time{
+  font-size:10.5px;
+  line-height:1;
+}
+.beer-row-meta{
+  gap:1px;
+}
+.beer-row-meta small{
+  font-size:11.5px;
+  line-height:1;
+}
+.beer-row-meta .list-rating b{
+  font-size:14px;
+}
+.beer-row-meta .list-rating strong{
+  font-size:12px;
+}
+@media(max-width:520px){
+  .library-list .beer-row-main{
+    padding-top:3px;
+    padding-bottom:3px;
+  }
+  .library-list .beer-info strong{font-size:14px}
+  .library-list .beer-info span{font-size:11px}
+  .library-list .beer-info time{font-size:10px}
+  .beer-row-meta small{font-size:11px}
+  .beer-row-meta .list-rating b{font-size:13px}
+  .beer-row-meta .list-rating strong{font-size:11px}
+}
