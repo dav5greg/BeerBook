@@ -28,12 +28,21 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'PUT') {
+      const newIdentifier = String(req.body?.identifier || key).trim().toLowerCase()
       const displayName = String(req.body?.display_name || '').trim()
+      if (!/^[a-z0-9_-]{3,30}$/.test(newIdentifier)) {
+        return json(res, 400, { error: 'L’identificativo deve essere lungo tra 3 e 30 caratteri.' })
+      }
+      const current = await sql`SELECT id, identifier, display_name FROM users WHERE identifier=${key}`
+      if (!current.length) return json(res, 404, { error: 'Archivio non trovato' })
+      if (newIdentifier !== key) {
+        const existing = await sql`SELECT id FROM users WHERE identifier=${newIdentifier}`
+        if (existing.length) return json(res, 409, { error: 'Identificativo univoco già utilizzato' })
+      }
       const rows = await sql`
-        INSERT INTO users (identifier, display_name)
-        VALUES (${key}, ${displayName || null})
-        ON CONFLICT (identifier)
-        DO UPDATE SET display_name=EXCLUDED.display_name
+        UPDATE users
+        SET identifier=${newIdentifier}, display_name=${displayName || null}, updated_at=NOW()
+        WHERE id=${current[0].id}
         RETURNING identifier, display_name
       `
       return json(res, 200, { user: rows[0] })
