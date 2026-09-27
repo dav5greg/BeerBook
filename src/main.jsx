@@ -303,7 +303,7 @@ function App() {
       {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
-      {screen === 'settings' && <Settings userKey={userKey} displayName={displayName} saveUserKey={saveUserKey} />}
+      {screen === 'settings' && <Settings displayName={displayName} saveUserKey={saveUserKey} />}
     </main>
 
     {deleteTarget && <DeleteDialog beer={deleteTarget} onCancel={() => setDeleteTarget(null)} onConfirm={confirmDeleteBeer} />}
