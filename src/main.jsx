@@ -912,6 +912,17 @@ function Onboarding({ onRegister, onEnter }) {
 function Settings({ userKey, displayName, saveUserKey }) {
   const [value, setValue] = useState(userKey)
   const [name, setName] = useState(displayName)
+  const [theme, setTheme] = useState(localStorage.getItem('beerbook-theme') || 'light')
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+  }, [theme])
+
+  function changeTheme(next) {
+    setTheme(next)
+    localStorage.setItem('beerbook-theme', next)
+  }
+
   return <section className="page">
     <p className="eyebrow">CONFIGURAZIONE</p><h1>Impostazioni</h1>
     <div className="settings-card">
@@ -920,6 +931,19 @@ function Settings({ userKey, displayName, saveUserKey }) {
       <label className="field"><span>Nome utente</span><input value={name} onChange={e => setName(e.target.value)} placeholder="Inserisci il tuo nome" /></label>
       <label className="field"><span>Identificativo archivio</span><input value={value} onChange={e => setValue(e.target.value)} placeholder="Scegli un identificativo" /></label>
       <button className="primary-button" onClick={() => saveUserKey(value, name)}>Salva profilo</button>
+    </div>
+
+    <div className="settings-card settings-theme-card">
+      <h3>Aspetto</h3>
+      <p>Scegli il tema dell'app.</p>
+      <div className="theme-switch" role="group" aria-label="Tema">
+        <button className={theme === 'light' ? 'active' : ''} onClick={() => changeTheme('light')} aria-pressed={theme === 'light'}>
+          <span>☀</span> Chiaro
+        </button>
+        <button className={theme === 'dark' ? 'active' : ''} onClick={() => changeTheme('dark')} aria-pressed={theme === 'dark'}>
+          <span>☾</span> Scuro
+        </button>
+      </div>
     </div>
   </section>
 }
