@@ -10,7 +10,7 @@ const DEMO_BEERS = [
 ]
 
 const emptyForm = {
-  name: '', brewery: '', country: '', region: '', style: '', abv: '', rating: 0,
+  name: 'Centenario', brewery: 'Birrificio Pedavena', country: 'Italia', region: '', style: '', abv: '5', rating: 0,
   description: '', notes: '', last_tasted_at: new Date().toISOString().slice(0, 10),
   carbonation: 'Media', to_try: false, places: [{ name: '', type: 'Altro', city: '' }]
 }
@@ -553,12 +553,15 @@ function AddBeer({ form, setForm, onBack, onSave }) {
       <section className={'form-section ' + (openSections.beer ? 'open' : 'collapsed')}>
         <div className="form-section-head">
           <button type="button" className="form-section-toggle" onClick={() => toggleSection('beer')}>
-            <span>{form.name ? 'Modifica birra' : 'Nuova birra'}</span><b>{openSections.beer ? '⌃' : '⌄'}</b>
+            <span>{form.name ? 'Modifica birra' : 'Nuova birra'}</span>
           </button>
           <label className="section-try-toggle">
             <input type="checkbox" checked={form.to_try} onChange={e => update('to_try', e.target.checked)} />
             <span>Da provare</span>
           </label>
+          <button type="button" className="section-chevron" onClick={() => toggleSection('beer')} aria-label={openSections.beer ? 'Chiudi sezione' : 'Apri sezione'}>
+            {openSections.beer ? '⌃' : '⌄'}
+          </button>
         </div>
         {openSections.beer && <div className="form-section-body">
           <Field label="Nome birra *"><input required value={form.name} onChange={e => update('name', e.target.value)} placeholder="Duvel" /></Field>
