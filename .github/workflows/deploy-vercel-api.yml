@@ -1,0 +1,26 @@
+name: Deploy Beer Book API to Vercel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'vercel.json'
+      - 'package.json'
+      - 'backend/package.json'
+      - '.github/workflows/deploy-vercel-api.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel production deployment
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$VERCEL_DEPLOY_HOOK_URL" ]; then
+            echo "Missing GitHub secret VERCEL_DEPLOY_HOOK_URL"
+            exit 1
+          fi
+          curl --fail --silent --show-error -X POST "$VERCEL_DEPLOY_HOOK_URL"
