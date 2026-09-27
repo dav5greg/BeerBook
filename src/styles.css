@@ -3081,3 +3081,29 @@ main{padding:0 20px}
   font-size:12px;
   font-weight:800;
 }
+
+
+/* --- Header icons: explicit contrast and clean geometry --- */
+.topbar-action .header-icon-svg{
+  width:20px;
+  height:20px;
+  display:block;
+  color:var(--ink);
+  stroke:var(--ink);
+  stroke-width:2.1;
+}
+.brand.home-back-button .simple-home-icon,
+.brand.home-back-button .back-icon-svg{
+  color:var(--ink);
+  stroke:var(--ink);
+  stroke-width:2.1;
+}
+:root[data-theme="dark"] .topbar-action .header-icon-svg,
+:root[data-theme="dark"] .brand.home-back-button .simple-home-icon,
+:root[data-theme="dark"] .brand.home-back-button .back-icon-svg{
+  color:#f1e7dc;
+  stroke:#f1e7dc;
+}
+.topbar-action{
+  color:var(--ink);
+}
