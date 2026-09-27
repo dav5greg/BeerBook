@@ -22,6 +22,7 @@ function App() {
   const [query, setQuery] = useState('')
   const [filters, setFilters] = useState({ rating: '', brewery: '', country: '', style: '', city: '', place: '', type: '', toTry: false })
   const [sortBy, setSortBy] = useState('recent')
+  const [sortDirection, setSortDirection] = useState('desc')
   const [userKey, setUserKey] = useState(localStorage.getItem('beerbook-user-key') || '')
   const [displayName, setDisplayName] = useState(localStorage.getItem('beerbook-display-name') || '')
   const [sync, setSync] = useState('offline')
@@ -205,9 +206,11 @@ function App() {
       return true
     })
     return result.sort((a,b) => {
-      if (sortBy === 'rating') return Number(b.rating || 0) - Number(a.rating || 0)
-      if (sortBy === 'name') return String(a.name || '').localeCompare(String(b.name || ''), 'it')
-      return String(b.last_tasted_at || '').localeCompare(String(a.last_tasted_at || ''))
+      let comparison = 0
+      if (sortBy === 'rating') comparison = Number(a.rating || 0) - Number(b.rating || 0)
+      else if (sortBy === 'name') comparison = String(a.name || '').localeCompare(String(b.name || ''), 'it')
+      else comparison = String(a.last_tasted_at || '').localeCompare(String(b.last_tasted_at || ''))
+      return sortDirection === 'asc' ? comparison : -comparison
     })
   }, [beers, query, filters, sortBy])
 
@@ -310,7 +313,7 @@ function App() {
     <main>
       {screen === 'onboarding' && <Onboarding onRegister={registerUser} onEnter={enterUser} />}
       {screen === 'home' && <Home displayName={displayName} stats={stats} beers={beers} onOpen={openBeer} onDelete={deleteBeer} onLibrary={() => setScreen('library')} onAdd={startAdd} onTry={() => { setFilters({ ...filters, toTry: true }); setScreen('library') }} />}
-      {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
+      {screen === 'library' && <Library beers={filtered} query={query} setQuery={setQuery} filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy} sortDirection={sortDirection} setSortDirection={setSortDirection} showFilters={showFilters} setShowFilters={setShowFilters} onOpen={openBeer} onAdd={startAdd} onDelete={deleteBeer} />}
       {screen === 'detail' && selected && <Detail beer={selected} onBack={() => setScreen('library')} onEdit={() => startEdit(selected)} />}
       {screen === 'add' && <AddBeer form={form} setForm={setForm} onBack={() => setScreen(selected ? 'detail' : 'library')} onSave={saveBeer} />}
       {screen === 'settings' && <Settings displayName={displayName} saveUserKey={saveUserKey} />}
@@ -477,7 +480,7 @@ function BeerCard({ beer, onClick, onDelete, compact = false }) {
   </article>
 }
 
-function Library({ beers, query, setQuery, filters, setFilters, sortBy, setSortBy, showFilters, setShowFilters, onOpen, onAdd, onDelete }) {
+function Library({ beers, query, setQuery, filters, setFilters, sortBy, setSortBy, sortDirection, setSortDirection, showFilters, setShowFilters, onOpen, onAdd, onDelete }) {
   const styles = [...new Set(beers.map(b => b.style).filter(Boolean))]
   const breweries = [...new Set(beers.map(b => b.brewery).filter(Boolean))]
   return <section className="page library-page">
@@ -487,24 +490,41 @@ function Library({ beers, query, setQuery, filters, setFilters, sortBy, setSortB
     </div>
     <div className="library-search-row">
       <div className="search-box"><span>⌕</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca birra, birrificio, stile, paese..." /></div>
-      <button className="filter-icon-button" onClick={() => setShowFilters(!showFilters)} aria-label="Filtri">☷</button>
+      <button className="filter-icon-button" onClick={() => setShowFilters(!showFilters)} aria-label="Apri filtri" title="Filtri">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" /></svg>
+        {Object.values(filters).filter(Boolean).length > 0 && <b>{Object.values(filters).filter(Boolean).length}</b>}
+      </button>
     </div>
-    <div className="library-filter-bar">
-      <button className="library-filter-main" onClick={() => setShowFilters(!showFilters)}><span className="library-filter-main-icon">☷</span><span>Filtri</span><strong>{Object.values(filters).filter(Boolean).length}</strong></button>
-      {filters.toTry && <button className="active-filter-chip" onClick={() => setFilters({ ...filters, toTry:false })}>🔖 Da provare ×</button>}
-      {filters.rating && <button className="active-filter-chip" onClick={() => setFilters({ ...filters, rating:'' })}>★ {filters.rating} stelle ×</button>}
-      {filters.brewery && <button className="active-filter-chip" onClick={() => setFilters({ ...filters, brewery:'' })}>Birrificio: {filters.brewery} ×</button>}
-      {filters.country && <button className="active-filter-chip" onClick={() => setFilters({ ...filters, country:'' })}>Paese: {filters.country} ×</button>}
-      {filters.style && <button className="active-filter-chip" onClick={() => setFilters({ ...filters, style:'' })}>Stile: {filters.style} ×</button>}
+    {showFilters && <div className="filter-panel">
+      <label>Valutazione<select value={filters.rating} onChange={e => setFilters({ ...filters, rating: e.target.value })}><option value="">Tutte</option>{[5,4,3,2,1].map(x => <option key={x} value={x}>{x} stelle</option>)}</select></label>
+      <label>Birrificio<select value={filters.brewery} onChange={e => setFilters({ ...filters, brewery: e.target.value })}><option value="">Tutti</option>{breweries.map(x => <option key={x}>{x}</option>)}</select></label>
+      <label>Paese<select value={filters.country} onChange={e => setFilters({ ...filters, country: e.target.value })}><option value="">Tutti</option>{[...new Set(beers.map(b => b.country).filter(Boolean))].sort().map(x => <option key={x}>{x}</option>)}</select></label>
+      <label>Stile<select value={filters.style} onChange={e => setFilters({ ...filters, style: e.target.value })}><option value="">Tutti</option>{styles.map(x => <option key={x}>{x}</option>)}</select></label>
+      <label>Città<select value={filters.city} onChange={e => setFilters({ ...filters, city: e.target.value })}><option value="">Tutte</option>{[...new Set(beers.flatMap(b => (b.places || []).map(p => p.city).filter(Boolean)))].sort().map(x => <option key={x}>{x}</option>)}</select></label>
+      <label>Tipologia<select value={filters.type} onChange={e => setFilters({ ...filters, type: e.target.value })}><option value="">Tutte</option>{['Supermercato','Pub','Bar','Ristorante','Altro'].map(x => <option key={x}>{x}</option>)}</select></label>
+    </div>}
+    <div className="library-active-filters">
+      {filters.toTry && <button onClick={() => setFilters({ ...filters, toTry:false })}>🔖 Da provare ×</button>}
+      {filters.rating && <button onClick={() => setFilters({ ...filters, rating:'' })}>★ {filters.rating} stelle ×</button>}
+      {filters.brewery && <button onClick={() => setFilters({ ...filters, brewery:'' })}>Birrificio: {filters.brewery} ×</button>}
+      {filters.country && <button onClick={() => setFilters({ ...filters, country:'' })}>Paese: {filters.country} ×</button>}
+      {filters.style && <button onClick={() => setFilters({ ...filters, style:'' })}>Stile: {filters.style} ×</button>}
+      {filters.city && <button onClick={() => setFilters({ ...filters, city:'' })}>Città: {filters.city} ×</button>}
+      {filters.type && <button onClick={() => setFilters({ ...filters, type:'' })}>Tipologia: {filters.type} ×</button>}
     </div>
     <div className="library-options">
       <label className="try-option"><input type="checkbox" checked={filters.toTry} onChange={e => setFilters({ ...filters, toTry:e.target.checked })} /><span className="try-filter-icon">🔖</span><strong>Solo da provare</strong></label>
       <label className="sort-label">Ordina per
-        <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
+        <select value={sortBy} onChange={e => {
+          const value=e.target.value
+          setSortBy(value)
+          setSortDirection(value === 'name' ? 'asc' : 'desc')
+        }}>
           <option value="recent">Più recenti</option>
           <option value="rating">Valutazione</option>
           <option value="name">Nome A–Z</option>
         </select>
+        <button className="sort-direction" onClick={() => setSortDirection(d => d === 'asc' ? 'desc' : 'asc')} aria-label={sortDirection === 'asc' ? 'Ordinamento crescente' : 'Ordinamento decrescente'} title={sortDirection === 'asc' ? 'Crescente' : 'Decrescente'}>{sortDirection === 'asc' ? '↑' : '↓'}</button>
       </label>
     </div>
     {showFilters && <div className="filter-panel">
@@ -530,7 +550,6 @@ function BeerRow({ beer, onClick, onDelete }) {
         <small>{beer.country || 'Paese non indicato'}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small>
         <div className="list-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b> <strong>{Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</strong></div>
       </div>
-      <span className="row-more">⋮</span>
     </button>
     <button className="delete-beer" onClick={onDelete} aria-label={'Elimina ' + beer.name} title="Elimina birra">×</button>
   </div>
