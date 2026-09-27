@@ -567,7 +567,7 @@ function AddBeer({ form, setForm, onBack, onSave }) {
           <Field label="Nome birra *"><input required value={form.name} onChange={e => update('name', e.target.value)} placeholder="Centenario" /></Field>
           <Field label="Birrificio"><input value={form.brewery} onChange={e => update('brewery', e.target.value)} placeholder="Birrificio Pedavena" /></Field>
           <div className="two-cols"><Field label="Paese"><input value={form.country} onChange={e => update('country', e.target.value)} placeholder="Italia" /></Field><Field label="Stile"><input value={form.style} onChange={e => update('style', e.target.value)} placeholder="" /></Field></div>
-          <Field label="Gradazione alcolica"><input type="number" step="0.1" min="0" value={form.abv} onChange={e => update('abv', e.target.value)} placeholder="5°" /></Field>
+          <Field label="Gradazione alcolica"><div className="abv-input-wrap"><input type="number" step="0.1" min="0" value={form.abv} onChange={e => update('abv', e.target.value)} placeholder="5" /><span>%</span></div></Field>
         </div>}
       </section>
 
