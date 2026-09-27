@@ -521,9 +521,9 @@ function Library({ beers, query, setQuery, filters, setFilters, sortBy, setSortB
     </div>
     {showFilters && <div className="filter-panel">
       <label>Valutazione<select value={filters.rating} onChange={e => setFilters({ ...filters, rating: e.target.value })}><option value="">Tutte</option>{[5,4,3,2,1].map(x => <option key={x} value={x}>{x} stelle</option>)}</select></label>
+      <label>Stile<select value={filters.style} onChange={e => setFilters({ ...filters, style: e.target.value })}><option value="">Tutti</option>{styles.map(x => <option key={x}>{x}</option>)}</select></label>
       <label>Birrificio<select value={filters.brewery} onChange={e => setFilters({ ...filters, brewery: e.target.value })}><option value="">Tutti</option>{breweries.map(x => <option key={x}>{x}</option>)}</select></label>
       <label>Paese<select value={filters.country} onChange={e => setFilters({ ...filters, country: e.target.value })}><option value="">Tutti</option>{[...new Set(beers.map(b => b.country).filter(Boolean))].sort().map(x => <option key={x}>{x}</option>)}</select></label>
-      <label>Stile<select value={filters.style} onChange={e => setFilters({ ...filters, style: e.target.value })}><option value="">Tutti</option>{styles.map(x => <option key={x}>{x}</option>)}</select></label>
       <label>Città<select value={filters.city} onChange={e => setFilters({ ...filters, city: e.target.value })}><option value="">Tutte</option>{[...new Set(beers.flatMap(b => (b.places || []).map(p => p.city).filter(Boolean)))].sort().map(x => <option key={x}>{x}</option>)}</select></label>
       <label>Tipologia<select value={filters.type} onChange={e => setFilters({ ...filters, type: e.target.value })}><option value="">Tutte</option>{['Supermercato','Pub','Bar','Ristorante','Altro'].map(x => <option key={x}>{x}</option>)}</select></label>
     </div>}
