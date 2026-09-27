@@ -1296,3 +1296,21 @@ main{padding:0 20px}
 .compact-beer-card .beer-card-body{padding-top:2px}
 .compact-beer-card .beer-card-body strong{font-size:14px}
 .compact-beer-card .beer-card-body>span{font-size:11px}
+
+
+/* --- Unified header icon language --- */
+.topbar-action .header-icon-svg{
+  width:21px;
+  height:21px;
+  display:block;
+  stroke:currentColor;
+  stroke-width:1.8;
+}
+.brand.home-back-button .back-icon-svg{
+  width:21px;
+  height:21px;
+  stroke-width:1.8;
+  transform:none;
+}
+.topbar-action.sync-button .header-icon-svg{stroke-width:1.8}
+.topbar-action.exit-button .header-icon-svg{stroke-width:1.8}
