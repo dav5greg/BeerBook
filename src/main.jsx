@@ -571,6 +571,7 @@ function Library({ beers, query, setQuery, filters, setFilters, sortBy, setSortB
       {filters.brewery && <button onClick={() => setFilters({ ...filters, brewery:'' })}>Birrificio: {filters.brewery} ×</button>}
       {filters.country && <button onClick={() => setFilters({ ...filters, country:'' })}>Paese: {filters.country} ×</button>}
       {filters.style && <button onClick={() => setFilters({ ...filters, style:'' })}>Stile: {filters.style} ×</button>}
+      {filters.place && <button onClick={() => setFilters({ ...filters, place:'' })}>Luogo: {filters.place} ×</button>}
       {filters.city && <button onClick={() => setFilters({ ...filters, city:'' })}>Città: {filters.city} ×</button>}
       {filters.type && <button onClick={() => setFilters({ ...filters, type:'' })}>Tipologia: {filters.type} ×</button>}
     </div>
