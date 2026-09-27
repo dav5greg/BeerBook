@@ -2724,3 +2724,122 @@ main{padding:0 20px}
   .place-list-info span{font-size:11px}
   .place-list-count{font-size:10.5px}
 }
+
+/* --- Luoghi: exact scale parity with Le mie birre --- */
+.places-page{
+  padding-top:20px;
+}
+.places-heading{
+  margin-bottom:16px;
+}
+.places-heading h1{
+  font-size:32px;
+  line-height:1;
+  letter-spacing:-.04em;
+  font-weight:900;
+  margin:0;
+}
+.places-heading p{
+  margin-top:6px;
+  font-size:13px;
+  font-weight:600;
+  color:#75685f;
+}
+.places-add-button{
+  width:46px;
+  height:46px;
+  font-size:24px;
+}
+.places-search{
+  min-height:46px;
+  padding:9px 13px;
+  border-radius:14px;
+  margin-bottom:12px;
+}
+.places-search input{
+  font-size:13px;
+  font-weight:500;
+}
+.places-search > span{
+  font-size:23px;
+  line-height:1;
+}
+.places-type-filters{
+  gap:8px;
+  padding:1px 0 12px;
+}
+.places-type-filters button{
+  min-height:46px;
+  padding:9px 12px;
+  font-size:12px;
+  font-weight:800;
+  border-radius:13px;
+}
+.place-list-row{
+  min-height:78px;
+  grid-template-columns:55px minmax(0,1fr) auto;
+  gap:11px;
+  padding:5px 2px;
+}
+.place-list-icon{
+  width:55px;
+  height:68px;
+  border-radius:10px;
+}
+.place-list-icon .real-icon,
+.place-list-icon .simple-place-type-icon{
+  width:32px;
+  height:32px;
+}
+.place-list-info strong{
+  font-size:15px;
+  line-height:1.15;
+  font-weight:900;
+}
+.place-list-info span{
+  margin-top:3px;
+  font-size:12px;
+  line-height:1.15;
+  font-weight:600;
+}
+.place-list-count{
+  font-size:10px;
+  font-weight:600;
+}
+.place-list-count span{
+  font-size:21px;
+}
+@media(max-width:520px){
+  .places-page{padding-top:20px}
+  .places-heading h1{font-size:29px}
+  .places-heading p{font-size:13px}
+  .places-add-button{width:40px;height:40px;font-size:23px}
+  .places-search{
+    min-height:40px;
+    padding:8px 12px;
+    margin-bottom:10px;
+  }
+  .places-search input{font-size:13px}
+  .places-search > span{font-size:22px}
+  .places-type-filters button{
+    min-height:40px;
+    padding:8px 11px;
+    font-size:11px;
+  }
+  .place-list-row{
+    min-height:70px;
+    grid-template-columns:52px minmax(0,1fr) auto;
+    gap:10px;
+    padding:1px 2px;
+  }
+  .place-list-icon{
+    width:52px;
+    height:64px;
+    border-radius:10px;
+  }
+  .place-list-icon .real-icon,
+  .place-list-icon .simple-place-type-icon{width:30px;height:30px}
+  .place-list-info strong{font-size:14px}
+  .place-list-info span{font-size:11px}
+  .place-list-count{font-size:9px}
+}
