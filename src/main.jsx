@@ -610,16 +610,20 @@ function AddBeer({ form, setForm, onBack, onSave }) {
 function PlaceAutocomplete({ mode, value, placeholder, onSelect }) {
   const [query, setQuery] = useState(value || '')
   const [suggestions, setSuggestions] = useState([])
+  const [selectedQuery, setSelectedQuery] = useState(value || '')
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setQuery(value || '')
+    if (String(value || '') !== query && String(value || '') !== selectedQuery) {
+      setQuery(value || '')
+      setSelectedQuery(value || '')
+    }
   }, [value])
 
   useEffect(() => {
     const text = query.trim()
-    if (text.length < 2 || text === String(value || '').trim()) {
+    if (text.length < 2 || text === selectedQuery.trim()) {
       setSuggestions([])
       return
     }
@@ -661,6 +665,7 @@ function PlaceAutocomplete({ mode, value, placeholder, onSelect }) {
     setSuggestions([])
     const label = mode === 'country' ? item.flag + ' ' + item.name : item.name
     setQuery(label)
+    setSelectedQuery(label)
     onSelect({ name: item.name, country: item.name, label })
   }
 
@@ -669,6 +674,7 @@ function PlaceAutocomplete({ mode, value, placeholder, onSelect }) {
       value={query}
       onChange={e => {
         setQuery(e.target.value)
+        setSelectedQuery('')
         onSelect({ name: e.target.value, country: e.target.value, label: e.target.value })
       }}
       onFocus={() => suggestions.length && setOpen(true)}
