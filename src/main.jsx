@@ -881,8 +881,6 @@ function Settings({ userKey, displayName, saveUserKey }) {
       <button className="primary-button" onClick={save}>Salva profilo</button>
       {message && <p className="settings-save-message">{message}</p>}
     </div>
-
-div>
   </section>
 }
 
