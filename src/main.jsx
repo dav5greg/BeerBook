@@ -883,8 +883,10 @@ function Settings({ userKey, displayName, saveUserKey }) {
     setMessage(result?.ok ? 'Profilo salvato.' : (result?.error || 'Impossibile salvare il profilo.'))
   }
 
-  return <section className="page">
-    <p className="eyebrow">CONFIGURAZIONE</p><h1>Impostazioni</h1>
+  return <section className="page library-page settings-page">
+    <div className="page-heading library-heading">
+      <div><h1>Impostazioni</h1></div>
+    </div>
     <div className="settings-card">
       <h3>Profilo</h3>
       <p>Nome mostrato in Home e identificativo dell'archivio.</p>
