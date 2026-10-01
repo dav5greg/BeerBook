@@ -25,10 +25,6 @@ function App() {
   const [showExitConfirm, setShowExitConfirm] = useState(false)
   const [screenHistory, setScreenHistory] = useState([])
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = localStorage.getItem('beerbook-theme') || 'light'
-  }, [])
-
   function navigate(nextScreen) {
     setScreenHistory(history => [...history, screen])
     setScreen(nextScreen)
@@ -860,22 +856,12 @@ function Onboarding({ onRegister, onEnter }) {
 function Settings({ userKey, displayName, saveUserKey }) {
   const [value, setValue] = useState(userKey)
   const [name, setName] = useState(displayName)
-  const [theme, setTheme] = useState(localStorage.getItem('beerbook-theme') || 'light')
   const [message, setMessage] = useState('')
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme
-  }, [theme])
 
   useEffect(() => {
     setValue(userKey)
     setName(displayName)
   }, [userKey, displayName])
-
-  function changeTheme(next) {
-    setTheme(next)
-    localStorage.setItem('beerbook-theme', next)
-  }
 
   async function save() {
     setMessage('')
@@ -896,14 +882,7 @@ function Settings({ userKey, displayName, saveUserKey }) {
       {message && <p className="settings-save-message">{message}</p>}
     </div>
 
-    <div className="settings-card settings-theme-card">
-      <h3>Aspetto</h3>
-      <p>Scegli il tema dell'app.</p>
-      <div className="theme-switch" role="group" aria-label="Tema">
-        <button className={theme === 'light' ? 'active' : ''} onClick={() => changeTheme('light')} aria-pressed={theme === 'light'}><span>☀</span> Chiaro</button>
-        <button className={theme === 'dark' ? 'active' : ''} onClick={() => changeTheme('dark')} aria-pressed={theme === 'dark'}><span>☾</span> Scuro</button>
-      </div>
-    </div>
+div>
   </section>
 }
 
