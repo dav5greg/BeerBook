@@ -2932,7 +2932,22 @@ main{padding:0 20px}
     height:117px;
   }
   .topbar-user-name{
-    font-size:15px;
+    font-size:25px;
     max-width:42%;
+  }
+}
+
+
+/* --- Final matching scale --- */
+.places-search > span{
+  font-size:25px !important;
+  line-height:1;
+}
+@media(max-width:520px){
+  .places-search > span{
+    font-size:25px !important;
+  }
+  .topbar-user-name{
+    font-size:25px !important;
   }
 }
