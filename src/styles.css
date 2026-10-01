@@ -2760,10 +2760,7 @@ main{padding:0 20px}
   font-size:13px;
   font-weight:500;
 }
-.places-search > span{
-  font-size:25px;
-  line-height:1;
-}
+
 .places-type-filters{
   gap:8px;
   padding:1px 0 12px;
@@ -2820,29 +2817,7 @@ main{padding:0 20px}
     margin-bottom:10px;
   }
   .places-search input{font-size:13px}
-  .places-search > span{font-size:25px}
-  .places-type-filters button{
-    min-height:40px;
-    padding:8px 11px;
-    font-size:11px;
-  }
-  .place-list-row{
-    min-height:70px;
-    grid-template-columns:52px minmax(0,1fr) auto;
-    gap:10px;
-    padding:1px 2px;
-  }
-  .place-list-icon{
-    width:52px;
-    height:64px;
-    border-radius:10px;
-  }
-  .place-list-icon .real-icon,
-  .place-list-icon .simple-place-type-icon{width:30px;height:30px}
-  .place-list-info strong{font-size:14px}
-  .place-list-info span{font-size:11px}
-  .place-list-count{font-size:9px}
-}
+  
 
 /* --- Purchase place rows are clickable library-style controls --- */
 .place-list-row{
@@ -2939,15 +2914,6 @@ main{padding:0 20px}
 
 
 /* --- Final matching scale --- */
-.places-search > span{
-  font-size:25px !important;
-  line-height:1;
-}
+
 @media(max-width:520px){
-  .places-search > span{
-    font-size:25px !important;
-  }
-  .topbar-user-name{
-    font-size:29px !important;
-  }
-}
+  
