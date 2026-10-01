@@ -2815,8 +2815,8 @@ main{padding:0 20px}
   .places-heading p{font-size:13px}
   .places-add-button{width:40px;height:40px;font-size:23px}
   .places-search{
-    min-height:40px;
-    padding:8px 12px;
+    min-height:46px;
+    padding:9px 13px;
     margin-bottom:10px;
   }
   .places-search input{font-size:13px}
@@ -2917,7 +2917,7 @@ main{padding:0 20px}
   text-overflow:ellipsis;
   white-space:nowrap;
   color:var(--ink);
-  font-size:16px;
+  font-size:25px;
   line-height:1;
   font-weight:800;
 }
