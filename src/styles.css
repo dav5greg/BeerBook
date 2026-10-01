@@ -2903,3 +2903,36 @@ main{padding:0 20px}
   font-size:12px;
   font-weight:800;
 }
+
+
+/* --- Header user name + compact Home hero --- */
+.topbar{position:relative}
+.topbar-user-name{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  max-width:48%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--ink);
+  font-size:16px;
+  line-height:1;
+  font-weight:800;
+}
+.home-user-name{display:none !important}
+.home-hero{
+  min-height:117px;
+  height:117px;
+}
+@media(max-width:520px){
+  .home-hero{
+    min-height:117px;
+    height:117px;
+  }
+  .topbar-user-name{
+    font-size:15px;
+    max-width:42%;
+  }
+}
