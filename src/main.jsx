@@ -3,12 +3,6 @@ import { createRoot } from 'react-dom/client'
 import './styles.css'
 
 const API_BASE = import.meta.env.VITE_API_BASE || ''
-const DEMO_BEERS = [
-  { id: 'demo-1', name: 'Duvel', brewery: 'Duvel Moortgat', country: 'Belgio', region: 'Puurs', style: 'Belgian Strong Ale', abv: 8.5, rating: 5, notes: 'Secca, profumata e molto equilibrata.', last_tasted_at: '2026-09-20', carbonation: 'Alta', to_try: false, place_names: ['Esselunga'] },
-  { id: 'demo-2', name: 'Punk IPA', brewery: 'BrewDog', country: 'Scozia', region: 'Ellon', style: 'IPA', abv: 5.4, rating: 4, notes: 'Agrumata e resinosa.', last_tasted_at: '2026-09-14', carbonation: 'Media', to_try: false, place_names: ['Supermercato'] },
-  { id: 'demo-3', name: 'Westmalle Tripel', brewery: 'Westmalle', country: 'Belgio', region: 'Malle', style: 'Tripel', abv: 9.5, rating: 5, notes: 'Complessa, secca, lunga.', last_tasted_at: '2026-09-08', carbonation: 'Alta', to_try: true, place_names: [] },
-]
-
 const emptyForm = {
   name: '', brewery: '', country: '', region: '', style: '', abv: '', rating: 0,
   description: '', notes: '', last_tasted_at: '', carbonation: '', to_try: false,
@@ -25,7 +19,6 @@ function App() {
   const [sortDirection, setSortDirection] = useState('desc')
   const [userKey, setUserKey] = useState(localStorage.getItem('beerbook-user-key') || '')
   const [displayName, setDisplayName] = useState(localStorage.getItem('beerbook-display-name') || '')
-  const [sync, setSync] = useState('offline')
   const [form, setForm] = useState(emptyForm)
   const [showFilters, setShowFilters] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState(null)
@@ -56,42 +49,23 @@ function App() {
       loadUserProfile()
     } else {
       setBeers([])
-      setSync('offline')
     }
-    const online = () => setSync('sync')
-    const offline = () => setSync('offline')
-    window.addEventListener('online', online)
-    window.addEventListener('offline', offline)
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/BeerBook/sw.js').catch(() => {})
-    return () => {
-      window.removeEventListener('online', online)
-      window.removeEventListener('offline', offline)
-    }
   }, [])
 
   async function loadBeers(key = userKey) {
-    const cacheKey = key ? 'beerbook-cache-' + key : 'beerbook-cache'
-    if (!navigator.onLine || !API_BASE || !key) {
-      setBeers(JSON.parse(localStorage.getItem(cacheKey) || 'null') || DEMO_BEERS)
-      setSync(navigator.onLine ? 'pending' : 'offline')
+    if (!API_BASE || !key) {
+      setBeers([])
       return
     }
-    try {
-      setSync('sync')
-      const res = await fetch(API_BASE + '/api/beers', { headers: { 'x-user-key': key } })
-      if (!res.ok) throw new Error()
-      const data = await res.json()
-      setBeers(data.beers || [])
-      localStorage.setItem(cacheKey, JSON.stringify(data.beers || []))
-      setSync('ok')
-    } catch {
-      setBeers(JSON.parse(localStorage.getItem(cacheKey) || 'null') || DEMO_BEERS)
-      setSync('pending')
-    }
+    const res = await fetch(API_BASE + '/api/beers', { headers: { 'x-user-key': key } })
+    if (!res.ok) throw new Error()
+    const data = await res.json()
+    setBeers(data.beers || [])
   }
 
   async function loadUserProfile(key = userKey) {
-    if (!API_BASE || !key || !navigator.onLine) return
+    if (!API_BASE || !key) return
     try {
       const res = await fetch(API_BASE + '/api/user', { headers: { 'x-user-key': key } })
       if (!res.ok) return
@@ -109,11 +83,8 @@ function App() {
     if (!/^[a-z0-9_-]{3,30}$/.test(clean)) {
       return { ok: false, error: 'L’identificativo deve essere lungo tra 3 e 30 caratteri.' }
     }
-    if (!API_BASE || !navigator.onLine) {
-      return { ok: false, error: 'Serve una connessione internet per rientrare nell’archivio.' }
-    }
+    if (!API_BASE) return { ok: false, error: 'Servizio non disponibile.' }
     try {
-      setSync('sync')
       const res = await fetch(API_BASE + '/api/user', { headers: { 'x-user-key': clean } })
       const data = await res.json().catch(() => ({}))
       if (res.status === 404) return { ok: false, error: 'Archivio non trovato.' }
@@ -142,11 +113,8 @@ function App() {
     if (!/^[a-z0-9_-]{3,30}$/.test(clean)) {
       return { ok: false, error: 'L’identificativo deve essere lungo tra 3 e 30 caratteri.' }
     }
-    if (!API_BASE || !navigator.onLine) {
-      return { ok: false, error: 'Serve una connessione internet per creare un nuovo archivio.' }
-    }
+    if (!API_BASE) return { ok: false, error: 'Servizio non disponibile.' }
     try {
-      setSync('sync')
       const res = await fetch(API_BASE + '/api/user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-user-key': clean },
@@ -160,19 +128,12 @@ function App() {
       localStorage.setItem('beerbook-user-key', clean)
       localStorage.setItem('beerbook-display-name', data.user?.display_name || name)
       setBeers([])
-      setSync('ok')
       setScreen('home')
       await loadBeers(clean)
       return { ok: true }
     } catch {
       return { ok: false, error: 'Impossibile creare il profilo. Controlla la connessione e riprova.' }
     }
-  }
-
-  async function syncNow() {
-    if (!userKey) return
-    await loadBeers()
-    await loadUserProfile()
   }
 
   function exitProfile() {
@@ -184,7 +145,6 @@ function App() {
     setSelected(null)
     setScreenHistory([])
     setScreen('onboarding')
-    setSync('offline')
   }
 
   async function saveUserKey(value, nameValue = displayName) {
@@ -192,7 +152,7 @@ function App() {
     const name = nameValue.trim()
     if (!clean) return { ok: false, error: 'Inserisci un identificativo valido.' }
     if (!/^[a-z0-9_-]{3,30}$/.test(clean)) return { ok: false, error: 'L’identificativo deve essere lungo tra 3 e 30 caratteri.' }
-    if (!API_BASE || !userKey || !navigator.onLine) return { ok: false, error: 'Serve una connessione internet per salvare il profilo.' }
+    if (!API_BASE || !userKey) return { ok: false, error: 'Servizio non disponibile.' }
     try {
       const res = await fetch(API_BASE + '/api/user', {
         method: 'PUT',
@@ -203,18 +163,6 @@ function App() {
       if (!res.ok) return { ok: false, error: data.error || 'Impossibile salvare il profilo.' }
       const saved = data.user?.identifier || clean
       const savedName = data.user?.display_name || ''
-      const previousKey = userKey
-
-      // Renaming an archive must not reload/overwrite the current beer list.
-      // The backend changes the identifier on the same users.id, so all beers
-      // and purchase places remain attached to the same user.
-      if (previousKey && previousKey !== saved) {
-        const currentCache = localStorage.getItem('beerbook-cache-' + previousKey)
-        if (currentCache) {
-          localStorage.setItem('beerbook-cache-' + saved, currentCache)
-        }
-      }
-
       setUserKey(saved)
       setDisplayName(savedName)
       localStorage.setItem('beerbook-user-key', saved)
@@ -290,16 +238,14 @@ function App() {
     const beer = deleteTarget
     if (!beer) return
     setDeleteTarget(null)
-    const local = beers.filter(b => b.id !== beer.id)
-    setBeers(local)
-    localStorage.setItem('beerbook-cache-' + userKey, JSON.stringify(local))
-    if (!API_BASE || !userKey || !navigator.onLine || String(beer.id).startsWith('demo-')) { setSync('pending'); return }
+    if (!API_BASE || !userKey) return
     try {
-      setSync('sync')
       const res = await fetch(API_BASE + '/api/beers/' + beer.id, { method: 'DELETE', headers: { 'x-user-key': userKey } })
       if (!res.ok) throw new Error()
-      setSync('ok')
-    } catch { setSync('pending') }
+      await loadBeers()
+    } catch {
+      setBeers(beers)
+    }
   }
 
   async function saveBeer(e) {
@@ -310,19 +256,17 @@ function App() {
       rating: Number(form.rating) || 0,
       places: form.places.filter(p => p.name.trim()).map(p => ({ name: p.name.trim(), type: p.type || 'Altro', city: p.city.trim() || null }))
     }
-    const local = selected ? beers.map(b => b.id === selected.id ? { ...b, ...payload } : b) : [{ ...payload, id: crypto.randomUUID() }, ...beers]
-    setBeers(local)
-    localStorage.setItem('beerbook-cache-' + userKey, JSON.stringify(local))
-    navigate('library')
-    if (!API_BASE || !userKey || !navigator.onLine) { setSync('pending'); return }
+    if (!API_BASE || !userKey) return
     try {
-      setSync('sync')
       const method = selected ? 'PUT' : 'POST'
       const url = selected ? API_BASE + '/api/beers/' + selected.id : API_BASE + '/api/beers'
       const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json', 'x-user-key': userKey }, body: JSON.stringify(payload) })
       if (!res.ok) throw new Error()
       await loadBeers()
-    } catch { setSync('pending') }
+      navigate('library')
+    } catch {
+      // Keep the form open when the online request fails.
+    }
   }
 
   const title = screen === 'home' ? 'Il tuo archivio' : screen === 'library' ? 'Le mie birre' : screen === 'places' ? 'Luoghi di acquisto' : screen === 'detail' ? selected?.name : screen === 'add' ? (selected ? 'Modifica birra' : 'Aggiungi birra') : 'Impostazioni'
@@ -340,8 +284,6 @@ function App() {
         <Icon name={screen === 'home' || screen === 'library' || screen === 'places' || screen === 'settings' ? 'home' : 'back'} />
       </button>}
       {!onboarding && <div className="topbar-actions">
-        <button className="topbar-action sync-button" onClick={syncNow} disabled={sync === 'sync'} aria-label="Sincronizza ora" title="Sincronizza ora"><Icon name="sync" /></button>
-        <SyncBadge state={sync} />
         <button className="topbar-action exit-button" onClick={() => setShowExitConfirm(true)} aria-label="Esci dal profilo" title="Esci dal profilo"><Icon name="exit" /></button>
       </div>}
     </header>
@@ -394,17 +336,6 @@ function ExitDialog({ onCancel, onConfirm }) {
       </div>
     </div>
   </div>
-}
-
-function SyncBadge({ state }) {
-  const map = {
-    ok: ['✓', 'Sincronizzato', 'good'],
-    sync: ['↻', 'Sincronizzazione…', 'working'],
-    pending: ['!', 'Da sincronizzare', 'pending'],
-    offline: ['×', 'Offline', 'offline']
-  }
-  const [icon, text, cls] = map[state] || map.offline
-  return <div className={'sync-badge ' + cls}><b>{icon}</b><span>{text}</span></div>
 }
 
 function NavItem({ active, icon, label, onClick }) {
