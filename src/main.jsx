@@ -329,7 +329,7 @@ function ExitDialog({ onCancel, onConfirm }) {
     <div className="delete-dialog exit-dialog" role="dialog" aria-modal="true" aria-labelledby="exit-title" onClick={e => e.stopPropagation()}>
       <div className="dialog-mark">↪</div>
       <h2 id="exit-title">Vuoi uscire dall’archivio?</h2>
-      <p>Verrai riportato alla schermata iniziale. I dati già sincronizzati resteranno nel tuo archivio.</p>
+      <p>Verrai riportato alla schermata iniziale. I dati resteranno nel tuo archivio.</p>
       <div className="dialog-actions">
         <button className="secondary-button" onClick={onCancel}>No, resta qui</button>
         <button className="primary-button" onClick={onConfirm}>Sì, esci</button>
