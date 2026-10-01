@@ -271,6 +271,7 @@ function App() {
 
   return <div className={"app-shell " + (onboarding ? "onboarding-active" : "")}>
     <header className="topbar">
+      {!onboarding && <div className="topbar-user-name">{displayName || userKey}</div>}
       {!onboarding && <button className="brand home-back-button" onClick={() => {
         if (screen === 'home') return
         if (screen === 'detail' || screen === 'add') return goBack()
@@ -460,7 +461,6 @@ function Home({ displayName, userKey, stats, beers, onOpen, onDelete, onLibrary,
   return <section className="page home-page">
     <div className="home-hero">
       <div className="home-hero-copy">
-        <p className="home-user-name">{displayName || userKey}</p>
         <h1>Beer Book</h1>
         <p>Il mio archivio di birre</p>
       </div>
