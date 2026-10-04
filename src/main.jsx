@@ -512,7 +512,7 @@ function BeerCard({ beer, onClick, onDelete, compact = false }) {
             {!compact && <small className="card-date">{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</small>}
           </div>
         </div>
-        {!compact && <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b></div>}
+        {!compact && <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b><small className="card-date">{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</small></div>}
       </div>
     </button>
     <button className="card-delete" onClick={onDelete} aria-label={'Elimina ' + beer.name}>×</button>
