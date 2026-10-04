@@ -581,7 +581,7 @@ function BeerRow({ beer, onClick, onDelete }) {
       <div className="beer-row-meta">
         <small>{beer.style || 'Stile non indicato'}</small>
         <small>{beer.country || 'Paese non indicato'}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small>
-        <div className="list-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b> <strong>{Number(beer.rating || 0) ? Number(beer.rating).toFixed(1) : '—'}</strong></div>
+        <div className="list-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b></div>
       </div>
     </button>
     <button className="delete-beer" onClick={onDelete} aria-label={'Elimina ' + beer.name} title="Elimina birra">×</button>
