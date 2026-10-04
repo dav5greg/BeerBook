@@ -414,13 +414,12 @@ main{padding:0 20px}
 }
 .beer-card-art span{font-size:75px;filter:drop-shadow(0 9px 8px rgba(0,0,0,.28))}
 .beer-card-body{padding:8px 8px 10px}
-.card-info-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;min-width:0}
+.card-info-row{display:flex;min-width:0}
 .card-title-info{min-width:0;flex:1}
-.card-title-info>strong,.card-title-info>span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card-title-info>strong{font-size:12px}
-.card-title-info>span{font-size:10px;color:#77695f;margin-top:2px}
-.card-right-info{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;text-align:right;line-height:1.15}
-.card-abv{font-size:10px;font-weight:700;color:#3d332c;white-space:nowrap}
+.card-title-info>strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}
+.card-subrow{display:flex;justify-content:space-between;align-items:baseline;gap:8px;min-width:0;margin-top:2px}
+.card-subrow>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;color:#77695f}
+.card-abv{flex:0 0 auto;font-size:10px;font-weight:700;color:#3d332c;white-space:nowrap;text-align:right}
 .card-rating small{font-size:9px;color:#756a62}
 .card-rating{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
 .card-rating b{font-size:11px;color:#e89a0c;letter-spacing:-2px}
