@@ -419,7 +419,7 @@ main{padding:0 20px}
 .card-title-info>strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}
 .card-subrow{display:flex;justify-content:space-between;align-items:baseline;gap:8px;min-width:0;margin-top:2px}
 .card-subrow>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;color:#77695f}
-.card-abv{flex:0 0 auto;font-size:10px;font-weight:700;color:#3d332c;white-space:nowrap;text-align:right}
+.card-abv{flex:0 0 auto;font-size:10px;font-weight:400;color:#77695f;white-space:nowrap;text-align:right}
 .card-rating small{font-size:9px;color:#756a62}
 .card-rating{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
 .card-rating b{font-size:11px;color:#e89a0c;letter-spacing:-2px}
