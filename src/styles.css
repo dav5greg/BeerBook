@@ -455,9 +455,8 @@ main{padding:0 20px}
 .library-list .beer-info strong{font-size:13px}
 .library-list .beer-info span{font-size:10px}
 .library-list .beer-info small{font-size:9px;margin-top:3px}
-.list-rating{margin-top:3px;font-size:10px}
+.list-rating{margin-top:3px;font-size:10px;text-align:right}
 .list-rating b{color:#ed990d;letter-spacing:-2px}
-.list-rating strong{color:#2f251e;font-size:10px;margin-left:3px}
 .library-list time{font-size:9px;color:#746b64;white-space:nowrap;align-self:flex-end;margin-bottom:10px}
 .row-more{font-size:18px;color:#665b53;margin-left:2px}
 .library-list .delete-beer{display:none}
