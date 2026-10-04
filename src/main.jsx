@@ -505,11 +505,10 @@ function BeerCard({ beer, onClick, onDelete, compact = false }) {
         <div className="card-info-row">
           <div className="card-title-info">
             <strong>{beer.name}</strong>
-            <span>{beer.style || 'Stile non indicato'}</span>
-          </div>
-          <div className="card-right-info">
-            <small className="card-abv">{beer.abv !== null && beer.abv !== undefined && beer.abv !== '' ? beer.abv + '%' : '—'}</small>
-
+            <div className="card-subrow">
+              <span>{beer.style || 'Stile non indicato'}</span>
+              <small className="card-abv">{beer.abv !== null && beer.abv !== undefined && beer.abv !== '' ? beer.abv + '%' : '—'}</small>
+            </div>
           </div>
         </div>
         {!compact && <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b><small>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</small></div>}
