@@ -509,10 +509,10 @@ function BeerCard({ beer, onClick, onDelete, compact = false }) {
           </div>
           <div className="card-right-info">
             <small className="card-abv">{beer.abv !== null && beer.abv !== undefined && beer.abv !== '' ? beer.abv + '%' : '—'}</small>
-            {!compact && <small className="card-date">{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</small>}
+
           </div>
         </div>
-        {!compact && <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b><small className="card-date">{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</small></div>}
+        {!compact && <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b><small>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</small></div>}
       </div>
     </button>
     <button className="card-delete" onClick={onDelete} aria-label={'Elimina ' + beer.name}>×</button>
