@@ -502,9 +502,17 @@ function BeerCard({ beer, onClick, onDelete, compact = false }) {
     <button className="beer-card-main" onClick={onClick}>
       <div className="beer-card-art"><span>🍺</span></div>
       <div className="beer-card-body">
-        <strong>{beer.name}</strong>
-        <span>{beer.style || 'Stile non indicato'}</span>
-        {!compact && <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b><small>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</small></div>}
+        <div className="card-info-row">
+          <div className="card-title-info">
+            <strong>{beer.name}</strong>
+            <span>{beer.style || 'Stile non indicato'}</span>
+          </div>
+          <div className="card-right-info">
+            <small className="card-abv">{beer.abv !== null && beer.abv !== undefined && beer.abv !== '' ? beer.abv + '%' : '—'}</small>
+            {!compact && <small className="card-date">{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</small>}
+          </div>
+        </div>
+        {!compact && <div className="card-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b></div>}
       </div>
     </button>
     <button className="card-delete" onClick={onDelete} aria-label={'Elimina ' + beer.name}>×</button>
