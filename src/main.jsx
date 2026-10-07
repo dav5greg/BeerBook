@@ -696,8 +696,8 @@ function AddBeer({ form, setForm, onBack, onSave }) {
         </div>
         {openSections.tasting && <div className="form-section-body">
           <Field label="Data degustazione"><div className="date-input-wrap"><input type="date" value={form.last_tasted_at} onChange={e => update('last_tasted_at', e.target.value)} />{form.last_tasted_at && <button type="button" className="clear-date-button" onPointerDown={e => e.preventDefault()} onMouseDown={e => e.preventDefault()} onClick={e => { e.preventDefault(); e.stopPropagation(); update('last_tasted_at', '') }} aria-label="Cancella data" title="Cancella data">×</button>}</div></Field>
-          <Field label="Carbonazione"><div className="segmented">{['Bassa','Media','Alta'].map(x => <button type="button" key={x} className={form.carbonation === x ? 'selected' : ''} onClick={() => update('carbonation', x)}>{x}</button>)}</div></Field>
-          <Field label="Valutazione"><div className="star-input">{[1,2,3,4,5].map(x => <button type="button" key={x} className={x <= form.rating ? 'on' : ''} onClick={() => update('rating', x)}>★</button>)}</div></Field>
+          <Field label="Carbonazione"><div className="segmented">{['Bassa','Media','Alta'].map(x => <button type="button" key={x} className={form.carbonation === x ? 'selected' : ''} onClick={() => update('carbonation', form.carbonation === x ? '' : x)}>{x}</button>)}</div></Field>
+          <Field label="Valutazione"><div className="star-input">{[1,2,3,4,5].map(x => <button type="button" key={x} className={x <= form.rating ? 'on' : ''} onClick={() => update('rating', Number(form.rating) === x ? 0 : x)}>★</button>)}</div></Field>
           <Field label="Note personali"><textarea rows="4" value={form.notes} onChange={e => update('notes', e.target.value)} /></Field>
         </div>}
       </section>
