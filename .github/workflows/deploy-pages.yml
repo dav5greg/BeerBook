@@ -44,10 +44,10 @@ jobs:
           end = s.index('\nfunction Detail', start)
           block = s[start:end]
           block = re.sub(r'\n\s*\{beer\.to_try && <span className="beer-to-try-icon"[^>]*>🔖</span>\}', '', block)
-          target = '<small>{beer.country || \'Paese non indicato\'}{beer.abv ? \' · \' + beer.abv + \'%\' : \'\'}</small>'
-          replacement = '<small>{beer.to_try && <span className="beer-to-try-icon" aria-label="Da provare" title="Da provare">🔖</span>}{beer.country || \'Paese non indicato\'}{beer.abv ? \' · \' + beer.abv + \'%\' : \'\'}</small>'
+          target = '<strong>{beer.name}</strong>'
+          replacement = '<strong>{beer.to_try && <span className="beer-to-try-icon" aria-label="Da provare" title="Da provare">🔖</span>}{beer.name}</strong>'
           if target not in block:
-              raise SystemExit('BeerRow country line not found')
+              raise SystemExit('BeerRow name line not found')
           block = block.replace(target, replacement, 1)
           s = s[:start] + block + s[end:]
 
