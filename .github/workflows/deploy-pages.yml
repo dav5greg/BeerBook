@@ -34,71 +34,27 @@ jobs:
 
           p = Path('src/main.jsx')
           s = p.read_text()
-
           start = s.index('function BeerRow({ beer, onClick, onDelete })')
           end = s.index('\nfunction Detail', start)
-          beer_row = '''function BeerRow({ beer, onClick, onDelete }) {
-            return <div className="beer-row">
-              <button className="beer-row-main" onClick={onClick}>
-                <div className="beer-list-art"><span>🍺</span></div>
-                <div className="beer-info"><strong>{beer.name}</strong><span>{beer.brewery || 'Birrificio non indicato'}</span><time>{beer.last_tasted_at ? String(beer.last_tasted_at).slice(0,10).split('-').reverse().join('/') : '—'}</time></div>
-                <div className="beer-row-meta">
-                  <small>{beer.style || 'Stile non indicato'}</small>
-                  <small>{beer.country || 'Paese non indicato'}{beer.abv ? ' · ' + beer.abv + '%' : ''}</small>
-                  <div className="list-rating"><b>{'★'.repeat(Number(beer.rating || 0))}</b></div>
-                </div>
-              </button>
-              {beer.to_try && <span className="beer-to-try-icon" aria-label="Da provare" title="Da provare">🔖</span>}
-              <button className="delete-beer" onClick={onDelete} aria-label={'Elimina ' + beer.name} title="Elimina birra">×</button>
-            </div>
-          }
-          '''
-          s = s[:start] + beer_row + s[end:]
+          block = s[start:end]
+          if 'beer-to-try-icon' not in block:
+              block, count = re.subn(r'(\n\s*</button>)(\n\s*<button className="delete-beer")', r'\1\n    {beer.to_try && <span className="beer-to-try-icon" aria-label="Da provare" title="Da provare">🔖</span>}\2', block, count=1)
+              if count != 1:
+                  raise SystemExit('BeerRow insertion failed')
+              s = s[:start] + block + s[end:]
 
-          old_save = '''      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json', 'x-user-key': userKey }, body: JSON.stringify(payload) })
-              if (!res.ok) throw new Error()
-              await loadBeers()
-              navigate('library')'''
-          new_save = '''      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json', 'x-user-key': userKey }, body: JSON.stringify(payload) })
-              if (!res.ok) throw new Error()
-              const data = await res.json().catch(() => ({}))
-              const savedBeer = { ...payload, id: selected ? selected.id : data.id, places: payload.places }
-              setBeers(current => selected
-                ? current.map(beer => beer.id === selected.id ? { ...beer, ...savedBeer } : beer)
-                : [savedBeer, ...current]
-              )
-              navigate('library')'''
-          if old_save in s:
-              s = s.replace(old_save, new_save, 1)
-          elif 'const savedBeer = { ...payload' not in s:
-              raise SystemExit('saveBeer patch target not found')
+          old = "await loadBeers()\n      navigate('library')"
+          new = "const data = await res.json().catch(() => ({}))\n      const savedBeer = { ...payload, id: selected ? selected.id : data.id, places: payload.places }\n      setBeers(current => selected ? current.map(beer => beer.id === selected.id ? { ...beer, ...savedBeer } : beer) : [savedBeer, ...current])\n      navigate('library')"
+          if old in s and 'const savedBeer = { ...payload' not in s:
+              s = s.replace(old, new, 1)
 
           p.write_text(s)
 
           p = Path('src/styles.css')
           s = p.read_text()
-          s += '''
-.beer-row{position:relative;}
-.beer-to-try-icon{
-  position:absolute;
-  left:50%;
-  bottom:9px;
-  transform:translateX(-50%);
-  z-index:2;
-  display:grid;
-  place-items:center;
-  width:26px;
-  height:26px;
-  border-radius:50%;
-  background:rgba(255,250,243,.96);
-  border:1px solid var(--line);
-  box-shadow:0 3px 9px rgba(77,45,25,.10);
-  font-size:15px;
-  line-height:1;
-  pointer-events:none;
-}
-'''
-          p.write_text(s)
+          if '.beer-to-try-icon{' not in s:
+              s += "\n.beer-row{position:relative;}\n.beer-to-try-icon{position:absolute;left:50%;bottom:9px;transform:translateX(-50%);z-index:2;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(255,250,243,.96);border:1px solid var(--line);box-shadow:0 3px 9px rgba(77,45,25,.10);font-size:15px;line-height:1;pointer-events:none;}\n"
+              p.write_text(s)
           PY
       - name: Build
         env:
