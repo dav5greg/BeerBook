@@ -1,0 +1,28 @@
+name: Republish Beer Book
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  republish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Republish current main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy-pages.yml --repo "${{ github.repository }}" --ref main
+      - name: Remove temporary workflow
+        uses: actions/checkout@v6
+      - name: Remove workflow file
+        run: |
+          rm .github/workflows/republish-pages.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/republish-pages.yml
+          git commit -m 'Remove temporary republish workflow'
+          git push
