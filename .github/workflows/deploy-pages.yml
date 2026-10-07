@@ -34,14 +34,22 @@ jobs:
 
           p = Path('src/main.jsx')
           s = p.read_text()
+          start = s.index('function Home({')
+          end = s.index('\nfunction Stat', start)
+          block = s[start:end]
+          block = re.sub(r'const recent = beers\.slice\(0, 3\)', 'const recent = beers.filter(b => !b.to_try).slice(0, 3)', block, count=1)
+          s = s[:start] + block + s[end:]
+
           start = s.index('function BeerRow({ beer, onClick, onDelete })')
           end = s.index('\nfunction Detail', start)
           block = s[start:end]
-          if 'beer-to-try-icon' not in block:
-              block, count = re.subn(r'(\n\s*</button>)(\n\s*<button className="delete-beer")', r'\1\n    {beer.to_try && <span className="beer-to-try-icon" aria-label="Da provare" title="Da provare">🔖</span>}\2', block, count=1)
-              if count != 1:
-                  raise SystemExit('BeerRow insertion failed')
-              s = s[:start] + block + s[end:]
+          block = re.sub(r'\n\s*\{beer\.to_try && <span className="beer-to-try-icon"[^>]*>🔖</span>\}', '', block)
+          target = '<small>{beer.country || \'Paese non indicato\'}{beer.abv ? \' · \' + beer.abv + \'%\' : \'\'}</small>'
+          replacement = '<small>{beer.to_try && <span className="beer-to-try-icon" aria-label="Da provare" title="Da provare">🔖</span>}{beer.country || \'Paese non indicato\'}{beer.abv ? \' · \' + beer.abv + \'%\' : \'\'}</small>'
+          if target not in block:
+              raise SystemExit('BeerRow country line not found')
+          block = block.replace(target, replacement, 1)
+          s = s[:start] + block + s[end:]
 
           old = "await loadBeers()\n      navigate('library')"
           new = "const data = await res.json().catch(() => ({}))\n      const savedBeer = { ...payload, id: selected ? selected.id : data.id, places: payload.places }\n      setBeers(current => selected ? current.map(beer => beer.id === selected.id ? { ...beer, ...savedBeer } : beer) : [savedBeer, ...current])\n      navigate('library')"
@@ -52,9 +60,15 @@ jobs:
 
           p = Path('src/styles.css')
           s = p.read_text()
-          if '.beer-to-try-icon{' not in s:
-              s += "\n.beer-row{position:relative;}\n.beer-to-try-icon{position:absolute;left:50%;bottom:9px;transform:translateX(-50%);z-index:2;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(255,250,243,.96);border:1px solid var(--line);box-shadow:0 3px 9px rgba(77,45,25,.10);font-size:15px;line-height:1;pointer-events:none;}\n"
-              p.write_text(s)
+          extra = """
+          .beer-row-main{padding:8px 2px;gap:10px}
+          .beer-list-art{width:50px;height:54px}
+          .beer-to-try-icon{display:inline-grid;place-items:center;width:18px;height:18px;margin-right:5px;border-radius:50%;background:rgba(255,250,243,.96);border:1px solid var(--line);box-shadow:0 2px 5px rgba(77,45,25,.10);font-size:11px;line-height:1;vertical-align:middle}
+          """
+          if '.beer-to-try-icon{' in s:
+              s = re.sub(r'\.beer-row\{position:relative;\}\.beer-to-try-icon\{[^}]*\}\s*', '', s)
+          s += '\n' + extra
+          p.write_text(s)
           PY
       - name: Build
         env:
