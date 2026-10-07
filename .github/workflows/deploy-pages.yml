@@ -77,6 +77,8 @@ jobs:
         env:
           VITE_API_BASE: https://beer-book-api.vercel.app
         run: npm run build
+      - name: Copy PWA icons
+        run: cp icon-192.png icon-512.png dist/
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
