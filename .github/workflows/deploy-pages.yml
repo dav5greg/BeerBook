@@ -26,6 +26,34 @@ jobs:
           node-version: 24
       - name: Install dependencies
         run: npm install
+      - name: Apply to-try icon to library cards
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('src/main.jsx')
+          s = p.read_text()
+          start = s.index('function BeerRow({ beer, onClick, onDelete })')
+          end = s.index('\nfunction Detail', start)
+          block = s[start:end]
+          if 'beer-to-try-icon' not in block:
+              block, count = re.subn(
+                  r'(\n\s*</button>)(\n\s*<button className="delete-beer")',
+                  r'\1\n    {beer.to_try && <span className="beer-to-try-icon" aria-label="Da provare" title="Da provare">🔖</span>}\2',
+                  block,
+                  count=1
+              )
+              if count != 1:
+                  raise SystemExit('BeerRow insertion failed')
+              p.write_text(s[:start] + block + s[end:])
+
+          p = Path('src/styles.css')
+          s = p.read_text()
+          if '.beer-to-try-icon{' not in s:
+              s += '''\n.beer-row{\n  position:relative;\n}\n.beer-to-try-icon{\n  position:absolute;\n  left:50%;\n  top:50%;\n  transform:translate(-50%,-50%);\n  z-index:2;\n  display:grid;\n  place-items:center;\n  width:34px;\n  height:34px;\n  border-radius:50%;\n  background:rgba(255,250,243,.94);\n  border:1px solid var(--line);\n  box-shadow:0 4px 12px rgba(77,45,25,.12);\n  font-size:18px;\n  line-height:1;\n  pointer-events:none;\n}\n'''
+              p.write_text(s)
+          PY
       - name: Build
         env:
           VITE_API_BASE: https://beer-book-api.vercel.app
