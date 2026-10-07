@@ -61,9 +61,10 @@ jobs:
           p = Path('src/styles.css')
           s = p.read_text()
           extra = """
-          .beer-row-main{padding:8px 2px;gap:10px}
-          .beer-list-art{width:50px;height:54px}
-          .beer-to-try-icon{display:inline-grid;place-items:center;width:18px;height:18px;margin-right:5px;border-radius:50%;background:rgba(255,250,243,.96);border:1px solid var(--line);box-shadow:0 2px 5px rgba(77,45,25,.10);font-size:11px;line-height:1;vertical-align:middle}
+          .beer-row-main{padding:2px 2px;gap:10px}
+          .beer-list-art{width:50px;height:62px}
+          .library-list .beer-info strong{display:flex;align-items:center;gap:5px}
+          .beer-to-try-icon{display:inline-grid;place-items:center;flex:0 0 auto;width:18px;height:18px;margin-right:0;border-radius:50%;background:rgba(255,250,243,.96);border:1px solid var(--line);box-shadow:0 2px 5px rgba(77,45,25,.10);font-size:11px;line-height:1}
           """
           if '.beer-to-try-icon{' in s:
               s = re.sub(r'\.beer-row\{position:relative;\}\.beer-to-try-icon\{[^}]*\}\s*', '', s)
